@@ -1,7 +1,5 @@
 package vistas;
 
-import controller.ControllerRegistroTicket;
-
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
@@ -34,10 +32,9 @@ public class PanelRegistroTicketInicial extends JPanel {
 	private JButton btnCancelar;
 	private JButton btnConfirmar;
 	
-	private ControllerRegistroTicket controller;
-	
 	public PanelRegistroTicketInicial() {
 		this.setLayout(new GridBagLayout());
+		this.construir();
 	}
 	
 	
@@ -132,28 +129,16 @@ public class PanelRegistroTicketInicial extends JPanel {
 		//Fila 5
 		
 		btnConfirmar = new JButton("Confirmar");
-		btnCancelar.addActionListener(e -> {
-		});
 		gridConst.gridy = 9;
 		gridConst.insets = new Insets(5, 20, 20, 20);
 		this.add(btnConfirmar, gridConst);
 		
 		btnCancelar = new JButton("Cancelar");
-		btnCancelar.addActionListener(e -> {
-		});
 		gridConst.gridx = 1;
 		gridConst.gridy = 9;
 		gridConst.insets = new Insets(5, 20, 5, 5);
 		this.add(btnCancelar, gridConst);
 				
-	}
-	
-	public ControllerRegistroTicket getController() {
-		return controller;
-	}
-
-	public void setController(ControllerRegistroTicket controller) {
-		this.controller = controller;
 	}
 	
 }

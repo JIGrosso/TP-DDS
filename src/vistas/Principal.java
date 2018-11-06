@@ -29,8 +29,11 @@ public class Principal {
 		frame.setVisible(true);
 		frame.setSize(500, 500);
 		
-		PanelInicio inicio = new PanelInicio();
-		frame.setContentPane(inicio);
+//		PanelInicio inicio = new PanelInicio();
+//		frame.setContentPane(inicio);
+		
+		PanelRegistroTicketInicial registro = new PanelRegistroTicketInicial();
+		frame.setContentPane(registro);
 		
 		
 		
