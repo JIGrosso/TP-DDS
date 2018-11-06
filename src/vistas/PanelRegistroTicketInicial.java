@@ -6,13 +6,19 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.Toolkit;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import javax.swing.JPanel;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
+
+import gestores.GestorDeTicket;
 
 public class PanelRegistroTicketInicial extends JPanel {
 
@@ -31,6 +37,16 @@ public class PanelRegistroTicketInicial extends JPanel {
 	private JTextField txtHoraApertura;
 	private JButton btnCancelar;
 	private JButton btnConfirmar;
+	
+	private Integer nroLegajo;
+	private Integer nroTicket;
+	private Date dateActual;
+	private String clasificacion;
+	private String fechaApertura;
+	private String horaApertura;
+	private String descripcion;
+	
+	private GestorDeTicket gestorTicket;
 	
 	public PanelRegistroTicketInicial() {
 		this.setLayout(new GridBagLayout());
@@ -65,12 +81,14 @@ public class PanelRegistroTicketInicial extends JPanel {
 		gridConst.insets = new Insets(5, 5, 5, 0);
 		this.add(lblNroLegajo, gridConst);
 		
+		//int getSiguienteNumeroTicket();
+		
 		txtNroTicket = new JTextField();
 		gridConst.gridx = 0;
 		gridConst.gridy = 2;
 		gridConst.insets = new Insets(5, 5, 10, 5);
 		this.add(txtNroTicket, gridConst);
-		
+
 		txtNroLegajo = new JTextField();
 		gridConst.gridx = 1;
 		gridConst.gridy = 2;
@@ -83,6 +101,8 @@ public class PanelRegistroTicketInicial extends JPanel {
 		gridConst.gridx = 0;
 		gridConst.insets = new Insets(5, 5, 5, 0);
 		
+		//List getGlasificacionesExistentes();
+		
 		cmbClasificacion = new JComboBox();
 		gridConst.gridy = 4;
 		gridConst.insets = new Insets(5, 5, 10, 0);
@@ -90,6 +110,14 @@ public class PanelRegistroTicketInicial extends JPanel {
 		
 		
 		// Fila 3
+		
+		dateActual = new Date();
+		
+		DateFormat dateFormatFecha = new SimpleDateFormat("yyyy/MM/dd");
+		fechaApertura = dateFormatFecha.format(dateActual);
+		
+		DateFormat dateFormatHora = new SimpleDateFormat("HH:mm:ss");
+		fechaApertura = dateFormatHora.format(dateActual);
 		
 		lblFechaApertura = new JLabel("Fecha Apertura: ");
 		gridConst.gridy = 5;
@@ -101,13 +129,13 @@ public class PanelRegistroTicketInicial extends JPanel {
 		gridConst.insets = new Insets(5, 5, 5, 0);
 		this.add(lblHoraApertura, gridConst);
 		
-		txtFechaApertura = new JTextField();
+		txtFechaApertura = new JTextField(fechaApertura);
 		gridConst.gridx = 0;
 		gridConst.gridy = 6;
 		gridConst.insets = new Insets(5, 5, 10, 5);
 		this.add(txtFechaApertura, gridConst);
 		
-		txtHoraApertura = new JTextField();
+		txtHoraApertura = new JTextField(horaApertura);
 		gridConst.gridx = 1;
 		gridConst.insets = new Insets(5, 5, 10, 0);
 		this.add(txtHoraApertura, gridConst);
@@ -129,6 +157,20 @@ public class PanelRegistroTicketInicial extends JPanel {
 		//Fila 5
 		
 		btnConfirmar = new JButton("Confirmar");
+		btnConfirmar.addActionListener(e -> {
+			boolean noVacios;
+			noVacios = validarCamposNoVacios (txtNroLegajo, cmbClasificacion, txtDescripcion);
+			if(noVacios) {
+				//recuperarIdClasificacion(clasificacion);
+				//recuperarSoporte();
+				nroLegajo = Integer.parseInt(txtNroLegajo.toString());
+				descripcion = txtDescripcion.getText();
+				//gestorTicket.crearTicket(soporte, nroLegajo, idClasificacion, descripcion);
+			}
+			else {
+				JOptionPane.showMessageDialog(null,"Ningún campo puede ser vacío", "Error", JOptionPane.ERROR_MESSAGE);
+			}
+		});
 		gridConst.gridy = 9;
 		gridConst.insets = new Insets(5, 20, 20, 20);
 		this.add(btnConfirmar, gridConst);
@@ -139,6 +181,14 @@ public class PanelRegistroTicketInicial extends JPanel {
 		gridConst.insets = new Insets(5, 20, 5, 5);
 		this.add(btnCancelar, gridConst);
 				
+	}
+
+
+	private boolean validarCamposNoVacios(JTextField nroLegajo, JComboBox clasificacion, JTextArea descripcion){
+		if(nroLegajo.toString().isEmpty() || clasificacion.getSelectedItem().toString().isEmpty() || descripcion.getText().isEmpty()) {
+			return false;
+		}
+		return true;
 	}
 	
 }
