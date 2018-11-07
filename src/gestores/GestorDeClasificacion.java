@@ -1,5 +1,5 @@
 package gestores;
 
-public class GestorDeClasificacion {
+public interface GestorDeClasificacion {
 
 }

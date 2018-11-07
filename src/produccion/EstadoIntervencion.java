@@ -2,7 +2,7 @@ package produccion;
 
 public class EstadoIntervencion {
 
-	public Integer idEstadoInt;
+	public EstadosIntervencion idEstadoInt;
 	public String nombre;
 	public String descripcion;
 	

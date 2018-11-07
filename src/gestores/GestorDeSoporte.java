@@ -1,5 +1,7 @@
 package gestores;
 
-public class GestorDeSoporte {
+import usuarios.Soporte;
 
+public interface GestorDeSoporte {
+	
 }

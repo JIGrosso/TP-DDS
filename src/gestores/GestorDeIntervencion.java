@@ -1,5 +1,5 @@
 package gestores;
 
-public class GestorDeIntervencion {
+public interface GestorDeIntervencion {
 
 }
