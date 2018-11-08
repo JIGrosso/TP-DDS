@@ -54,5 +54,12 @@ public class Ticket {
 		
 	};
 	
+	public void addHistorialEstadoTicket(HistorialEstadoTicket historialEstado) {
+		this.historialesEstado.add(historialEstado);
+	}
+	
+	public void addHistorialClasificacionTicket(HistorialClasificacionTicket historialClasificacion) {
+		this.historialesClasificacion.add(historialClasificacion);
+	}
 }
 	

@@ -12,6 +12,7 @@ import produccion.EstadoTicket;
 import produccion.EstadosIntervencion;
 import produccion.EstadosTicket;
 import usuarios.Cliente;
+import usuarios.GrupoDeResolucion;
 import usuarios.Soporte;
 
 public interface GestorBD {
@@ -67,6 +68,30 @@ public interface GestorBD {
 		}
 	}
 	
+	public static Integer nroNuevoIntervencion() {
+		
+		try (Connection connection = DriverManager.getConnection("jdbc:postgresql://localhost:5432/TP-DDS", "postgres", "postgres")) {
+			
+			System.out.println("Connected to PostgreSQL database!");
+			
+			Statement statement;
+			statement = connection.createStatement();
+			//REVISAR NOMBRE DE TABLA CORRECTO
+			ResultSet resultSet = statement.executeQuery("SELECT MAX(idIntervencion) FROM public.intervencion");
+			resultSet.next();
+			
+			if(!resultSet.next()) {
+				return 1;
+			}
+			else {
+				Integer idIntervencion = Integer.valueOf(resultSet.getString("max"));
+				return idIntervencion+1;
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
 	// Implementar mapeos
 	
 	public static Cliente mapearCliente(Integer nroLegajo) {
@@ -215,7 +240,32 @@ public interface GestorBD {
 			e.printStackTrace();
 			return null;
 		}
-
-	}
 	
-}
+	}
+
+		public static GrupoDeResolucion mapearGrupoDeResolucion(Integer nroLegajo) {
+			
+			try (Connection connection = DriverManager.getConnection("jdbc:postgresql://localhost:5432/TP-DDS", "postgres", "postgres")) {
+					
+					System.out.println("Connected to PostgreSQL database!");
+					String idClasificacionConsulta = nroLegajo.toString();
+					
+					Statement statement;
+					statement = connection.createStatement();
+					//Ver nombres tablas
+					ResultSet resultSet = statement.executeQuery("SELECT g.* FROM public.soporte s, public.grupoResolucion g WHERE g.idGrupo = s.idGrupo AND nroLegajo = " + nroLegajo);
+					
+					resultSet.next(); 
+					Integer idGrupo = Integer.valueOf(resultSet.getString("idGrupo"));
+					GrupoDeResolucion grupoDeResolucion = new GrupoDeResolucion(idGrupo, resultSet.getString("nombre"), resultSet.getString("nivel"), resultSet.getString("descripcion"));
+					return grupoDeResolucion;
+				
+				} catch (SQLException e) {
+					e.printStackTrace();
+					return null;
+				}
+
+		}
+
+		
+	}
