@@ -5,17 +5,17 @@ public class Soporte {
 	public String nombre;
 	public Integer dni;
 	public String email;
-	public Integer telefono;
+	public String telefono;
 	public Integer nroLegajo;
 	public String password;
 	public GrupoDeResolucion grupo;
 	
-	public Soporte(Integer nroLegajo, String password, String nombre, Integer dni, Integer telefono, String email) {
+	public Soporte(Integer nroLegajo, String password, String nombre, Integer dni, String telefono2, String email) {
 		this.nroLegajo = nroLegajo;
 		this.password = password;
 		this.nombre = nombre;
 		this.dni = dni;
-		this.telefono = telefono;
+		this.telefono = telefono2;
 		this.email = email;
 		this.grupo = null;
 	}
@@ -44,11 +44,11 @@ public class Soporte {
 		this.email = email;
 	}
 
-	public Integer getTelefono() {
+	public String getTelefono() {
 		return telefono;
 	}
 
-	public void setTelefono(Integer telefono) {
+	public void setTelefono(String telefono) {
 		this.telefono = telefono;
 	}
 
