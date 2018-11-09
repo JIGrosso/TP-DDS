@@ -112,7 +112,7 @@ public interface GestorBD {
 			
 			Statement statement;
 			statement = connection.createStatement();
-			ResultSet resultSet = statement.executeQuery("SELECT * FROM public.cliente WHERE nroLegajo = "+nroLegajoConsulta);
+			ResultSet resultSet = statement.executeQuery("SELECT * FROM public.cliente WHERE nroLegajoC = "+nroLegajoConsulta);
 			
 			resultSet.next(); 
 			Integer nroLeg = Integer.valueOf(resultSet.getString("nrolegajoc"));
@@ -129,22 +129,22 @@ public interface GestorBD {
 
 	}
 
-	public static Clasificacion mapearClasificacion(Integer idClasificacion) {
+	public static Clasificacion mapearClasificacion(String clasificacion2) {
 	
 		try (Connection connection = DriverManager.getConnection("jdbc:postgresql://localhost:5432/TP-DDS", "postgres", "postgres")) {
 				
 				System.out.println("Connected to PostgreSQL database!");
-				String idClasificacionConsulta = idClasificacion.toString();
+				String idClasificacionConsulta = clasificacion2.toString();
 				
 				Statement statement;
 				statement = connection.createStatement();
-				ResultSet resultSet = statement.executeQuery("SELECT * FROM public.clasificacion WHERE idClasificacion = " + idClasificacionConsulta);
+				ResultSet resultSet = statement.executeQuery("SELECT * FROM public.clasificacion WHERE nombre = " + "'" + idClasificacionConsulta + "'");
 				
 				resultSet.next(); 
 				Integer idClas = Integer.valueOf(resultSet.getString("idClasificacion"));
 				Integer nroLegajoCreador = Integer.valueOf(resultSet.getString("nroLegajoSoporte"));
 				Soporte soporte = mapearSoporte(nroLegajoCreador);
-				Clasificacion clasificacion = new Clasificacion (idClas, resultSet.getString("nombre"), resultSet.getString("descripcion"), soporte);
+				Clasificacion clasificacion = new Clasificacion (idClas, resultSet.getString("nombre"), resultSet.getString("descripcionAlcance"), soporte);
 				
 				return clasificacion;
 			
@@ -258,8 +258,13 @@ public interface GestorBD {
 					
 					Statement statement;
 					statement = connection.createStatement();
+<<<<<<< HEAD
 
 					ResultSet resultSet = statement.executeQuery("SELECT g.* FROM public.soporte s, public.grupo_resolucion g WHERE g.idGrupo = s.idGrupo AND s.nroLegajo = " +nroLegajo.toString());
+=======
+					//Ver nombres tablas
+					ResultSet resultSet = statement.executeQuery("SELECT g.* FROM public.soporte s, public.grupo_Resolucion g WHERE g.idGrupo = s.idGrupo AND nroLegajo = " + nroLegajo);
+>>>>>>> Facu
 					
 					resultSet.next(); 
 					Integer idGrupo = Integer.valueOf(resultSet.getString("idGrupo"));

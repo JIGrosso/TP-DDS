@@ -11,10 +11,10 @@ import usuarios.Soporte;
 
 public interface GestorDeTicket {
 	
-	public static void crearTicket(Soporte soporte, Integer nroTicket, Integer nroLegajo, Date fechaCreacion, Integer idClasificacion, String descripcion){
+	public static void crearTicket(Soporte soporte, Integer nroTicket, Integer nroLegajo, Date fechaCreacion, String clasificacion2, String descripcion){
 		
 		Cliente cliente = GestorBD.mapearCliente(nroLegajo);
-		Clasificacion clasificacion = GestorBD.mapearClasificacion(idClasificacion);
+		Clasificacion clasificacion = GestorBD.mapearClasificacion(clasificacion2);
 		
 		// Ver fechaApertura y horaApertura
 		

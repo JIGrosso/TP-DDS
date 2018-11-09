@@ -107,7 +107,9 @@ public class PanelRegistroTicketInicial extends JPanel implements GestorBD{
 		
 		// Fila 6
 		
-		cmbClasificacion = new JComboBox();
+		String[] clasificaciones = {"Software"};
+		
+		cmbClasificacion = new JComboBox(clasificaciones);
 		gridConst.gridy = 6;
 		gridConst.insets = new Insets(5, 5, 10, 0);
 		this.add(cmbClasificacion, gridConst);
@@ -180,8 +182,8 @@ public class PanelRegistroTicketInicial extends JPanel implements GestorBD{
 			if(noVacios) {
 				Integer nroLegajo = Integer.valueOf(txtNroLegajo.getText());
 				String descripcion = txtDescripcion.getText();
-				Integer idClasificacion = 1;
-				GestorDeTicket.crearTicket(Principal.usuarioIniciado, nroTicket, nroLegajo, fechaActual, idClasificacion, descripcion);
+				String clasificacion = cmbClasificacion.getSelectedItem().toString();
+				GestorDeTicket.crearTicket(Principal.usuarioIniciado, nroTicket, nroLegajo, fechaActual, clasificacion, descripcion);
 			}
 			else {
 				JOptionPane.showMessageDialog(null,"Ningún campo puede ser vacío", "Error", JOptionPane.ERROR_MESSAGE);

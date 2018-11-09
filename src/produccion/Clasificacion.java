@@ -1,6 +1,5 @@
 package produccion;
 
-import usuarios.GrupoDeResolucion;
 import usuarios.Soporte;
 
 public class Clasificacion {
