@@ -5,6 +5,7 @@ import java.util.Date;
 import produccion.Clasificacion;
 import produccion.HistorialClasificacionTicket;
 import produccion.HistorialEstadoTicket;
+import produccion.Intervencion;
 import produccion.Ticket;
 import usuarios.Cliente;
 import usuarios.Soporte;
@@ -25,7 +26,7 @@ public interface GestorDeTicket {
 		nuevoTicket.addHistorialEstadoTicket(historialEstadoTicket);
 		nuevoTicket.addHistorialClasificacionTicket(historialClasificacion);
 		
-		GestorDeIntervencion.crearIntervencion(soporte.nroLegajo);
+		Intervencion nuevaIntervencion = GestorDeIntervencion.crearIntervencion(soporte, fechaCreacion);
 		
 		// Persistir Cambios
 		

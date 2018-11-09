@@ -94,8 +94,26 @@ public interface GestorBD {
 			ResultSet resultSet = statement.executeQuery("SELECT nextval('seqHistorialEstadoTicket')");
 			resultSet.next();
 			
-			Integer idIntervencion = Integer.valueOf(resultSet.getString("nextval"));
-			return idIntervencion;
+			Integer idHistorial = Integer.valueOf(resultSet.getString("nextval"));
+			return idHistorial;
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
+	
+	public static Integer nroNuevoHistorialEI() {
+		
+		try (Connection connection = DriverManager.getConnection("jdbc:postgresql://localhost:5432/TP-DDS", "postgres", "postgres")) {
+			
+			Statement statement;
+			statement = connection.createStatement();
+			ResultSet resultSet = statement.executeQuery("SELECT nextval('seqHistorialEstadoIntervencion')");
+			resultSet.next();
+			
+			Integer idHistorialI = Integer.valueOf(resultSet.getString("nextval"));
+			return idHistorialI;
 			
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -258,17 +276,12 @@ public interface GestorBD {
 					
 					Statement statement;
 					statement = connection.createStatement();
-<<<<<<< HEAD
-
 					ResultSet resultSet = statement.executeQuery("SELECT g.* FROM public.soporte s, public.grupo_resolucion g WHERE g.idGrupo = s.idGrupo AND s.nroLegajo = " +nroLegajo.toString());
-=======
-					//Ver nombres tablas
-					ResultSet resultSet = statement.executeQuery("SELECT g.* FROM public.soporte s, public.grupo_Resolucion g WHERE g.idGrupo = s.idGrupo AND nroLegajo = " + nroLegajo);
->>>>>>> Facu
-					
+
 					resultSet.next(); 
 					Integer idGrupo = Integer.valueOf(resultSet.getString("idGrupo"));
-					GrupoDeResolucion grupoDeResolucion = new GrupoDeResolucion(idGrupo, resultSet.getString("nombre"), resultSet.getString("nivel"), resultSet.getString("descripcion"));
+					// Arreglar nivel
+					GrupoDeResolucion grupoDeResolucion = new GrupoDeResolucion(idGrupo, resultSet.getString("nombre"), resultSet.getString("descripcion"));
 					
 					return grupoDeResolucion;
 					

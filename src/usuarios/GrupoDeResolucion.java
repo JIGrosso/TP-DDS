@@ -7,10 +7,10 @@ public class GrupoDeResolucion {
 	public Nivel nivel;
 	public String descripcion;
 	
-	public GrupoDeResolucion(Integer idGrupo, String nombre, String idNivel, String descripcion) {
+	public GrupoDeResolucion(Integer idGrupo, String nombre, String descripcion) {
 		this.idGrupo = idGrupo;
 		this.nombre = nombre;
-		this.nivel = Nivel.valueOf(idNivel);
+		this.nivel = Nivel.NIVEL_0;
 		this.descripcion = descripcion;
 	}
 }
