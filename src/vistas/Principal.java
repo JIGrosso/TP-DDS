@@ -14,7 +14,7 @@ import usuarios.Soporte;
 public class Principal implements GestorBD{
 	
 	
-	 // prueba
+	 // prueba FACundo
 	public static Soporte usuarioIniciado;
 	
 	public static EstadoTicket abiertoMA;
