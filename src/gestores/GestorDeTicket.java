@@ -3,7 +3,6 @@ package gestores;
 import java.util.Date;
 
 import produccion.Clasificacion;
-import produccion.EstadoTicket;
 import produccion.HistorialClasificacionTicket;
 import produccion.HistorialEstadoTicket;
 import produccion.Ticket;
@@ -21,9 +20,9 @@ public interface GestorDeTicket {
 		
 		Ticket nuevoTicket = new Ticket(nroTicket, cliente, clasificacion, fechaCreacion, fechaCreacion, descripcion);
 		
-		HistorialEstadoTicket historialEstado = new HistorialEstadoTicket(soporte);
-		HistorialClasificacionTicket historialClasificacion = new HistorialClasificacionTicket(clasificacion, nroTicket);
-		nuevoTicket.addHistorialEstadoTicket(historialEstado);
+		HistorialEstadoTicket historialEstadoTicket = new HistorialEstadoTicket(soporte);
+		HistorialClasificacionTicket historialClasificacion = new HistorialClasificacionTicket(clasificacion);
+		nuevoTicket.addHistorialEstadoTicket(historialEstadoTicket);
 		nuevoTicket.addHistorialClasificacionTicket(historialClasificacion);
 		
 		GestorDeIntervencion.crearIntervencion(soporte.nroLegajo);

@@ -2,10 +2,11 @@ package produccion;
 
 import java.util.Date;
 
+import gestores.GestorBD;
 import usuarios.Soporte;
 import vistas.Principal;
 
-public class HistorialEstadoTicket {
+public class HistorialEstadoTicket implements GestorBD{
 	
 	public Integer idHistorialEstadoTic;
 	public Date fechaDesde;
@@ -14,15 +15,15 @@ public class HistorialEstadoTicket {
 	public Soporte actor;
 	
 	public HistorialEstadoTicket(Soporte soporte) {
-		//idHistorialEstadoTic = Null, ver en persistencia
-		Date fechaD = new Date();
+		idHistorialEstadoTic = GestorBD.nroNuevoHistorialET();
+		fechaDesde = new Date();
 		this.estado = Principal.abiertoMA;
 		this.actor = soporte;
 	}
 	
 	public HistorialEstadoTicket(Soporte soporte, EstadoTicket estado) {
-		//idHistorialEstadoTic = Null, ver en persistencia
-		Date fechaD = new Date();
+		idHistorialEstadoTic = null;
+		fechaDesde = new Date();
 		this.estado = estado;
 		this.actor = soporte;
 	}

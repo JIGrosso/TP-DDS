@@ -32,7 +32,6 @@ public interface GestorBD {
 			Integer nroLeg = Integer.valueOf(resultSet.getString("nrolegajo"));
 			Integer dni = Integer.valueOf(resultSet.getString("dni"));
 			String telefono = resultSet.getString("telefono");
-			// Tuve que cambiar el telefono a String porque sino con Integer me daba out of range (el telefono es mas grande que el maximo tamaño Integer disponible)
 			Soporte soporte = new Soporte(nroLeg, "contrasenia", resultSet.getString("nombre"), dni, telefono, resultSet.getString("email"));
 			
 			return soporte;
@@ -72,27 +71,37 @@ public interface GestorBD {
 		
 		try (Connection connection = DriverManager.getConnection("jdbc:postgresql://localhost:5432/TP-DDS", "postgres", "postgres")) {
 			
-			System.out.println("Connected to PostgreSQL database!");
-			
 			Statement statement;
 			statement = connection.createStatement();
-			//REVISAR NOMBRE DE TABLA CORRECTO
-			ResultSet resultSet = statement.executeQuery("SELECT MAX(idIntervencion) FROM public.intervencion");
+			ResultSet resultSet = statement.executeQuery("SELECT nextval('seqHistorialEstadoTicket')");
 			resultSet.next();
 			
-			if(!resultSet.next()) {
-				return 1;
-			}
-			else {
-				Integer idIntervencion = Integer.valueOf(resultSet.getString("max"));
-				return idIntervencion+1;
-			}
+			Integer idIntervencion = Integer.valueOf(resultSet.getString("nextval"));
+			return idIntervencion;
+			
 		} catch (SQLException e) {
 			e.printStackTrace();
 			return null;
 		}
 	}
-	// Implementar mapeos
+	
+	public static Integer nroNuevoHistorialET() {
+		
+		try (Connection connection = DriverManager.getConnection("jdbc:postgresql://localhost:5432/TP-DDS", "postgres", "postgres")) {
+			
+			Statement statement;
+			statement = connection.createStatement();
+			ResultSet resultSet = statement.executeQuery("SELECT nextval('seqHistorialEstadoTicket')");
+			resultSet.next();
+			
+			Integer idIntervencion = Integer.valueOf(resultSet.getString("nextval"));
+			return idIntervencion;
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
 	
 	public static Cliente mapearCliente(Integer nroLegajo) {
 		
@@ -247,19 +256,17 @@ public interface GestorBD {
 			
 			try (Connection connection = DriverManager.getConnection("jdbc:postgresql://localhost:5432/TP-DDS", "postgres", "postgres")) {
 					
-					System.out.println("Connected to PostgreSQL database!");
-					String idClasificacionConsulta = nroLegajo.toString();
-					
 					Statement statement;
 					statement = connection.createStatement();
-					//Ver nombres tablas
-					ResultSet resultSet = statement.executeQuery("SELECT g.* FROM public.soporte s, public.grupoResolucion g WHERE g.idGrupo = s.idGrupo AND nroLegajo = " + nroLegajo);
+
+					ResultSet resultSet = statement.executeQuery("SELECT g.* FROM public.soporte s, public.grupo_resolucion g WHERE g.idGrupo = s.idGrupo AND s.nroLegajo = " +nroLegajo.toString());
 					
 					resultSet.next(); 
 					Integer idGrupo = Integer.valueOf(resultSet.getString("idGrupo"));
 					GrupoDeResolucion grupoDeResolucion = new GrupoDeResolucion(idGrupo, resultSet.getString("nombre"), resultSet.getString("nivel"), resultSet.getString("descripcion"));
+					
 					return grupoDeResolucion;
-				
+					
 				} catch (SQLException e) {
 					e.printStackTrace();
 					return null;
