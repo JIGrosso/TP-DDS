@@ -2,6 +2,7 @@ package vistas;
 
 import java.awt.Dimension;
 import java.awt.Toolkit;
+import java.util.ArrayList;
 
 import javax.swing.JFrame;
 import javax.swing.WindowConstants;
@@ -10,11 +11,10 @@ import gestores.GestorBD;
 import produccion.EstadoIntervencion;
 import produccion.EstadoTicket;
 import usuarios.Soporte;
+import produccion.Clasificacion;
 
 public class Principal implements GestorBD{
 	
-	
-	 // prueba FACundo
 	public static Soporte usuarioIniciado;
 	
 	public static EstadoTicket abiertoMA;
@@ -27,6 +27,7 @@ public class Principal implements GestorBD{
 	public static EstadoIntervencion espera;
 	public static EstadoIntervencion cerrada;
 	
+	public static ArrayList<Clasificacion> clasificacion;
 
 	public static void main(String[] args) {
 		
@@ -72,6 +73,5 @@ public class Principal implements GestorBD{
 		activa = GestorBD.mapearEstadoIntervencion("ACTIVA");
 		espera = GestorBD.mapearEstadoIntervencion("ESPERA");
 		cerrada = GestorBD.mapearEstadoIntervencion("CERRADA");
-		
 	}
 }
