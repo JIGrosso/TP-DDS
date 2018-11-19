@@ -12,7 +12,8 @@ public interface GestorDeIntervencion {
 	public static Intervencion crearIntervencion(Soporte soporte, Date fechaAsignacion) {
 
 		Integer IdIntervencion = GestorBD.nroNuevoIntervencion();
-		GrupoDeResolucion grupo = GestorBD.mapearGrupoDeResolucion(soporte.nroLegajo);
+		Integer idGrupo = soporte.getGrupo().getIdGrupo();
+		GrupoDeResolucion grupo = GestorBD.mapearGrupoDeResolucion(idGrupo);
 		Integer idPrimerHistorial = GestorBD.nroNuevoHistorialEI();
 
 		HistorialEstadoIntervencion primerHistorial = new HistorialEstadoIntervencion(idPrimerHistorial, fechaAsignacion, soporte);

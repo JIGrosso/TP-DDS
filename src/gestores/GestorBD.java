@@ -59,16 +59,12 @@ public interface GestorBD {
 
 			Statement statement;
 			statement = connection.createStatement();
-			ResultSet resultSet = statement.executeQuery("SELECT MAX(nroticket) FROM public.ticket");
+			ResultSet resultSet = statement.executeQuery("SELECT nextval('seqNroTicket')");
 			resultSet.next();
+			
+			Integer nroTicket = Integer.valueOf(resultSet.getString("nextval"));
+			return nroTicket;
 
-			if(!resultSet.next()) {
-				return 1;
-			}
-			else {
-				Integer nroTicket = Integer.valueOf(resultSet.getString("max"));
-				return nroTicket+1;
-			}
 		} catch (SQLException e) {
 			e.printStackTrace();
 			return null;
@@ -81,7 +77,7 @@ public interface GestorBD {
 
 			Statement statement;
 			statement = connection.createStatement();
-			ResultSet resultSet = statement.executeQuery("SELECT nextval('seqHistorialEstadoTicket')");
+			ResultSet resultSet = statement.executeQuery("SELECT nextval('seqIntervencion')");
 			resultSet.next();
 
 			Integer idIntervencion = Integer.valueOf(resultSet.getString("nextval"));
@@ -290,7 +286,6 @@ public interface GestorBD {
 					Statement statement;
 					statement = connection.createStatement();
 					ResultSet resultSet = statement.executeQuery("SELECT * FROM public.grupo_resolucion g WHERE g.idGrupo = " + idGrupoConsulta);
-
 					resultSet.next();
 					Integer idNuevoGrupo = Integer.valueOf(resultSet.getString("idGrupo"));
 

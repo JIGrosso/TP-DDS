@@ -14,19 +14,17 @@ public class HistorialEstadoTicket implements GestorBD{
 	public EstadoTicket estado;
 	public Soporte actor;
 
-	public HistorialEstadoTicket() {};
-
-	public void PrimerHistorialEstadoTicket(Soporte soporte, Date fechaCreacion) {
-		this.idHistorialEstadoTic = 1; // El estado sera Abierto en Mesa de Ayuda
+	public HistorialEstadoTicket(Soporte soporte, Date fechaCreacion) {
+		this.idHistorialEstadoTic = GestorBD.nroNuevoHistorialET();
 		this.fechaDesde = fechaCreacion;
 		this.fechaHasta = null;
 		this.estado = Principal.abiertoMA;
 		this.actor = soporte;
-	}
+	};
 
-	public HistorialEstadoTicket(Soporte soporte, EstadoTicket estado) {
+	public HistorialEstadoTicket(Soporte soporte, EstadoTicket estado, Date fechaCreacion) {
 		idHistorialEstadoTic = null;
-		fechaDesde = new Date();
+		fechaDesde = fechaCreacion;
 		this.estado = estado;
 		this.actor = soporte;
 	}
