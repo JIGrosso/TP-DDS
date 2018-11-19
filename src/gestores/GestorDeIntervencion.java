@@ -1,15 +1,13 @@
 package gestores;
 
+import produccion.Intervencion;
 import usuarios.GrupoDeResolucion;
 
 public interface GestorDeIntervencion {
 
-	public static void crearIntervencion(Integer nroLegajo) {
+	public static void crearIntervencion(GrupoDeResolucion grupo) {
 		
-		Integer nroIdIntervencion = GestorBD.nroNuevoIntervencion();
-		GrupoDeResolucion grupo = GestorBD.mapearGrupoDeResolucion(nroLegajo);
-		//Intervencion intervencion = new Intervencion();
-		
+		Intervencion intervencion = new Intervencion();
 	}
 
 }

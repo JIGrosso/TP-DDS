@@ -12,8 +12,7 @@ public class Ticket {
 	public Integer nroTicket;
 	public Cliente cliente;
 	public Clasificacion clasificacion;
-	public Date fechaApertura;
-	public Date horaApertura;
+	public Date fechaYHoraApertura;
 	public String descripcion;
 	public String observaciones;
 	public EstadoTicket estadoActual;
@@ -22,13 +21,12 @@ public class Ticket {
 	public List<Intervencion> intervenciones;
 	
 	
-	public Ticket(Integer nroTicket, Cliente cliente, Clasificacion clasificacion, Date fechaApertura, Date horaApertura, String descripcion) {
+	public Ticket(Integer nroTicket, Cliente cliente, Clasificacion clasificacion, Date fechaApertura, String descripcion) {
 		
 		this.nroTicket = nroTicket;
 		this.cliente = cliente;
 		this.clasificacion = clasificacion;
-		this.fechaApertura = fechaApertura;
-		this.horaApertura = horaApertura;
+		this.fechaYHoraApertura = fechaApertura;
 		this.descripcion = descripcion;
 		this.observaciones = null;
 		this.estadoActual = Principal.abiertoMA;
@@ -43,8 +41,7 @@ public class Ticket {
 		this.nroTicket = nroTicket;
 		this.cliente = cliente;
 		this.clasificacion = clasificacion;
-		this.fechaApertura = fechaApertura;
-		this.horaApertura = horaApertura;
+		this.fechaYHoraApertura = fechaApertura;
 		this.descripcion = descripcion;
 		this.observaciones = null;
 		this.estadoActual = estadoActual;

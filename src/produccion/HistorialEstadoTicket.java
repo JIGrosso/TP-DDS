@@ -13,9 +13,12 @@ public class HistorialEstadoTicket {
 	public EstadoTicket estado;
 	public Soporte actor;
 	
-	public HistorialEstadoTicket(Soporte soporte) {
-		//idHistorialEstadoTic = Null, ver en persistencia
-		Date fechaD = new Date();
+	public HistorialEstadoTicket() {};
+	
+	public void PrimerHistorialEstadoTicket(Soporte soporte, Date fechaCreacion) {
+		this.idHistorialEstadoTic = 1; // El estado sera Abierto en Mesa de Ayuda
+		this.fechaDesde = fechaCreacion;
+		this.fechaHasta = null;
 		this.estado = Principal.abiertoMA;
 		this.actor = soporte;
 	}

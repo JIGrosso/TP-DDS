@@ -1,5 +1,6 @@
 package gestores;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import produccion.Clasificacion;
@@ -19,16 +20,24 @@ public interface GestorDeTicket {
 		
 		// Ver fechaApertura y horaApertura
 		
-		Ticket nuevoTicket = new Ticket(nroTicket, cliente, clasificacion, fechaCreacion, fechaCreacion, descripcion);
+		//Cambiar nombre de variable ticket a nuevoTicket
 		
-		HistorialEstadoTicket historialEstado = new HistorialEstadoTicket(soporte);
+		Ticket nuevoTicket = new Ticket(nroTicket, cliente, clasificacion, fechaCreacion, descripcion);
+		
+		HistorialEstadoTicket primerHistorialEstado = new HistorialEstadoTicket();
+		primerHistorialEstado.PrimerHistorialEstadoTicket(soporte, fechaCreacion);
 		HistorialClasificacionTicket historialClasificacion = new HistorialClasificacionTicket(clasificacion, nroTicket);
-		nuevoTicket.addHistorialEstadoTicket(historialEstado);
+		nuevoTicket.addHistorialEstadoTicket(primerHistorialEstado);
 		nuevoTicket.addHistorialClasificacionTicket(historialClasificacion);
 		
-		GestorDeIntervencion.crearIntervencion(soporte.nroLegajo);
+		System.out.println("Historial Estado Ticket: " + nuevoTicket.historialesEstado.get(0).estado.nombre);
 		
-		// Persistir Cambios
+		// GestorDeIntervencion.crearIntervencion(soporte, grupo);
+		
+		System.out.println("Ticket creado: Nro Ticket: " + nuevoTicket.nroTicket);
+		System.out.println("Estado Actual: " + nuevoTicket.estadoActual.nombre);
+			
+		GestorBD.guardarTicket(nuevoTicket, soporte);
 		
 	}
 }
