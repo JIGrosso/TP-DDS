@@ -10,14 +10,14 @@ public class Soporte {
 	public String password;
 	public GrupoDeResolucion grupo;
 	
-	public Soporte(Integer nroLegajo, String password, String nombre, Integer dni, String telefono2, String email) {
+	public Soporte(Integer nroLegajo, String password, String nombre, Integer dni, String telefono2, String email, GrupoDeResolucion grupo) {
 		this.nroLegajo = nroLegajo;
 		this.password = password;
 		this.nombre = nombre;
 		this.dni = dni;
 		this.telefono = telefono2;
 		this.email = email;
-		this.grupo = null;
+		this.grupo = grupo;
 	}
 
 	public String getNombre() {
