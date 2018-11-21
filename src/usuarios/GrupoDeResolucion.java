@@ -13,8 +13,6 @@ public class GrupoDeResolucion {
 		this.nombre = nombre;
 		this.nivel = Nivel.NIVEL_0;
 		this.descripcion = descripcion;
-		
-		System.out.println("Grupo de Resolucion creado: IdGrupo: " + idGrupo + ", Nombre: " + nombre);
 	}
 
 	public Integer getIdGrupo() {

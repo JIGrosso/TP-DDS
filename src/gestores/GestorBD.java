@@ -6,6 +6,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.List;
 
 import produccion.Clasificacion;
 import produccion.EstadoIntervencion;
@@ -22,34 +24,56 @@ public interface GestorBD {
 	SimpleDateFormat formatFecha = new SimpleDateFormat("yyyy-MM-dd");
 	SimpleDateFormat formatHora = new SimpleDateFormat("HH:mm:ss.SSS");
 
+	//Creación de listas para evitar crear duplicados de Objetos GrupoDeResolucion y Soporte desde la BDD
+	
+	List<GrupoDeResolucion> gruposMapeados = new ArrayList<GrupoDeResolucion>();
+	List<Soporte> soportesMapeados = new ArrayList<Soporte>();
+
 
 	public static Soporte mapearSoporte(Integer nroLegajo) {
+		
+		Soporte nuevoSoporte = null;
+		
+		for (int i=0; i < soportesMapeados.size(); i++) {
+			if (soportesMapeados.get(i).nroLegajo.equals(nroLegajo)) {
+				nuevoSoporte = soportesMapeados.get(i);
+			}
+		}
+				
+		if (nuevoSoporte != null) {
+			System.out.println("Soporte: " + nuevoSoporte.nroLegajo + " ya encontrado en programa.");
+			return nuevoSoporte;
+		}		
+		
+		else {
 
-		try (Connection connection = DriverManager.getConnection("jdbc:postgresql://localhost:5432/TP-DDS", "postgres", "postgres")) {
-
-			System.out.println("Connected to PostgreSQL database!");
-			String nroLegajoConsulta = nroLegajo.toString();
-
-			Statement statement;
-			statement = connection.createStatement();
-			ResultSet resultSet = statement.executeQuery("SELECT * FROM public.soporte WHERE nroLegajo = "+nroLegajoConsulta);
-
-			resultSet.next();
-			Integer nroLeg = Integer.valueOf(resultSet.getString("nrolegajo"));
-			Integer dni = Integer.valueOf(resultSet.getString("dni"));
-			String telefono = resultSet.getString("telefono");
-			Integer idGrupo = Integer.valueOf(resultSet.getString("idGrupo"));
-			GrupoDeResolucion grupo = mapearGrupoDeResolucion(idGrupo);
-			Soporte soporte = new Soporte(nroLeg, "contrasenia", resultSet.getString("nombre"), dni, telefono, resultSet.getString("email"), grupo);
-
-			return soporte;
-
-		} catch (SQLException e) {
-			e.printStackTrace();
-			return null;
+			try (Connection connection = DriverManager.getConnection("jdbc:postgresql://localhost:5432/TP-DDS", "postgres", "postgres")) {
+	
+				System.out.println("Connected to PostgreSQL database!");
+				String nroLegajoConsulta = nroLegajo.toString();
+	
+				Statement statement;
+				statement = connection.createStatement();
+				ResultSet resultSet = statement.executeQuery("SELECT * FROM public.soporte WHERE nroLegajo = "+ nroLegajoConsulta);
+	
+				resultSet.next();
+				Integer nroLeg = Integer.valueOf(resultSet.getString("nrolegajo"));
+				Integer dni = Integer.valueOf(resultSet.getString("dni"));
+				String telefono = resultSet.getString("telefono");
+				Integer idGrupo = Integer.valueOf(resultSet.getString("idGrupo"));
+				GrupoDeResolucion grupo = mapearGrupoDeResolucion(idGrupo);
+				Soporte soporte = new Soporte(nroLeg, "contrasenia", resultSet.getString("nombre"), dni, telefono, resultSet.getString("email"), grupo);
+				soportesMapeados.add(soporte);
+				System.out.println("Soporte: " + soporte.nroLegajo + " mapeado desde BDD.");
+				return soporte;
+	
+			} catch (SQLException e) {
+				e.printStackTrace();
+				return null;
+			}
 		}
 
-	};
+	}
 
 	public static Integer nroNuevoTicket() {
 
@@ -274,30 +298,43 @@ public interface GestorBD {
 		}
 
 	}
-
-		public static GrupoDeResolucion mapearGrupoDeResolucion(Integer idGrupo) {
-
-			try (Connection connection = DriverManager.getConnection("jdbc:postgresql://localhost:5432/TP-DDS", "postgres", "postgres")) {
-
-					System.out.println("Connected to PostgreSQL database!");
-
-					String idGrupoConsulta = idGrupo.toString();
-
-					Statement statement;
-					statement = connection.createStatement();
-					ResultSet resultSet = statement.executeQuery("SELECT * FROM public.grupo_resolucion g WHERE g.idGrupo = " + idGrupoConsulta);
-					resultSet.next();
-					Integer idNuevoGrupo = Integer.valueOf(resultSet.getString("idGrupo"));
-
-					GrupoDeResolucion grupoDeResolucion = new GrupoDeResolucion(idNuevoGrupo, resultSet.getString("nombre"), resultSet.getString("nivel"), resultSet.getString("descripcion"));
-					return grupoDeResolucion;
-
-				} catch (SQLException e) {
-					e.printStackTrace();
-					return null;
-				}
-
+	
+	public static GrupoDeResolucion mapearGrupoDeResolucion(Integer idGrupo) {
+		
+		GrupoDeResolucion nuevoGrupo = null;
+		
+		for (int i=0; i < gruposMapeados.size(); i++) {
+			if (gruposMapeados.get(i).idGrupo == idGrupo) {
+				nuevoGrupo = gruposMapeados.get(i);
+			}
 		}
+		if (nuevoGrupo != null) {
+			System.out.println("Grupo: " + nuevoGrupo.nombre + " ya encontrado en programa.");
+			return nuevoGrupo;
+		}
+					
+		else {
+			
+			try (Connection connection = DriverManager.getConnection("jdbc:postgresql://localhost:5432/TP-DDS", "postgres", "postgres")) {
+				System.out.println("Connected to PostgreSQL database!");
+				String idGrupoConsulta = idGrupo.toString();
+				Statement statement;
+				statement = connection.createStatement();
+				ResultSet resultSet = statement.executeQuery("SELECT * FROM public.grupo_resolucion g WHERE g.idGrupo = " + idGrupoConsulta);
+				resultSet.next();
+				Integer idNuevoGrupo = Integer.valueOf(resultSet.getString("idGrupo"));
+	
+				GrupoDeResolucion grupoDeResolucion = new GrupoDeResolucion(idNuevoGrupo, resultSet.getString("nombre"), resultSet.getString("nivel"), resultSet.getString("descripcion"));
+				System.out.println("Grupo: " + grupoDeResolucion.nombre + " mapeado desde BDD.");
+				gruposMapeados.add(grupoDeResolucion);
+				return grupoDeResolucion;
+			}
+			catch (SQLException e) {
+				e.printStackTrace();
+				return null;
+			}
+		}
+	}
 
 		public static void guardarTicket (Ticket ticket, Soporte soporte) {
 			try (Connection connection = DriverManager.getConnection("jdbc:postgresql://localhost:5432/TP-DDS", "postgres", "postgres")) {
