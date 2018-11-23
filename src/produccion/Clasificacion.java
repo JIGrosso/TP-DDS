@@ -1,5 +1,9 @@
 package produccion;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import usuarios.GrupoDeResolucion;
 import usuarios.Soporte;
 
 public class Clasificacion {
@@ -8,12 +12,14 @@ public class Clasificacion {
 	public String nombre;
 	public String descripcionAlcance;
 	public Soporte creador;
+	public List<GrupoDeResolucion> gruposPertenecientes; 
 	
 	public Clasificacion (Integer idClasificacion, String nombre, String descripcionAlcance, Soporte creador) {
 		this.idClasificacion = idClasificacion;
 		this.nombre = nombre;
 		this.descripcionAlcance = descripcionAlcance;
 		this.creador = creador;
+		this.gruposPertenecientes = new ArrayList<GrupoDeResolucion>();
 	}
 	
 	public Integer getIdClasificacion() {

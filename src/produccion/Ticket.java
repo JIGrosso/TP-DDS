@@ -5,12 +5,14 @@ import java.util.Date;
 import java.util.List;
 
 import usuarios.Cliente;
+import usuarios.GrupoDeResolucion;
 import vistas.Principal;
 
 public class Ticket {
 
 	public Integer nroTicket;
 	public Cliente cliente;
+	public GrupoDeResolucion grupoAsignado;
 	public Clasificacion clasificacion;
 	public Date fechaYHoraApertura;
 	public String descripcion;
@@ -21,7 +23,7 @@ public class Ticket {
 	public List<Intervencion> intervenciones;
 	
 	
-	public Ticket(Integer nroTicket, Cliente cliente, Clasificacion clasificacion, Date fechaApertura, String descripcion) {
+	public Ticket(Integer nroTicket, Cliente cliente, Clasificacion clasificacion, GrupoDeResolucion grupoAsignado, Date fechaApertura, String descripcion) {
 		
 		this.nroTicket = nroTicket;
 		this.cliente = cliente;
@@ -29,6 +31,7 @@ public class Ticket {
 		this.fechaYHoraApertura = fechaApertura;
 		this.descripcion = descripcion;
 		this.observaciones = null;
+		this.grupoAsignado = grupoAsignado;
 		this.estadoActual = Principal.abiertoMA;
 		this.historialesEstado = new ArrayList<HistorialEstadoTicket>();
 		this.historialesClasificacion = new ArrayList<HistorialClasificacionTicket>();
@@ -36,7 +39,7 @@ public class Ticket {
 		
 	};
 	
-	public Ticket(Integer nroTicket, Cliente cliente, Clasificacion clasificacion, Date fechaApertura, Date horaApertura, String descripcion, EstadoTicket estadoActual) {
+	public Ticket(Integer nroTicket, Cliente cliente, Clasificacion clasificacion, GrupoDeResolucion grupoAsignado, Date fechaApertura, Date horaApertura, String descripcion, EstadoTicket estadoActual) {
 		
 		this.nroTicket = nroTicket;
 		this.cliente = cliente;
@@ -44,6 +47,7 @@ public class Ticket {
 		this.fechaYHoraApertura = fechaApertura;
 		this.descripcion = descripcion;
 		this.observaciones = null;
+		this.grupoAsignado = grupoAsignado;
 		this.estadoActual = estadoActual;
 		this.historialesEstado = new ArrayList<HistorialEstadoTicket>();
 		this.historialesClasificacion = new ArrayList<HistorialClasificacionTicket>();

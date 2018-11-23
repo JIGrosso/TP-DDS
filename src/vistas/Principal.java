@@ -31,10 +31,11 @@ public class Principal implements GestorBD{
 
 	public static void main(String[] args) {
 		
+		cargarEstados();
+		
 		Integer nroLegajo = 23795;
 		usuarioIniciado = GestorBD.mapearSoporte(nroLegajo);
 		
-		cargarEstados();
 		
 		javax.swing.SwingUtilities.invokeLater(new Runnable() {
 			public void run() {

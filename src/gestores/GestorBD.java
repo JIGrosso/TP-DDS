@@ -7,6 +7,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import produccion.Clasificacion;
@@ -14,10 +15,13 @@ import produccion.EstadoIntervencion;
 import produccion.EstadoTicket;
 import produccion.EstadosIntervencion;
 import produccion.EstadosTicket;
+import produccion.HistorialEstadoIntervencion;
+import produccion.Intervencion;
 import produccion.Ticket;
 import usuarios.Cliente;
 import usuarios.GrupoDeResolucion;
 import usuarios.Soporte;
+import vistas.Principal;
 
 public interface GestorBD {
 
@@ -48,8 +52,7 @@ public interface GestorBD {
 		else {
 
 			try (Connection connection = DriverManager.getConnection("jdbc:postgresql://localhost:5432/TP-DDS", "postgres", "postgres")) {
-	
-				System.out.println("Connected to PostgreSQL database!");
+
 				String nroLegajoConsulta = nroLegajo.toString();
 	
 				Statement statement;
@@ -79,14 +82,14 @@ public interface GestorBD {
 
 		try (Connection connection = DriverManager.getConnection("jdbc:postgresql://localhost:5432/TP-DDS", "postgres", "postgres")) {
 
-			System.out.println("Connected to PostgreSQL database!");
-
 			Statement statement;
 			statement = connection.createStatement();
+			// "SELECT last_value FROM seqNroTicket"
 			ResultSet resultSet = statement.executeQuery("SELECT nextval('seqNroTicket')");
 			resultSet.next();
 			
-			Integer nroTicket = Integer.valueOf(resultSet.getString("nextval"));
+			Integer nroTicket = resultSet.getInt("nextval");
+			// return nroTicket+1
 			return nroTicket;
 
 		} catch (SQLException e) {
@@ -153,7 +156,6 @@ public interface GestorBD {
 
 		try (Connection connection = DriverManager.getConnection("jdbc:postgresql://localhost:5432/TP-DDS", "postgres", "postgres")) {
 
-			System.out.println("Connected to PostgreSQL database!");
 			String nroLegajoConsulta = nroLegajo.toString();
 
 			Statement statement;
@@ -180,7 +182,6 @@ public interface GestorBD {
 
 		try (Connection connection = DriverManager.getConnection("jdbc:postgresql://localhost:5432/TP-DDS", "postgres", "postgres")) {
 
-				System.out.println("Connected to PostgreSQL database!");
 				String idClasificacionConsulta = clasificacion2.toString();
 
 				Statement statement;
@@ -205,8 +206,6 @@ public interface GestorBD {
 	public static EstadoTicket mapearEstadoTicket(String idEstado) {
 
 		try (Connection connection = DriverManager.getConnection("jdbc:postgresql://localhost:5432/TP-DDS", "postgres", "postgres")) {
-
-			System.out.println("Connected to PostgreSQL database!");
 
 			Statement statement;
 			statement = connection.createStatement();
@@ -253,8 +252,6 @@ public interface GestorBD {
 	public static EstadoIntervencion mapearEstadoIntervencion(String idEstadoIntervencion) {
 
 		try (Connection connection = DriverManager.getConnection("jdbc:postgresql://localhost:5432/TP-DDS", "postgres", "postgres")) {
-
-			System.out.println("Connected to PostgreSQL database!");
 
 			Statement statement;
 			statement = connection.createStatement();
@@ -316,15 +313,37 @@ public interface GestorBD {
 		else {
 			
 			try (Connection connection = DriverManager.getConnection("jdbc:postgresql://localhost:5432/TP-DDS", "postgres", "postgres")) {
-				System.out.println("Connected to PostgreSQL database!");
+				
 				String idGrupoConsulta = idGrupo.toString();
-				Statement statement;
-				statement = connection.createStatement();
-				ResultSet resultSet = statement.executeQuery("SELECT * FROM public.grupo_resolucion g WHERE g.idGrupo = " + idGrupoConsulta);
+				
+				// Informacion del grupo
+				
+				Statement infoGrupo;
+				infoGrupo = connection.createStatement();
+				ResultSet resultSet = infoGrupo.executeQuery("SELECT * FROM public.grupo_resolucion g WHERE g.idGrupo = " + idGrupoConsulta);
 				resultSet.next();
 				Integer idNuevoGrupo = Integer.valueOf(resultSet.getString("idGrupo"));
-	
-				GrupoDeResolucion grupoDeResolucion = new GrupoDeResolucion(idNuevoGrupo, resultSet.getString("nombre"), resultSet.getString("nivel"), resultSet.getString("descripcion"));
+				String nombreGrupo = resultSet.getString("nombre");
+				String nivelGrupo = resultSet.getString("nivel");
+				String descripcionGrupo = resultSet.getString("descripcion");
+				
+				// Intervenciones Asignadas
+				
+				Statement consultaIntervenciones;
+				consultaIntervenciones = connection.createStatement();
+				ResultSet resultSet2 = consultaIntervenciones.executeQuery("SELECT i.idIntervencion FROM public.intervencion i WHERE i.idGrupo = " + idGrupoConsulta);
+				
+				resultSet2.next();
+				List<Intervencion> intervencionesAsignadas = new ArrayList<Intervencion>();
+				while(resultSet2.next()) {
+					Integer idIntervencion = Integer.valueOf(resultSet2.getString("idIntervencion"));
+					Intervencion aux = mapearIntervencion(idIntervencion);
+					intervencionesAsignadas.add(aux);
+				}
+				
+				// Creacion de la instancia
+				
+				GrupoDeResolucion grupoDeResolucion = new GrupoDeResolucion(idNuevoGrupo, nombreGrupo, nivelGrupo, descripcionGrupo, intervencionesAsignadas);
 				System.out.println("Grupo: " + grupoDeResolucion.nombre + " mapeado desde BDD.");
 				gruposMapeados.add(grupoDeResolucion);
 				return grupoDeResolucion;
@@ -336,28 +355,172 @@ public interface GestorBD {
 		}
 	}
 
-		public static void guardarTicket (Ticket ticket, Soporte soporte) {
-			try (Connection connection = DriverManager.getConnection("jdbc:postgresql://localhost:5432/TP-DDS", "postgres", "postgres")) {
+	public static Intervencion mapearIntervencion(Integer idIntervencion) {
+		
+		try (Connection connection = DriverManager.getConnection("jdbc:postgresql://localhost:5432/TP-DDS", "postgres", "postgres")) {
 
-				System.out.println("Connected to PostgreSQL database! --> Guardar Ticket");
+			String idIntervencionConsulta = idIntervencion.toString();
 
-				String fechaApertura = formatFecha.format(ticket.fechaYHoraApertura);
-				String horaApertura = formatHora.format(ticket.fechaYHoraApertura);
+			// Informacion de la intervencion
+			
+			Statement statement;
+			statement = connection.createStatement();
+			ResultSet resultSet = statement.executeQuery("SELECT * FROM public.intervencion WHERE idIntervencion = "+ idIntervencionConsulta);
 
-				Statement statement1;
-				statement1 = connection.createStatement();
-				statement1.executeUpdate("INSERT INTO public.ticket VALUES (" + ticket.nroTicket + ", '" + ticket.descripcion + "', '-' , '" + horaApertura + "', '" + fechaApertura + "', " + ticket.cliente.nroLegajo + ", '" + ticket.estadoActual.idEstadoTicket + "', " + ticket.clasificacion.idClasificacion + ")");
+			resultSet.next();
 
-				String fechaDesdeHistorialET = formatFecha.format(ticket.historialesEstado.get(0).fechaDesde);
-
-				Statement statement2;
-				statement2 = connection.createStatement();
-				statement2.executeUpdate("INSERT INTO public.historial_estado_ticket VALUES (" + ticket.historialesEstado.get(0).idHistorialEstadoTic + ", '" + fechaDesdeHistorialET + "', null, " + ticket.nroTicket + ", '" + ticket.estadoActual.idEstadoTicket + "', " + soporte.nroLegajo + ")");
-
-
-			} catch (SQLException e) {
-				e.printStackTrace();
-				return;
+			Integer idInterv = resultSet.getInt("idIntervencion");
+			Date fechaAsignacion = resultSet.getDate("fechaAsignacion");
+			String idEstadoActual = resultSet.getString("idEstadoIntervencion");
+			EstadoIntervencion estadoActual = buscarEstadoIntervencion(idEstadoActual);
+			
+			// Historiales de estado de intervencion
+			
+			Statement consultaHistoriales;
+			consultaHistoriales = connection.createStatement();
+			ResultSet resultSet2 = consultaHistoriales.executeQuery("SELECT * FROM public.historial_estado_intervencion WHERE idIntervencion = "+ idIntervencionConsulta);
+			
+			resultSet2.next();
+			List<HistorialEstadoIntervencion> historiales = new ArrayList<HistorialEstadoIntervencion>();
+			while(resultSet2.next()) {
+				Integer idHistorialEstadoIntervencion = resultSet2.getInt("idHistorialEstadoIntervencion");
+				HistorialEstadoIntervencion aux = mapearHistorialEstadoIntervencion(idHistorialEstadoIntervencion);
+				historiales.add(aux);
 			}
+			
+			//Creacion de la intervencion
+			
+			Intervencion intervencion = new Intervencion(idInterv, resultSet.getString("observacions"), fechaAsignacion, null, estadoActual, historiales);
+			
+			return intervencion;
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return null;
+		}
+		
+	}
+
+	public static HistorialEstadoIntervencion mapearHistorialEstadoIntervencion(Integer idHistorialEstadoIntervencion) {
+		
+		try (Connection connection = DriverManager.getConnection("jdbc:postgresql://localhost:5432/TP-DDS", "postgres", "postgres")) {
+
+			String idHistorialConsulta = idHistorialEstadoIntervencion.toString();
+
+			Statement statement;
+			statement = connection.createStatement();
+			ResultSet resultSet = statement.executeQuery("SELECT * FROM public.historial_estado_intervencion WHERE idHistorialEstadoIntervencion = "+ idHistorialConsulta);
+
+			resultSet.next();
+
+			Integer idHistorial = resultSet.getInt("idHistorialEstadoIntervencion");
+			Date fechaDesde = resultSet.getDate("fechaDesde");
+			Date fechaHasta = resultSet.getDate("fechaHasta");
+			String idEstadoIntervencion = resultSet.getString("idEstadoIntervencion");
+			EstadoIntervencion estado = buscarEstadoIntervencion(idEstadoIntervencion);
+			Integer nroSoporte = resultSet.getInt("nroLegajoSoporte");
+			Soporte actor = mapearSoporte(nroSoporte);
+				
+			HistorialEstadoIntervencion aux = new HistorialEstadoIntervencion(idHistorial, fechaDesde, fechaHasta, actor, estado);
+				
+			return aux;
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return null;
 		}
 	}
+
+	public static EstadoIntervencion buscarEstadoIntervencion(String idEstadoIntervencion) {
+
+		if(idEstadoIntervencion.equalsIgnoreCase(Principal.asignada.getIdEstadoInt().name())) {
+			return Principal.asignada;
+		}
+		else if(idEstadoIntervencion.equalsIgnoreCase(Principal.activa.getIdEstadoInt().name())) {
+			return Principal.activa;
+		}
+		else if(idEstadoIntervencion.equalsIgnoreCase(Principal.cerrada.getIdEstadoInt().name())) {
+			return Principal.cerrada;
+		}
+		else if(idEstadoIntervencion.equalsIgnoreCase(Principal.espera.getIdEstadoInt().name())) {
+			return Principal.cerrada;
+		}
+		else {
+			return null;
+		}
+		
+	}
+	
+	public static EstadoTicket buscarEstadoTicket(String idEstadoTicket) {
+
+		if(idEstadoTicket.equalsIgnoreCase(Principal.abiertoMA.getIdEstadoTicket().name())) {
+			return Principal.abiertoMA;
+		}
+		else if(idEstadoTicket.equalsIgnoreCase(Principal.abiertoD.getIdEstadoTicket().name())) {
+			return Principal.abiertoD;
+		}
+		else if(idEstadoTicket.equalsIgnoreCase(Principal.solucionadoOK.getIdEstadoTicket().name())) {
+			return Principal.solucionadoOK;
+		}
+		else if(idEstadoTicket.equalsIgnoreCase(Principal.cerrado.getIdEstadoTicket().name())) {
+			return Principal.cerrado;
+		}
+		else {
+			return null;
+		}
+		
+	}
+
+	public static void guardarTicket (Ticket ticket, Soporte soporte) {
+		
+		try (Connection connection = DriverManager.getConnection("jdbc:postgresql://localhost:5432/TP-DDS", "postgres", "postgres")) {
+
+			System.out.println("Connected to PostgreSQL database! --> Guardar Ticket");
+
+			String fechaApertura = formatFecha.format(ticket.fechaYHoraApertura);
+			String horaApertura = formatHora.format(ticket.fechaYHoraApertura);
+			
+			Statement statement1;
+			statement1 = connection.createStatement();
+			statement1.executeUpdate("INSERT INTO public.ticket VALUES (" + ticket.nroTicket + ", '" + ticket.descripcion + "', '-' , '" + horaApertura + "', '" + fechaApertura + "', " + ticket.cliente.nroLegajo + ", '" + ticket.estadoActual.idEstadoTicket + "', " + ticket.clasificacion.idClasificacion + ")");
+
+			String fechaDesdeHistorialET = formatFecha.format(ticket.historialesEstado.get(0).fechaDesde);
+
+			Statement statement2;
+			statement2 = connection.createStatement();
+			statement2.executeUpdate("INSERT INTO public.historial_estado_ticket VALUES (" + ticket.historialesEstado.get(0).idHistorialEstadoTic + ", '" + fechaDesdeHistorialET + "', null, " + ticket.nroTicket + ", '" + ticket.estadoActual.idEstadoTicket + "', " + soporte.nroLegajo + ")");
+
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return;
+		}
+	}
+
+	public static void guardarIntervencion(Intervencion intervencion, Soporte soporte, Integer nroTicket) {
+		
+		try (Connection connection = DriverManager.getConnection("jdbc:postgresql://localhost:5432/TP-DDS", "postgres", "postgres")) {
+
+			System.out.println("Connected to PostgreSQL database! --> Guardar Intervencion");
+			
+			String fechaAsignacion = formatFecha.format(intervencion.fechaAsignacion);
+			
+			Statement statement1;
+			statement1 = connection.createStatement();
+			statement1.executeUpdate("INSERT INTO public.intervencion VALUES (" + intervencion.getIdIntervencion() + ", '" + intervencion.getObservaciones() + "', '" + fechaAsignacion + "', " + nroTicket + ", '" + intervencion.getEstadoIntervencionActual().getIdEstadoInt().name() + "', " + soporte.getGrupo().idGrupo + ")");
+
+			// Hacer un for para guardar todas las intervenciones que sufren cambios
+			HistorialEstadoIntervencion auxHistorial = intervencion.historialesEstado.get(0);
+			String fechaDesdeHistorialEI = formatFecha.format(auxHistorial.fechaDesde);
+
+			Statement statement2;
+			statement2 = connection.createStatement();
+			statement2.executeUpdate("INSERT INTO public.historial_estado_intervencion VALUES (" + auxHistorial.idHistorialEstadoInt + ", '" + fechaDesdeHistorialEI + "', null, " + intervencion.getIdIntervencion() + ", '" + intervencion.getEstadoIntervencionActual().idEstadoInt.name() + "', " + soporte.nroLegajo + ")");
+
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return;
+		}
+	}
+}

@@ -20,4 +20,13 @@ public class HistorialEstadoIntervencion {
 		this.actor = actor;
 		this.estado = Principal.activa;
 	}
+	
+	public HistorialEstadoIntervencion(Integer idHistorial, Date fechaDesde, Date fechaHasta, Soporte actor, EstadoIntervencion estado) {
+		this.idHistorialEstadoInt = idHistorial;
+		this.fechaDesde = fechaDesde;
+		this.fechaHasta = fechaHasta;
+		this.actor = actor;
+		this.estado = estado;
+	}
+	
 }

@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import usuarios.GrupoDeResolucion;
 import vistas.Principal;
 
 public class Intervencion {
@@ -13,20 +12,83 @@ public class Intervencion {
 	public String observaciones;
 	public Date fechaAsignacion;
 	public Date fechaFin;
-	public GrupoDeResolucion grupoAsignado;
 	public EstadoIntervencion estadoIntervencionActual;
 	public List<HistorialEstadoIntervencion> historialesEstado;
 	
-	public Intervencion(Integer idIntervencion, Date fechaAsignacion, GrupoDeResolucion grupo, HistorialEstadoIntervencion primerHistorial) {
+	// Creacion primer intervencion
+	
+	public Intervencion(Integer idIntervencion, Date fechaAsignacion, HistorialEstadoIntervencion primerHistorial) {
 		//ACTIVA
 		this.idIntervencion = idIntervencion;
 		this.observaciones = "Intervencion por creacion de ticket";
 		this.fechaAsignacion = fechaAsignacion;
 		this.fechaFin = null;
-		this.grupoAsignado = grupo;
 		this.estadoIntervencionActual = Principal.activa;
 		this.historialesEstado = new ArrayList<HistorialEstadoIntervencion>();
 		this.historialesEstado.add(primerHistorial);
 		
 	}
+	
+	// Para el mapeo de intervenciones
+	
+	public Intervencion(Integer idIntervencion, String observaciones, Date fechaAsignacion, Date fechaFin, EstadoIntervencion estadoActual, List<HistorialEstadoIntervencion> historiales) {
+		
+		this.idIntervencion = idIntervencion;
+		this.observaciones = observaciones;
+		this.fechaAsignacion = fechaAsignacion;
+		this.fechaFin = null;
+		this.estadoIntervencionActual = estadoActual;
+		this.historialesEstado = historiales;
+		
+	}
+
+	public Integer getIdIntervencion() {
+		return idIntervencion;
+	}
+
+	public void setIdIntervencion(Integer idIntervencion) {
+		this.idIntervencion = idIntervencion;
+	}
+
+	public String getObservaciones() {
+		return observaciones;
+	}
+
+	public void setObservaciones(String observaciones) {
+		this.observaciones = observaciones;
+	}
+
+	public Date getFechaAsignacion() {
+		return fechaAsignacion;
+	}
+
+	public void setFechaAsignacion(Date fechaAsignacion) {
+		this.fechaAsignacion = fechaAsignacion;
+	}
+
+	public Date getFechaFin() {
+		return fechaFin;
+	}
+
+	public void setFechaFin(Date fechaFin) {
+		this.fechaFin = fechaFin;
+	}
+
+	public EstadoIntervencion getEstadoIntervencionActual() {
+		return estadoIntervencionActual;
+	}
+
+	public void setEstadoIntervencionActual(EstadoIntervencion estadoIntervencionActual) {
+		this.estadoIntervencionActual = estadoIntervencionActual;
+	}
+
+	public List<HistorialEstadoIntervencion> getHistorialesEstado() {
+		return historialesEstado;
+	}
+
+	public void setHistorialesEstado(List<HistorialEstadoIntervencion> historialesEstado) {
+		this.historialesEstado = historialesEstado;
+	}
+	
+	
 }

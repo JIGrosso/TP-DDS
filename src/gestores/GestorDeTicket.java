@@ -17,7 +17,7 @@ public interface GestorDeTicket {
 		Cliente cliente = GestorBD.mapearCliente(nroLegajo);
 		Clasificacion clasificacion = GestorBD.mapearClasificacion(clasificacionS);
 
-		Ticket nuevoTicket = new Ticket(nroTicket, cliente, clasificacion, fechaCreacion, descripcion);
+		Ticket nuevoTicket = new Ticket(nroTicket, cliente, clasificacion, soporte.grupo, fechaCreacion, descripcion);
 
 		HistorialEstadoTicket primerHistorialEstado = new HistorialEstadoTicket(soporte, fechaCreacion);
 		HistorialClasificacionTicket historialClasificacion = new HistorialClasificacionTicket(clasificacion);
@@ -32,6 +32,8 @@ public interface GestorDeTicket {
 		System.out.println("Estado Actual: " + nuevoTicket.estadoActual.nombre);
 
 		GestorBD.guardarTicket(nuevoTicket, soporte);
+		GestorBD.guardarIntervencion(nuevaIntervencion, soporte, nuevoTicket.nroTicket);
+		// GuardarGrupo pq se actualiza su lista de intervenciones
 
 	}
 }
