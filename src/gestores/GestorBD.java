@@ -266,7 +266,6 @@ public interface GestorBD {
 				resultado.add(clasificacion);
 			}
 			
-			resultSet.close();
 			connection.close();
 			return resultado;
 			
@@ -424,7 +423,6 @@ public interface GestorBD {
 					Intervencion aux = mapearIntervencion(auxIds.get(i));
 					intervencionesAsignadas.add(aux);
 				}
-				
 				
 				// Creacion de la instancia
 				

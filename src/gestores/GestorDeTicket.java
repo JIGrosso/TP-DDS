@@ -26,7 +26,8 @@ public interface GestorDeTicket {
 		System.out.println("Historial Estado Ticket: " + nuevoTicket.historialesEstado.get(0).estado.nombre);
 
 		Intervencion nuevaIntervencion = GestorDeIntervencion.crearIntervencion(soporte, fechaCreacion);
-
+		nuevoTicket.intervenciones.add(nuevaIntervencion);
+		
 		System.out.println("Ticket creado: Nro Ticket: " + nuevoTicket.nroTicket);
 		System.out.println("Estado Actual: " + nuevoTicket.estadoActual.nombre);
 
