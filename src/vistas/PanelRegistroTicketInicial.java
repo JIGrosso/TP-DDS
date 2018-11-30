@@ -12,13 +12,17 @@ import java.util.Date;
 import javax.swing.JPanel;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
+import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
+import javax.swing.SwingUtilities;
 
 import gestores.GestorBD;
 import gestores.GestorDeTicket;
+import produccion.Clasificacion;
+import produccion.Ticket;
 
 public class PanelRegistroTicketInicial extends JPanel implements GestorBD{
 
@@ -105,9 +109,8 @@ public class PanelRegistroTicketInicial extends JPanel implements GestorBD{
 		
 		// Fila 6
 		
-		String[] clasificaciones = {"Software"};
-		
-		cmbClasificacion = new JComboBox(clasificaciones);
+		Clasificacion[] auxClasificaciones = Principal.clasificaciones.toArray(new Clasificacion[Principal.clasificaciones.size()]);
+		cmbClasificacion = new JComboBox(auxClasificaciones);
 		gridConst.gridy = 6;
 		gridConst.insets = new Insets(5, 5, 10, 0);
 		this.add(cmbClasificacion, gridConst);
@@ -124,7 +127,7 @@ public class PanelRegistroTicketInicial extends JPanel implements GestorBD{
 		
 		lblFechaApertura = new JLabel("Fecha Apertura: ");
 		gridConst.gridy = 7;
-		gridConst.insets = new Insets(5, 5, 5, 5);
+		gridConst.insets = new Insets(5, 5, 5, 0);
 		this.add(lblFechaApertura, gridConst);
 		
 		// Fila 8
@@ -133,7 +136,7 @@ public class PanelRegistroTicketInicial extends JPanel implements GestorBD{
 		txtFechaApertura.setColumns(10);
 		txtFechaApertura.setEditable(false);
 		gridConst.gridy = 8;
-		gridConst.insets = new Insets(5, 5, 10, 5);
+		gridConst.insets = new Insets(5, 5, 10, 0);
 		this.add(txtFechaApertura, gridConst);
 		
 		// Fila 9
@@ -180,29 +183,45 @@ public class PanelRegistroTicketInicial extends JPanel implements GestorBD{
 			if(noVacios) {
 				Integer nroLegajo = Integer.valueOf(txtNroLegajo.getText());
 				String descripcion = txtDescripcion.getText();
-				String clasificacion = cmbClasificacion.getSelectedItem().toString();
-				GestorDeTicket.crearTicket(Principal.usuarioIniciado, nroTicket, nroLegajo, fechaActual, clasificacion, descripcion);
+				Clasificacion clasificacion = (Clasificacion) cmbClasificacion.getSelectedItem();
+				Ticket nuevoTicket = GestorDeTicket.crearTicket(Principal.usuarioIniciado, nroTicket, nroLegajo, fechaActual, clasificacion, descripcion);
+				avanzar(nuevoTicket);
 			}
 			else {
 				JOptionPane.showMessageDialog(null,"Ningún campo puede ser vacío", "Error", JOptionPane.ERROR_MESSAGE);
 			}
 		});
 		gridConst.anchor = GridBagConstraints.LINE_START;
-		gridConst.gridy = 9;
+		gridConst.gridy = 11;
 		gridConst.gridx = 2;
 		gridConst.gridwidth = 1;
 		gridConst.gridheight = 1;
-		gridConst.insets = new Insets(5, 20, 20, 5);
+		gridConst.insets = new Insets(5, 20, 5, 5);
 		this.add(btnConfirmar, gridConst);
 		
 		btnCancelar = new JButton("Cancelar");
+		btnCancelar.addActionListener(e -> {
+			JFrame frame = (JFrame) SwingUtilities.getAncestorOfClass(JFrame.class, this);
+			frame.dispose();
+		});
 		gridConst.anchor = GridBagConstraints.LINE_END;
 		gridConst.gridx = 1;
-		gridConst.gridy = 9;
-		gridConst.insets = new Insets(5, 20, 20, 5);
+		gridConst.insets = new Insets(5, 20, 5, 5);
 		this.add(btnCancelar, gridConst);
 				
 	}
+
+	private void avanzar(Ticket nuevoTicket) {
+		
+		JFrame frame = (JFrame) SwingUtilities.getAncestorOfClass(JFrame.class, this);
+		this.setVisible(false);
+
+		PanelTicketRegistrado proximaPantalla = new PanelTicketRegistrado(nuevoTicket);
+		frame.setContentPane(proximaPantalla);
+		frame.setTitle("Usuario: "+Principal.usuarioIniciado.getNombre());
+		
+	}
+
 
 	private boolean validarCamposNoVacios(String nroLegajo, String clasificacion, String descripcion) {
 		if(nroLegajo.isEmpty() || clasificacion.toString().isEmpty() || descripcion.isEmpty()) {

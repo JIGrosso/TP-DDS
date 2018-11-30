@@ -27,14 +27,13 @@ public class Principal implements GestorBD{
 	public static EstadoIntervencion espera;
 	public static EstadoIntervencion cerrada;
 	
-	public static ArrayList<Clasificacion> clasificacion;
+	public static ArrayList<Clasificacion> clasificaciones;
 
 	public static void main(String[] args) {
 		
 		cargarEstados();
 		
-		Integer nroLegajo = 23795;
-		usuarioIniciado = GestorBD.mapearSoporte(nroLegajo);
+		cargarClasificaciones();
 		
 		
 		javax.swing.SwingUtilities.invokeLater(new Runnable() {
@@ -44,6 +43,7 @@ public class Principal implements GestorBD{
 		});
 	}
 	
+
 	private static void createAndShowGUI() {
 		
 		JFrame frame = new JFrame();
@@ -51,13 +51,10 @@ public class Principal implements GestorBD{
 		frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 		frame.setVisible(true);
 		frame.setSize(500, 500);
-		frame.setTitle("Registro Ticket");
+		frame.setTitle("Inicio de Sesión");
 		
-//		PanelInicio inicio = new PanelInicio();
-//		frame.setContentPane(inicio);
-		
-		PanelRegistroTicketInicial registro = new PanelRegistroTicketInicial();
-		frame.setContentPane(registro);
+		PanelInicio inicio = new PanelInicio();
+		frame.setContentPane(inicio);
 		
 		Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
         frame.setLocation(dim.width/2- frame.getSize().width/2, dim.height/2- frame.getSize().height/2);
@@ -74,5 +71,11 @@ public class Principal implements GestorBD{
 		activa = GestorBD.mapearEstadoIntervencion("ACTIVA");
 		espera = GestorBD.mapearEstadoIntervencion("ESPERA");
 		cerrada = GestorBD.mapearEstadoIntervencion("CERRADA");
+	}
+	
+	public static void cargarClasificaciones() {
+		
+		clasificaciones = GestorBD.mapearClasificaciones();
+		
 	}
 }

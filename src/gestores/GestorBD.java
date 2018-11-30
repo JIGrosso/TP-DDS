@@ -33,7 +33,29 @@ public interface GestorBD {
 	List<GrupoDeResolucion> gruposMapeados = new ArrayList<GrupoDeResolucion>();
 	List<Soporte> soportesMapeados = new ArrayList<Soporte>();
 
+	
+	
+	public static boolean validarSoporte(Integer nroLegajo, String password) {
+		
+		try (Connection connection = DriverManager.getConnection("jdbc:postgresql://localhost:5432/TP-DDS", "postgres", "postgres")) {
 
+			Statement statement;
+			statement = connection.createStatement();
+			ResultSet resultSet = statement.executeQuery("SELECT * FROM soporte WHERE nroLegajo = " + nroLegajo +" AND contrasenia = '" + password + "'");
+			
+			if(!resultSet.next()) {
+				return false;
+			}
+			else {
+				return true;
+			}
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return false;
+	}
+	
 	public static Soporte mapearSoporte(Integer nroLegajo) {
 		
 		Soporte nuevoSoporte = null;
@@ -84,12 +106,11 @@ public interface GestorBD {
 
 			Statement statement;
 			statement = connection.createStatement();
-			// "SELECT last_value FROM seqNroTicket"
-			ResultSet resultSet = statement.executeQuery("SELECT nextval('seqNroTicket')");
+			ResultSet resultSet = statement.executeQuery("SELECT last_value FROM seqNroTicket");
 			resultSet.next();
 			
-			Integer nroTicket = resultSet.getInt("nextval");
-			// return nroTicket+1
+			Integer nroTicket = resultSet.getInt("last_value");
+			
 			return nroTicket;
 
 		} catch (SQLException e) {
@@ -104,10 +125,13 @@ public interface GestorBD {
 
 			Statement statement;
 			statement = connection.createStatement();
-			ResultSet resultSet = statement.executeQuery("SELECT nextval('seqIntervencion')");
+			ResultSet resultSet = statement.executeQuery("SELECT last_value FROM seqIntervencion");
 			resultSet.next();
-
-			Integer idIntervencion = Integer.valueOf(resultSet.getString("nextval"));
+			
+			Integer idIntervencion = resultSet.getInt("last_value");
+			
+			statement.execute("SELECT nextval('seqIntervencion')");
+			
 			return idIntervencion;
 
 		} catch (SQLException e) {
@@ -122,10 +146,13 @@ public interface GestorBD {
 
 			Statement statement;
 			statement = connection.createStatement();
-			ResultSet resultSet = statement.executeQuery("SELECT nextval('seqHistorialEstadoTicket')");
+			ResultSet resultSet = statement.executeQuery("SELECT last_value FROM seqHistorialEstadoTicket");
 			resultSet.next();
 
-			Integer idHistorial = Integer.valueOf(resultSet.getString("nextval"));
+			Integer idHistorial = resultSet.getInt("last_value");
+			
+			statement.execute("SELECT nextval('seqHistorialEstadoTicket')");
+			
 			return idHistorial;
 
 		} catch (SQLException e) {
@@ -140,11 +167,35 @@ public interface GestorBD {
 
 			Statement statement;
 			statement = connection.createStatement();
-			ResultSet resultSet = statement.executeQuery("SELECT nextval('seqHistorialEstadoIntervencion')");
+			ResultSet resultSet = statement.executeQuery("SELECT last_value FROM seqHistorialEstadoIntervencion");
 			resultSet.next();
 
-			Integer idHistorialI = Integer.valueOf(resultSet.getString("nextval"));
-			return idHistorialI;
+			Integer idHistorialEI = resultSet.getInt("last_value");
+			
+			statement.execute("SELECT nextval('seqHistorialEstadoIntervencion')");
+			
+			return idHistorialEI;
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
+	
+	public static Integer nroNuevoHistorialC() {
+
+		try (Connection connection = DriverManager.getConnection("jdbc:postgresql://localhost:5432/TP-DDS", "postgres", "postgres")) {
+
+			Statement statement;
+			statement = connection.createStatement();
+			ResultSet resultSet = statement.executeQuery("SELECT last_value FROM seqHistorialClasificacion");
+			resultSet.next();
+
+			Integer idHistorialC = resultSet.getInt("last_value");
+			
+			statement.execute("SELECT nextval('seqHistorialClasificacion')");
+			
+			return idHistorialC;
 
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -178,29 +229,33 @@ public interface GestorBD {
 
 	}
 
-	public static Clasificacion mapearClasificacion(String clasificacion2) {
-
+	// OJO A LA HORA DE NECESITAR CLASIFICACIONES PQ ESTAN EN UNA VARIABLE GLOBAL
+	
+	public static ArrayList<Clasificacion> mapearClasificaciones() {
+		
 		try (Connection connection = DriverManager.getConnection("jdbc:postgresql://localhost:5432/TP-DDS", "postgres", "postgres")) {
 
-				String idClasificacionConsulta = clasificacion2.toString();
+			Statement statement;
+			statement = connection.createStatement();
+			ResultSet resultSet = statement.executeQuery("SELECT * FROM public.clasificacion");
 
-				Statement statement;
-				statement = connection.createStatement();
-				ResultSet resultSet = statement.executeQuery("SELECT * FROM public.clasificacion WHERE nombre = " + "'" + idClasificacionConsulta + "'");
+			ArrayList<Clasificacion> resultado = new ArrayList<Clasificacion>();
 
-				resultSet.next();
-				Integer idClas = Integer.valueOf(resultSet.getString("idClasificacion"));
+			while(resultSet.next()) {
+				Integer idClasificacion = resultSet.getInt("idClasificacion");
 				Integer nroLegajoCreador = Integer.valueOf(resultSet.getString("nroLegajoSoporte"));
 				Soporte soporte = mapearSoporte(nroLegajoCreador);
-				Clasificacion clasificacion = new Clasificacion (idClas, resultSet.getString("nombre"), resultSet.getString("descripcionAlcance"), soporte);
-
-				return clasificacion;
-
-			} catch (SQLException e) {
-				e.printStackTrace();
-				return null;
+				Clasificacion clasificacion = new Clasificacion (idClasificacion, resultSet.getString("nombre"), resultSet.getString("descripcionAlcance"), soporte);
+				resultado.add(clasificacion);
 			}
-
+			
+			return resultado;
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		return null;
 	}
 
 	public static EstadoTicket mapearEstadoTicket(String idEstado) {
@@ -332,8 +387,7 @@ public interface GestorBD {
 				Statement consultaIntervenciones;
 				consultaIntervenciones = connection.createStatement();
 				ResultSet resultSet2 = consultaIntervenciones.executeQuery("SELECT i.idIntervencion FROM public.intervencion i WHERE i.idGrupo = " + idGrupoConsulta);
-				
-				resultSet2.next();
+
 				List<Intervencion> intervencionesAsignadas = new ArrayList<Intervencion>();
 				while(resultSet2.next()) {
 					Integer idIntervencion = Integer.valueOf(resultSet2.getString("idIntervencion"));
@@ -379,8 +433,7 @@ public interface GestorBD {
 			Statement consultaHistoriales;
 			consultaHistoriales = connection.createStatement();
 			ResultSet resultSet2 = consultaHistoriales.executeQuery("SELECT * FROM public.historial_estado_intervencion WHERE idIntervencion = "+ idIntervencionConsulta);
-			
-			resultSet2.next();
+
 			List<HistorialEstadoIntervencion> historiales = new ArrayList<HistorialEstadoIntervencion>();
 			while(resultSet2.next()) {
 				Integer idHistorialEstadoIntervencion = resultSet2.getInt("idHistorialEstadoIntervencion");
@@ -482,13 +535,23 @@ public interface GestorBD {
 			
 			Statement statement1;
 			statement1 = connection.createStatement();
-			statement1.executeUpdate("INSERT INTO public.ticket VALUES (" + ticket.nroTicket + ", '" + ticket.descripcion + "', '-' , '" + horaApertura + "', '" + fechaApertura + "', " + ticket.cliente.nroLegajo + ", '" + ticket.estadoActual.idEstadoTicket + "', " + ticket.clasificacion.idClasificacion + ")");
+			statement1.executeUpdate("INSERT INTO public.ticket VALUES (" + ticket.nroTicket + ", '" + ticket.descripcion + "', '-' , '" + horaApertura + "', '" + fechaApertura + "', " + ticket.cliente.nroLegajo + ", '" + ticket.estadoActual.idEstadoTicket + "', " + ticket.clasificacion.idClasificacion + ")" );
 
 			String fechaDesdeHistorialET = formatFecha.format(ticket.historialesEstado.get(0).fechaDesde);
 
 			Statement statement2;
 			statement2 = connection.createStatement();
-			statement2.executeUpdate("INSERT INTO public.historial_estado_ticket VALUES (" + ticket.historialesEstado.get(0).idHistorialEstadoTic + ", '" + fechaDesdeHistorialET + "', null, " + ticket.nroTicket + ", '" + ticket.estadoActual.idEstadoTicket + "', " + soporte.nroLegajo + ")");
+			statement2.executeUpdate("INSERT INTO public.historial_estado_ticket VALUES (" + ticket.historialesEstado.get(0).idHistorialEstadoTic + ", '" + fechaDesdeHistorialET + "', null, " + ticket.nroTicket + ", '" + ticket.estadoActual.idEstadoTicket + "', " + soporte.nroLegajo + ")" );
+			
+			String fechaDesdeHistorialC = formatFecha.format(ticket.historialesClasificacion.get(0).fechaDesde);
+			
+			Statement statement3;
+			statement3 = connection.createStatement();
+			statement3.executeUpdate("INSERT INTO public.historial_clasificacion_ticket VALUES (" + ticket.historialesClasificacion.get(0).idHistorialClasificacion + ", '" + fechaDesdeHistorialC + "', null, " + ticket.clasificacion.getIdClasificacion() + ", " + ticket.nroTicket + ")" );
+			
+			Statement statement4;
+			statement4 = connection.createStatement();
+			statement4.execute("SELECT nextval('seqNroTicket')");
 
 
 		} catch (SQLException e) {
@@ -512,7 +575,7 @@ public interface GestorBD {
 			// Hacer un for para guardar todas las intervenciones que sufren cambios
 			HistorialEstadoIntervencion auxHistorial = intervencion.historialesEstado.get(0);
 			String fechaDesdeHistorialEI = formatFecha.format(auxHistorial.fechaDesde);
-
+			
 			Statement statement2;
 			statement2 = connection.createStatement();
 			statement2.executeUpdate("INSERT INTO public.historial_estado_intervencion VALUES (" + auxHistorial.idHistorialEstadoInt + ", '" + fechaDesdeHistorialEI + "', null, " + intervencion.getIdIntervencion() + ", '" + intervencion.getEstadoIntervencionActual().idEstadoInt.name() + "', " + soporte.nroLegajo + ")");

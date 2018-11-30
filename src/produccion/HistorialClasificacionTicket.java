@@ -2,14 +2,18 @@ package produccion;
 
 import java.util.Date;
 
+import gestores.GestorBD;
+
 public class HistorialClasificacionTicket {
 
+	public Integer idHistorialClasificacion;
 	public Date fechaDesde;
 	public Date fechaHasta;
 	public Clasificacion clasificacion;
 	
-	public HistorialClasificacionTicket(Clasificacion clasificacion) {
-		this.fechaDesde = new Date();
+	public HistorialClasificacionTicket(Clasificacion clasificacion, Date fechaCreacion) {
+		this.idHistorialClasificacion = GestorBD.nroNuevoHistorialC();
+		this.fechaDesde = fechaCreacion;
 		this.clasificacion = clasificacion;
 	}
 	

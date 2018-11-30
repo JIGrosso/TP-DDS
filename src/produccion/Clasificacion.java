@@ -47,6 +47,9 @@ public class Clasificacion {
 		this.creador = creador;
 	}
 	
+	public String toString() {
+		return this.nombre;
+	}
 
 
 }

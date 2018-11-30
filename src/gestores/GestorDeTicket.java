@@ -12,15 +12,14 @@ import usuarios.Soporte;
 
 public interface GestorDeTicket {
 
-	public static void crearTicket(Soporte soporte, Integer nroTicket, Integer nroLegajo, Date fechaCreacion, String clasificacionS, String descripcion){
+	public static Ticket crearTicket(Soporte soporte, Integer nroTicket, Integer nroLegajo, Date fechaCreacion, Clasificacion clasificacion, String descripcion){
 
 		Cliente cliente = GestorBD.mapearCliente(nroLegajo);
-		Clasificacion clasificacion = GestorBD.mapearClasificacion(clasificacionS);
 
 		Ticket nuevoTicket = new Ticket(nroTicket, cliente, clasificacion, soporte.grupo, fechaCreacion, descripcion);
 
 		HistorialEstadoTicket primerHistorialEstado = new HistorialEstadoTicket(soporte, fechaCreacion);
-		HistorialClasificacionTicket historialClasificacion = new HistorialClasificacionTicket(clasificacion);
+		HistorialClasificacionTicket historialClasificacion = new HistorialClasificacionTicket(clasificacion, fechaCreacion);
 		nuevoTicket.addHistorialEstadoTicket(primerHistorialEstado);
 		nuevoTicket.addHistorialClasificacionTicket(historialClasificacion);
 
@@ -32,8 +31,10 @@ public interface GestorDeTicket {
 		System.out.println("Estado Actual: " + nuevoTicket.estadoActual.nombre);
 
 		GestorBD.guardarTicket(nuevoTicket, soporte);
-		GestorBD.guardarIntervencion(nuevaIntervencion, soporte, nuevoTicket.nroTicket);
+		GestorBD.guardarIntervencion(nuevaIntervencion, soporte, nroTicket);
 		// GuardarGrupo pq se actualiza su lista de intervenciones
+		
+		return nuevoTicket;
 
 	}
 }
