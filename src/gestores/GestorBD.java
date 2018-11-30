@@ -28,13 +28,6 @@ public interface GestorBD {
 	SimpleDateFormat formatFecha = new SimpleDateFormat("yyyy-MM-dd");
 	SimpleDateFormat formatHora = new SimpleDateFormat("HH:mm:ss.SSS");
 
-	//Creación de listas para evitar crear duplicados de Objetos GrupoDeResolucion y Soporte desde la BDD
-	
-	List<GrupoDeResolucion> gruposMapeados = new ArrayList<GrupoDeResolucion>();
-	List<Soporte> soportesMapeados = new ArrayList<Soporte>();
-
-	
-	
 	public static boolean validarSoporte(Integer nroLegajo, String password) {
 		
 		try (Connection connection = DriverManager.getConnection("jdbc:postgresql://localhost:5432/TP-DDS", "postgres", "postgres")) {
@@ -44,15 +37,20 @@ public interface GestorBD {
 			ResultSet resultSet = statement.executeQuery("SELECT * FROM soporte WHERE nroLegajo = " + nroLegajo +" AND contrasenia = '" + password + "'");
 			
 			if(!resultSet.next()) {
+				resultSet.close();
+				connection.close();
 				return false;
 			}
 			else {
+				resultSet.close();
+				connection.close();
 				return true;
 			}
 
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
+		
 		return false;
 	}
 	
@@ -60,9 +58,9 @@ public interface GestorBD {
 		
 		Soporte nuevoSoporte = null;
 		
-		for (int i=0; i < soportesMapeados.size(); i++) {
-			if (soportesMapeados.get(i).nroLegajo.equals(nroLegajo)) {
-				nuevoSoporte = soportesMapeados.get(i);
+		for (int i=0; i < Principal.soportesMapeados.size(); i++) {
+			if (Principal.soportesMapeados.get(i).nroLegajo.equals(nroLegajo)) {
+				nuevoSoporte = Principal.soportesMapeados.get(i);
 			}
 		}
 				
@@ -86,10 +84,17 @@ public interface GestorBD {
 				Integer dni = Integer.valueOf(resultSet.getString("dni"));
 				String telefono = resultSet.getString("telefono");
 				Integer idGrupo = Integer.valueOf(resultSet.getString("idGrupo"));
+				
+				connection.close();
+				
 				GrupoDeResolucion grupo = mapearGrupoDeResolucion(idGrupo);
 				Soporte soporte = new Soporte(nroLeg, "contrasenia", resultSet.getString("nombre"), dni, telefono, resultSet.getString("email"), grupo);
-				soportesMapeados.add(soporte);
+				Principal.soportesMapeados.add(soporte);
+				
 				System.out.println("Soporte: " + soporte.nroLegajo + " mapeado desde BDD.");
+				
+				
+				
 				return soporte;
 	
 			} catch (SQLException e) {
@@ -111,6 +116,8 @@ public interface GestorBD {
 			
 			Integer nroTicket = resultSet.getInt("last_value");
 			
+			resultSet.close();
+			connection.close();
 			return nroTicket;
 
 		} catch (SQLException e) {
@@ -132,6 +139,8 @@ public interface GestorBD {
 			
 			statement.execute("SELECT nextval('seqIntervencion')");
 			
+			resultSet.close();
+			connection.close();
 			return idIntervencion;
 
 		} catch (SQLException e) {
@@ -153,6 +162,8 @@ public interface GestorBD {
 			
 			statement.execute("SELECT nextval('seqHistorialEstadoTicket')");
 			
+			resultSet.close();
+			connection.close();
 			return idHistorial;
 
 		} catch (SQLException e) {
@@ -174,6 +185,8 @@ public interface GestorBD {
 			
 			statement.execute("SELECT nextval('seqHistorialEstadoIntervencion')");
 			
+			resultSet.close();
+			connection.close();
 			return idHistorialEI;
 
 		} catch (SQLException e) {
@@ -195,6 +208,8 @@ public interface GestorBD {
 			
 			statement.execute("SELECT nextval('seqHistorialClasificacion')");
 			
+			resultSet.close();
+			connection.close();
 			return idHistorialC;
 
 		} catch (SQLException e) {
@@ -220,6 +235,8 @@ public interface GestorBD {
 			String telefono = resultSet.getString("telefono");
 			Cliente cliente = new Cliente(resultSet.getString("nombre"), dni, resultSet.getString("email"), telefono, nroLeg);
 
+			resultSet.close();
+			connection.close();
 			return cliente;
 
 		} catch (SQLException e) {
@@ -243,12 +260,14 @@ public interface GestorBD {
 
 			while(resultSet.next()) {
 				Integer idClasificacion = resultSet.getInt("idClasificacion");
-				Integer nroLegajoCreador = Integer.valueOf(resultSet.getString("nroLegajoSoporte"));
+				Integer nroLegajoCreador = resultSet.getInt("nroLegajoSoporte");
 				Soporte soporte = mapearSoporte(nroLegajoCreador);
 				Clasificacion clasificacion = new Clasificacion (idClasificacion, resultSet.getString("nombre"), resultSet.getString("descripcionAlcance"), soporte);
 				resultado.add(clasificacion);
 			}
 			
+			resultSet.close();
+			connection.close();
 			return resultado;
 			
 		} catch (SQLException e) {
@@ -296,6 +315,8 @@ public interface GestorBD {
 				estadoTicket.setDescripcion(resultSet.getString("descripcion"));
 			}
 
+			resultSet.close();
+			connection.close();
 			return estadoTicket;
 
 		} catch (SQLException e) {
@@ -341,7 +362,9 @@ public interface GestorBD {
 				estadoIntervencion.setNombre(resultSet.getString("nombre"));
 				estadoIntervencion.setDescripcion(resultSet.getString("descripcion"));
 			}
-
+			
+			resultSet.close();
+			connection.close();
 			return estadoIntervencion;
 
 		} catch (SQLException e) {
@@ -355,9 +378,9 @@ public interface GestorBD {
 		
 		GrupoDeResolucion nuevoGrupo = null;
 		
-		for (int i=0; i < gruposMapeados.size(); i++) {
-			if (gruposMapeados.get(i).idGrupo == idGrupo) {
-				nuevoGrupo = gruposMapeados.get(i);
+		for (int i=0; i < Principal.gruposMapeados.size(); i++) {
+			if (Principal.gruposMapeados.get(i).idGrupo == idGrupo) {
+				nuevoGrupo = Principal.gruposMapeados.get(i);
 			}
 		}
 		if (nuevoGrupo != null) {
@@ -377,7 +400,7 @@ public interface GestorBD {
 				infoGrupo = connection.createStatement();
 				ResultSet resultSet = infoGrupo.executeQuery("SELECT * FROM public.grupo_resolucion g WHERE g.idGrupo = " + idGrupoConsulta);
 				resultSet.next();
-				Integer idNuevoGrupo = Integer.valueOf(resultSet.getString("idGrupo"));
+				Integer idNuevoGrupo = resultSet.getInt("idGrupo");
 				String nombreGrupo = resultSet.getString("nombre");
 				String nivelGrupo = resultSet.getString("nivel");
 				String descripcionGrupo = resultSet.getString("descripcion");
@@ -388,24 +411,34 @@ public interface GestorBD {
 				consultaIntervenciones = connection.createStatement();
 				ResultSet resultSet2 = consultaIntervenciones.executeQuery("SELECT i.idIntervencion FROM public.intervencion i WHERE i.idGrupo = " + idGrupoConsulta);
 
+				List<Integer> auxIds = new ArrayList<Integer>();
 				List<Intervencion> intervencionesAsignadas = new ArrayList<Intervencion>();
 				while(resultSet2.next()) {
 					Integer idIntervencion = Integer.valueOf(resultSet2.getString("idIntervencion"));
-					Intervencion aux = mapearIntervencion(idIntervencion);
+					auxIds.add(idIntervencion);
+				}
+				
+				connection.close();
+
+				for(int i = 0; i < auxIds.size()-1; i++) {
+					Intervencion aux = mapearIntervencion(auxIds.get(i));
 					intervencionesAsignadas.add(aux);
 				}
+				
 				
 				// Creacion de la instancia
 				
 				GrupoDeResolucion grupoDeResolucion = new GrupoDeResolucion(idNuevoGrupo, nombreGrupo, nivelGrupo, descripcionGrupo, intervencionesAsignadas);
 				System.out.println("Grupo: " + grupoDeResolucion.nombre + " mapeado desde BDD.");
-				gruposMapeados.add(grupoDeResolucion);
+				Principal.gruposMapeados.add(grupoDeResolucion);
+		
+				
 				return grupoDeResolucion;
 			}
 			catch (SQLException e) {
 				e.printStackTrace();
 				return null;
-			}
+			}	
 		}
 	}
 
@@ -434,16 +467,26 @@ public interface GestorBD {
 			consultaHistoriales = connection.createStatement();
 			ResultSet resultSet2 = consultaHistoriales.executeQuery("SELECT * FROM public.historial_estado_intervencion WHERE idIntervencion = "+ idIntervencionConsulta);
 
-			List<HistorialEstadoIntervencion> historiales = new ArrayList<HistorialEstadoIntervencion>();
+			List<Integer> auxIds = new ArrayList<Integer>();
 			while(resultSet2.next()) {
 				Integer idHistorialEstadoIntervencion = resultSet2.getInt("idHistorialEstadoIntervencion");
-				HistorialEstadoIntervencion aux = mapearHistorialEstadoIntervencion(idHistorialEstadoIntervencion);
+				auxIds.add(idHistorialEstadoIntervencion);
+				
+			}
+			
+			connection.close();
+			
+			List<HistorialEstadoIntervencion> historiales = new ArrayList<HistorialEstadoIntervencion>();
+
+			for(int i = 0; i < auxIds.size()-1; i++) {
+				HistorialEstadoIntervencion aux = mapearHistorialEstadoIntervencion(auxIds.get(i));
 				historiales.add(aux);
 			}
 			
 			//Creacion de la intervencion
 			
 			Intervencion intervencion = new Intervencion(idInterv, resultSet.getString("observacions"), fechaAsignacion, null, estadoActual, historiales);
+			
 			
 			return intervencion;
 
@@ -475,7 +518,9 @@ public interface GestorBD {
 			Soporte actor = mapearSoporte(nroSoporte);
 				
 			HistorialEstadoIntervencion aux = new HistorialEstadoIntervencion(idHistorial, fechaDesde, fechaHasta, actor, estado);
-				
+			
+			resultSet.close();
+			connection.close();
 			return aux;
 
 		} catch (SQLException e) {
@@ -552,7 +597,8 @@ public interface GestorBD {
 			Statement statement4;
 			statement4 = connection.createStatement();
 			statement4.execute("SELECT nextval('seqNroTicket')");
-
+			
+			connection.close();
 
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -580,6 +626,7 @@ public interface GestorBD {
 			statement2 = connection.createStatement();
 			statement2.executeUpdate("INSERT INTO public.historial_estado_intervencion VALUES (" + auxHistorial.idHistorialEstadoInt + ", '" + fechaDesdeHistorialEI + "', null, " + intervencion.getIdIntervencion() + ", '" + intervencion.getEstadoIntervencionActual().idEstadoInt.name() + "', " + soporte.nroLegajo + ")");
 
+			connection.close();
 
 		} catch (SQLException e) {
 			e.printStackTrace();

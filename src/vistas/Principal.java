@@ -3,6 +3,7 @@ package vistas;
 import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.JFrame;
 import javax.swing.WindowConstants;
@@ -10,6 +11,7 @@ import javax.swing.WindowConstants;
 import gestores.GestorBD;
 import produccion.EstadoIntervencion;
 import produccion.EstadoTicket;
+import usuarios.GrupoDeResolucion;
 import usuarios.Soporte;
 import produccion.Clasificacion;
 
@@ -28,6 +30,9 @@ public class Principal implements GestorBD{
 	public static EstadoIntervencion cerrada;
 	
 	public static ArrayList<Clasificacion> clasificaciones;
+	
+	public static List<GrupoDeResolucion> gruposMapeados = new ArrayList<GrupoDeResolucion>();
+	public static List<Soporte> soportesMapeados = new ArrayList<Soporte>();
 
 	public static void main(String[] args) {
 		
@@ -58,6 +63,7 @@ public class Principal implements GestorBD{
 		
 		Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
         frame.setLocation(dim.width/2- frame.getSize().width/2, dim.height/2- frame.getSize().height/2);
+        
 	}
 	
 	public static void cargarEstados() {
