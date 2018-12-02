@@ -14,10 +14,7 @@ import gestores.GestorBD;
 import gestores.GestorDeClasificacion;
 import gestores.GestorDeIntervencion;
 import gestores.GestorDeTicket;
-import produccion.EstadoIntervencion;
-import produccion.EstadoTicket;
 import usuarios.Soporte;
-import produccion.Clasificacion;
 
 public class Principal implements GestorBD{
 	
