@@ -7,7 +7,13 @@ import java.util.ArrayList;
 import javax.swing.JFrame;
 import javax.swing.WindowConstants;
 
+import clasesDTO.ClasificacionDTO;
+import clasesDTO.EstadoTicketDTO;
+import clasesDTO.EstadoIntervencionDTO;
 import gestores.GestorBD;
+import gestores.GestorDeClasificacion;
+import gestores.GestorDeIntervencion;
+import gestores.GestorDeTicket;
 import produccion.EstadoIntervencion;
 import produccion.EstadoTicket;
 import usuarios.Soporte;
@@ -17,17 +23,11 @@ public class Principal implements GestorBD{
 	
 	public static Soporte usuarioIniciado;
 	
-	public static EstadoTicket abiertoMA;
-	public static EstadoTicket abiertoD;
-	public static EstadoTicket solucionadoOK;
-	public static EstadoTicket cerrado;
+	public static ArrayList<EstadoTicketDTO> estadosTicket;
 	
-	public static EstadoIntervencion asignada;
-	public static EstadoIntervencion activa;
-	public static EstadoIntervencion espera;
-	public static EstadoIntervencion cerrada;
+	public static ArrayList<EstadoIntervencionDTO> estadosIntervencion;
 	
-	public static ArrayList<Clasificacion> clasificaciones;
+	public static ArrayList<ClasificacionDTO> clasificaciones;
 
 	public static void main(String[] args) {
 		
@@ -62,20 +62,11 @@ public class Principal implements GestorBD{
 	
 	public static void cargarEstados() {
 		
-		abiertoMA = GestorBD.mapearEstadoTicket("ABIERTO_MA");
-		abiertoD = GestorBD.mapearEstadoTicket("ABIERTO_D");
-		solucionadoOK = GestorBD.mapearEstadoTicket("SOLUCIONADO_OK");
-		cerrado = GestorBD.mapearEstadoTicket("CERRADO");
-
-		asignada = GestorBD.mapearEstadoIntervencion("ASIGNADA");
-		activa = GestorBD.mapearEstadoIntervencion("ACTIVA");
-		espera = GestorBD.mapearEstadoIntervencion("ESPERA");
-		cerrada = GestorBD.mapearEstadoIntervencion("CERRADA");
+		estadosTicket = GestorDeTicket.mapearEstadosDTO();
+		estadosIntervencion = GestorDeIntervencion.mapearEstadosIntervencionDTO();
 	}
 	
 	public static void cargarClasificaciones() {
-		
-		clasificaciones = GestorBD.mapearClasificaciones();
-		
+		clasificaciones = GestorDeClasificacion.getClasificaciones();	
 	}
 }

@@ -10,6 +10,9 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import clasesDTO.ClasificacionDTO;
+import clasesDTO.EstadoIntervencionDTO;
+import clasesDTO.EstadoTicketDTO;
 import produccion.Clasificacion;
 import produccion.EstadoIntervencion;
 import produccion.EstadoTicket;
@@ -231,34 +234,34 @@ public interface GestorBD {
 
 	// OJO A LA HORA DE NECESITAR CLASIFICACIONES PQ ESTAN EN UNA VARIABLE GLOBAL
 	
-	public static ArrayList<Clasificacion> mapearClasificaciones() {
-		
-		try (Connection connection = DriverManager.getConnection("jdbc:postgresql://localhost:5432/TP-DDS", "postgres", "postgres")) {
+//	public static ArrayList<Clasificacion> mapearClasificaciones() {
+//		
+//		try (Connection connection = DriverManager.getConnection("jdbc:postgresql://localhost:5432/TP-DDS", "postgres", "postgres")) {
+//
+//			Statement statement;
+//			statement = connection.createStatement();
+//			ResultSet resultSet = statement.executeQuery("SELECT * FROM public.clasificacion");
+//
+//			ArrayList<Clasificacion> resultado = new ArrayList<Clasificacion>();
+//
+//			while(resultSet.next()) {
+//				Integer idClasificacion = resultSet.getInt("idClasificacion");
+//				Integer nroLegajoCreador = Integer.valueOf(resultSet.getString("nroLegajoSoporte"));
+//				Soporte soporte = mapearSoporte(nroLegajoCreador);
+//				Clasificacion clasificacion = new Clasificacion (idClasificacion, resultSet.getString("nombre"), resultSet.getString("descripcionAlcance"), soporte);
+//				resultado.add(clasificacion);
+//			}
+//			
+//			return resultado;
+//			
+//		} catch (SQLException e) {
+//			e.printStackTrace();
+//		}
+//		
+//		return null;
+//	}
 
-			Statement statement;
-			statement = connection.createStatement();
-			ResultSet resultSet = statement.executeQuery("SELECT * FROM public.clasificacion");
-
-			ArrayList<Clasificacion> resultado = new ArrayList<Clasificacion>();
-
-			while(resultSet.next()) {
-				Integer idClasificacion = resultSet.getInt("idClasificacion");
-				Integer nroLegajoCreador = Integer.valueOf(resultSet.getString("nroLegajoSoporte"));
-				Soporte soporte = mapearSoporte(nroLegajoCreador);
-				Clasificacion clasificacion = new Clasificacion (idClasificacion, resultSet.getString("nombre"), resultSet.getString("descripcionAlcance"), soporte);
-				resultado.add(clasificacion);
-			}
-			
-			return resultado;
-			
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-		
-		return null;
-	}
-
-	public static EstadoTicket mapearEstadoTicket(String idEstado) {
+	public static EstadoTicketDTO mapearEstadoTicketDTO(String idEstado) {
 
 		try (Connection connection = DriverManager.getConnection("jdbc:postgresql://localhost:5432/TP-DDS", "postgres", "postgres")) {
 
@@ -270,33 +273,33 @@ public interface GestorBD {
 
 			String idEstadosTicket = resultSet.getString("idEstadoTicket");
 
-			EstadoTicket estadoTicket = new EstadoTicket();
+			EstadoTicketDTO estadoTicketDTO = new EstadoTicketDTO();
 
 			if (idEstadosTicket.equals("ABIERTO_MA")) {
-				estadoTicket.setIdEstadoTicket(EstadosTicket.ABIERTO_MA);
-				estadoTicket.setNombre(resultSet.getString("nombre"));
-				estadoTicket.setDescripcion(resultSet.getString("descripcion"));
+				estadoTicketDTO.setIdEstadoTicket(EstadosTicket.ABIERTO_MA);
+				estadoTicketDTO.setNombre(resultSet.getString("nombre"));
+				estadoTicketDTO.setDescripcion(resultSet.getString("descripcion"));
 			}
 
 			else if (idEstadosTicket.equals("ABIERTO_D")) {
-				estadoTicket.setIdEstadoTicket(EstadosTicket.ABIERTO_D);
-				estadoTicket.setNombre(resultSet.getString("nombre"));
-				estadoTicket.setDescripcion(resultSet.getString("descripcion"));
+				estadoTicketDTO.setIdEstadoTicket(EstadosTicket.ABIERTO_D);
+				estadoTicketDTO.setNombre(resultSet.getString("nombre"));
+				estadoTicketDTO.setDescripcion(resultSet.getString("descripcion"));
 			}
 
 			else if (idEstadosTicket.equals("SOLUCIONADO_OK")) {
-				estadoTicket.setIdEstadoTicket(EstadosTicket.SOLUCIONADO_OK);
-				estadoTicket.setNombre(resultSet.getString("nombre"));
-				estadoTicket.setDescripcion(resultSet.getString("descripcion"));
+				estadoTicketDTO.setIdEstadoTicket(EstadosTicket.SOLUCIONADO_OK);
+				estadoTicketDTO.setNombre(resultSet.getString("nombre"));
+				estadoTicketDTO.setDescripcion(resultSet.getString("descripcion"));
 			}
 
 			else if (idEstadosTicket.equals("CERRADO")) {
-				estadoTicket.setIdEstadoTicket(EstadosTicket.CERRADO);
-				estadoTicket.setNombre(resultSet.getString("nombre"));
-				estadoTicket.setDescripcion(resultSet.getString("descripcion"));
+				estadoTicketDTO.setIdEstadoTicket(EstadosTicket.CERRADO);
+				estadoTicketDTO.setNombre(resultSet.getString("nombre"));
+				estadoTicketDTO.setDescripcion(resultSet.getString("descripcion"));
 			}
 
-			return estadoTicket;
+			return estadoTicketDTO;
 
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -304,52 +307,52 @@ public interface GestorBD {
 		}
 	}
 
-	public static EstadoIntervencion mapearEstadoIntervencion(String idEstadoIntervencion) {
-
-		try (Connection connection = DriverManager.getConnection("jdbc:postgresql://localhost:5432/TP-DDS", "postgres", "postgres")) {
-
-			Statement statement;
-			statement = connection.createStatement();
-			ResultSet resultSet = statement.executeQuery("SELECT * FROM public.estado_intervencion WHERE idEstadoIntervencion = '" + idEstadoIntervencion + "'");
-
-			resultSet.next();
-
-			String idEstadosIntervencion = resultSet.getString("idEstadoIntervencion");
-
-			EstadoIntervencion estadoIntervencion = new EstadoIntervencion();
-
-			if (idEstadosIntervencion.equals("ASIGNADA")) {
-				estadoIntervencion.setIdEstadoInt(EstadosIntervencion.ASIGNADA);
-				estadoIntervencion.setNombre(resultSet.getString("nombre"));
-				estadoIntervencion.setDescripcion(resultSet.getString("descripcion"));
-			}
-
-			else if (idEstadosIntervencion.equals("ACTIVA")) {
-				estadoIntervencion.setIdEstadoInt(EstadosIntervencion.ACTIVA);
-				estadoIntervencion.setNombre(resultSet.getString("nombre"));
-				estadoIntervencion.setDescripcion(resultSet.getString("descripcion"));
-			}
-
-			else if (idEstadosIntervencion.equals("ESPERA")) {
-				estadoIntervencion.setIdEstadoInt(EstadosIntervencion.ESPERA);
-				estadoIntervencion.setNombre(resultSet.getString("nombre"));
-				estadoIntervencion.setDescripcion(resultSet.getString("descripcion"));
-			}
-
-			else if (idEstadosIntervencion.equals("CERRADA")) {
-				estadoIntervencion.setIdEstadoInt(EstadosIntervencion.CERRADA);
-				estadoIntervencion.setNombre(resultSet.getString("nombre"));
-				estadoIntervencion.setDescripcion(resultSet.getString("descripcion"));
-			}
-
-			return estadoIntervencion;
-
-		} catch (SQLException e) {
-			e.printStackTrace();
-			return null;
-		}
-
-	}
+//	public static EstadoIntervencion mapearEstadoIntervencion(String idEstadoIntervencion) {
+//
+//		try (Connection connection = DriverManager.getConnection("jdbc:postgresql://localhost:5432/TP-DDS", "postgres", "postgres")) {
+//
+//			Statement statement;
+//			statement = connection.createStatement();
+//			ResultSet resultSet = statement.executeQuery("SELECT * FROM public.estado_intervencion WHERE idEstadoIntervencion = '" + idEstadoIntervencion + "'");
+//
+//			resultSet.next();
+//
+//			String idEstadosIntervencion = resultSet.getString("idEstadoIntervencion");
+//
+//			EstadoIntervencion estadoIntervencion = new EstadoIntervencion();
+//
+//			if (idEstadosIntervencion.equals("ASIGNADA")) {
+//				estadoIntervencion.setIdEstadoInt(EstadosIntervencion.ASIGNADA);
+//				estadoIntervencion.setNombre(resultSet.getString("nombre"));
+//				estadoIntervencion.setDescripcion(resultSet.getString("descripcion"));
+//			}
+//
+//			else if (idEstadosIntervencion.equals("ACTIVA")) {
+//				estadoIntervencion.setIdEstadoInt(EstadosIntervencion.ACTIVA);
+//				estadoIntervencion.setNombre(resultSet.getString("nombre"));
+//				estadoIntervencion.setDescripcion(resultSet.getString("descripcion"));
+//			}
+//
+//			else if (idEstadosIntervencion.equals("ESPERA")) {
+//				estadoIntervencion.setIdEstadoInt(EstadosIntervencion.ESPERA);
+//				estadoIntervencion.setNombre(resultSet.getString("nombre"));
+//				estadoIntervencion.setDescripcion(resultSet.getString("descripcion"));
+//			}
+//
+//			else if (idEstadosIntervencion.equals("CERRADA")) {
+//				estadoIntervencion.setIdEstadoInt(EstadosIntervencion.CERRADA);
+//				estadoIntervencion.setNombre(resultSet.getString("nombre"));
+//				estadoIntervencion.setDescripcion(resultSet.getString("descripcion"));
+//			}
+//
+//			return estadoIntervencion;
+//
+//		} catch (SQLException e) {
+//			e.printStackTrace();
+//			return null;
+//		}
+//
+//	}
 	
 	public static GrupoDeResolucion mapearGrupoDeResolucion(Integer idGrupo) {
 		
@@ -584,6 +587,79 @@ public interface GestorBD {
 		} catch (SQLException e) {
 			e.printStackTrace();
 			return;
+		}
+	}
+
+	public static ArrayList<ClasificacionDTO> mapearClasificacionesDTO() {
+
+		try (Connection connection = DriverManager.getConnection("jdbc:postgresql://localhost:5432/TP-DDS", "postgres", "postgres")) {
+
+			Statement statement;
+			statement = connection.createStatement();
+			ResultSet resultSet = statement.executeQuery("SELECT * FROM public.clasificacion");
+
+			ArrayList<ClasificacionDTO> resultado = new ArrayList<ClasificacionDTO>();
+
+			while(resultSet.next()) {
+				Integer idClasificacion = resultSet.getInt("idClasificacion");
+				Integer nroLegajoCreador = Integer.valueOf(resultSet.getString("nroLegajoSoporte"));
+				Soporte soporte = mapearSoporte(nroLegajoCreador);
+				ClasificacionDTO clasificacion = new ClasificacionDTO (idClasificacion, resultSet.getString("nombre"), resultSet.getString("descripcionAlcance"), soporte);
+				resultado.add(clasificacion);
+			}
+			
+			return resultado;
+			
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+
+		return null;
+	}
+
+	public static EstadoIntervencionDTO mapearEstadoIntervencionDTO(String idEstadoIntervencion) {
+		
+		try (Connection connection = DriverManager.getConnection("jdbc:postgresql://localhost:5432/TP-DDS", "postgres", "postgres")) {
+
+			Statement statement;
+			statement = connection.createStatement();
+			ResultSet resultSet = statement.executeQuery("SELECT * FROM public.estado_intervencion WHERE idEstadoIntervencion = '" + idEstadoIntervencion + "'");
+
+			resultSet.next();
+
+			String idEstadosIntervencion = resultSet.getString("idEstadoIntervencion");
+
+			EstadoIntervencionDTO estadoIntervencionDTO = new EstadoIntervencionDTO();
+
+			if (idEstadosIntervencion.equals("ASIGNADA")) {
+				estadoIntervencionDTO.setIdEstadoInt(EstadosIntervencion.ASIGNADA);
+				estadoIntervencionDTO.setNombre(resultSet.getString("nombre"));
+				estadoIntervencionDTO.setDescripcion(resultSet.getString("descripcion"));
+			}
+
+			else if (idEstadosIntervencion.equals("ACTIVA")) {
+				estadoIntervencionDTO.setIdEstadoInt(EstadosIntervencion.ACTIVA);
+				estadoIntervencionDTO.setNombre(resultSet.getString("nombre"));
+				estadoIntervencionDTO.setDescripcion(resultSet.getString("descripcion"));
+			}
+
+			else if (idEstadosIntervencion.equals("ESPERA")) {
+				estadoIntervencionDTO.setIdEstadoInt(EstadosIntervencion.ESPERA);
+				estadoIntervencionDTO.setNombre(resultSet.getString("nombre"));
+				estadoIntervencionDTO.setDescripcion(resultSet.getString("descripcion"));
+			}
+
+			else if (idEstadosIntervencion.equals("CERRADA")) {
+				estadoIntervencionDTO.setIdEstadoInt(EstadosIntervencion.CERRADA);
+				estadoIntervencionDTO.setNombre(resultSet.getString("nombre"));
+				estadoIntervencionDTO.setDescripcion(resultSet.getString("descripcion"));
+			}
+
+			return estadoIntervencionDTO;
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return null;
 		}
 	}
 }

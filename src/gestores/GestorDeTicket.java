@@ -1,7 +1,10 @@
 package gestores;
 
+import java.util.ArrayList;
 import java.util.Date;
 
+import clasesDTO.EstadoIntervencionDTO;
+import clasesDTO.EstadoTicketDTO;
 import produccion.Clasificacion;
 import produccion.HistorialClasificacionTicket;
 import produccion.HistorialEstadoTicket;
@@ -36,5 +39,18 @@ public interface GestorDeTicket {
 		
 		return nuevoTicket;
 
+	}
+
+	public static ArrayList<EstadoTicketDTO> mapearEstadosDTO() {
+		ArrayList<EstadoTicketDTO> estadosTickets = new ArrayList<EstadoTicketDTO>();
+		EstadoTicketDTO abiertoMA = GestorBD.mapearEstadoTicketDTO("ABIERTO_MA");
+		estadosTickets.add(abiertoMA);
+		EstadoTicketDTO abiertoD = GestorBD.mapearEstadoTicketDTO("ABIERTO_D");
+		estadosTickets.add(abiertoD);
+		EstadoTicketDTO solucionadoOK = GestorBD.mapearEstadoTicketDTO("SOLUCIONADO_OK");
+		estadosTickets.add(solucionadoOK);
+		EstadoTicketDTO cerrado = GestorBD.mapearEstadoTicketDTO("CERRADO");
+		estadosTickets.add(cerrado);
+		return estadosTickets;
 	}
 }
