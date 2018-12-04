@@ -5,9 +5,9 @@ import java.util.ArrayList;
 import clasesDTO.ClasificacionDTO;
 import gestores.GestorBD;
 
-public interface GestorDeClasificacion {
+public class GestorDeClasificacion {
 
-	static ArrayList<ClasificacionDTO> getClasificaciones() {
+	public static ArrayList<ClasificacionDTO> getClasificaciones() {
 		ArrayList<ClasificacionDTO> clasificaciones = new ArrayList<ClasificacionDTO>();
 		clasificaciones = GestorBD.mapearClasificacionesDTO();
 		return clasificaciones;

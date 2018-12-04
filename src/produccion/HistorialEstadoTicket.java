@@ -6,7 +6,7 @@ import gestores.GestorBD;
 import gestores.GestorDeTicket;
 import usuarios.Soporte;
 
-public class HistorialEstadoTicket implements GestorBD{
+public class HistorialEstadoTicket {
 
 	public Integer idHistorialEstadoTic;
 	public Date fechaDesde;

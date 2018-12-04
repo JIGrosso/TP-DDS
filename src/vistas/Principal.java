@@ -15,9 +15,10 @@ import gestores.GestorBD;
 import gestores.GestorDeClasificacion;
 import gestores.GestorDeIntervencion;
 import gestores.GestorDeTicket;
+import usuarios.GrupoDeResolucion;
 import usuarios.Soporte;
 
-public class Principal implements GestorBD{
+public class Principal {
 
 	public static Soporte usuarioIniciado;
 
@@ -26,6 +27,10 @@ public class Principal implements GestorBD{
 	public static ArrayList<EstadoIntervencionDTO> estadosIntervencion;
 
 	public static ArrayList<ClasificacionDTO> clasificaciones;
+	
+	public static List<GrupoDeResolucion> gruposMapeados = new ArrayList<GrupoDeResolucion>();
+	
+	public static List<Soporte> soportesMapeados = new ArrayList<Soporte>();
 
 	public static void main(String[] args) {
 
@@ -49,7 +54,7 @@ public class Principal implements GestorBD{
 		frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 		frame.setVisible(true);
 		frame.setSize(500, 500);
-		frame.setTitle("Inicio de Sesiï¿½n");
+		frame.setTitle("Inicio de Sesión");
 
 		PanelInicio inicio = new PanelInicio();
 		frame.setContentPane(inicio);
@@ -66,6 +71,7 @@ public class Principal implements GestorBD{
 	}
 
 	public static void cargarClasificaciones() {
+		
 		clasificaciones = GestorDeClasificacion.getClasificaciones();
 	}
 }

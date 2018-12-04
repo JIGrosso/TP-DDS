@@ -15,6 +15,7 @@ public class Clasificacion {
 	public List<GrupoDeResolucion> gruposPertenecientes; 
 	
 	public Clasificacion (Integer idClasificacion, String nombre, String descripcionAlcance, Soporte creador) {
+		
 		this.idClasificacion = idClasificacion;
 		this.nombre = nombre;
 		this.descripcionAlcance = descripcionAlcance;
@@ -45,10 +46,6 @@ public class Clasificacion {
 	}
 	public void setCreador(Soporte creador) {
 		this.creador = creador;
-	}
-	
-	public String toString() {
-		return this.nombre;
 	}
 
 

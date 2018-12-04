@@ -1,5 +1,5 @@
 package gestores;
 
-public interface GestorDeCliente {
+public class GestorDeCliente {
 
 }

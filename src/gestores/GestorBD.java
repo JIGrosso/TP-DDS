@@ -26,10 +26,10 @@ import usuarios.GrupoDeResolucion;
 import usuarios.Soporte;
 import vistas.Principal;
 
-public interface GestorBD {
+public class GestorBD {
 
-	SimpleDateFormat formatFecha = new SimpleDateFormat("yyyy-MM-dd");
-	SimpleDateFormat formatHora = new SimpleDateFormat("HH:mm:ss.SSS");
+	private static SimpleDateFormat formatFecha = new SimpleDateFormat("yyyy-MM-dd");
+	private static SimpleDateFormat formatHora = new SimpleDateFormat("HH:mm:ss.SSS");
 
 	public static boolean validarSoporte(Integer nroLegajo, String password) {
 		
@@ -40,12 +40,10 @@ public interface GestorBD {
 			ResultSet resultSet = statement.executeQuery("SELECT * FROM soporte WHERE nroLegajo = " + nroLegajo +" AND contrasenia = '" + password + "'");
 			
 			if(!resultSet.next()) {
-				resultSet.close();
 				connection.close();
 				return false;
 			}
 			else {
-				resultSet.close();
 				connection.close();
 				return true;
 			}

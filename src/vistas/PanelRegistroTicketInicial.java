@@ -19,12 +19,13 @@ import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
 
+import clasesDTO.ClasificacionDTO;
 import gestores.GestorBD;
 import gestores.GestorDeTicket;
 import produccion.Clasificacion;
 import produccion.Ticket;
 
-public class PanelRegistroTicketInicial extends JPanel implements GestorBD{
+public class PanelRegistroTicketInicial extends JPanel{
 
 	private JLabel lblTitulo;
 	private JLabel lblNroTicket;
@@ -109,7 +110,7 @@ public class PanelRegistroTicketInicial extends JPanel implements GestorBD{
 		
 		// Fila 6
 		
-		Clasificacion[] auxClasificaciones = Principal.clasificaciones.toArray(new Clasificacion[Principal.clasificaciones.size()]);
+		ClasificacionDTO[] auxClasificaciones = Principal.clasificaciones.toArray(new ClasificacionDTO[Principal.clasificaciones.size()]);
 		cmbClasificacion = new JComboBox(auxClasificaciones);
 		gridConst.gridy = 6;
 		gridConst.insets = new Insets(5, 5, 10, 0);
