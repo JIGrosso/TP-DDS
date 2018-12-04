@@ -47,6 +47,15 @@ public class Clasificacion {
 	public void setCreador(Soporte creador) {
 		this.creador = creador;
 	}
-
+	
+	public ArrayList<Integer> getIdGrupos() {
+		
+		ArrayList<Integer> resultado = new ArrayList<Integer>();
+		for(int i = 0; i < this.gruposPertenecientes.size(); i++) {
+			resultado.add(this.gruposPertenecientes.get(i).idGrupo);
+		}
+		
+		return resultado;
+	}
 
 }

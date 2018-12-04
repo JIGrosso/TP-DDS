@@ -15,6 +15,7 @@ import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
 
 import gestores.GestorBD;
+import gestores.GestorDeSoporte;
 
 public class PanelInicio extends JPanel{
 
@@ -76,12 +77,12 @@ public class PanelInicio extends JPanel{
 				Integer nroLegajo = Integer.valueOf(txtNro.getText());
 				String password = String.valueOf(txtPass.getPassword());
 				
-				if(!GestorBD.validarSoporte(nroLegajo, password)) {
+				if(!GestorDeSoporte.validarSoporte(nroLegajo, password)) {
 					throw new Exception();
 				}
 				else {
 					
-					Principal.usuarioIniciado = GestorBD.mapearSoporte(nroLegajo);
+					Principal.usuarioIniciado = GestorDeSoporte.mapearSoporte(nroLegajo);
 			
 					JFrame frame = (JFrame) SwingUtilities.getAncestorOfClass(JFrame.class, this);
 					this.setVisible(false);

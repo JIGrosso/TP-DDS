@@ -30,6 +30,7 @@ public class GestorDeIntervencion {
 	}
 
 	public static ArrayList<EstadoIntervencionDTO> mapearEstadosIntervencionDTO() {
+		
 		ArrayList<EstadoIntervencionDTO> estadosIntervencion = new ArrayList<EstadoIntervencionDTO>();
 		EstadoIntervencionDTO asignadadto = GestorBD.mapearEstadoIntervencionDTO("ASIGNADA");
 		estadosIntervencion.add(asignadadto);

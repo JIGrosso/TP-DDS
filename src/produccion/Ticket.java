@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import javax.swing.JOptionPane;
+
 import gestores.GestorDeTicket;
 import usuarios.Cliente;
 import usuarios.GrupoDeResolucion;
@@ -61,6 +63,24 @@ public class Ticket {
 	
 	public void addHistorialClasificacionTicket(HistorialClasificacionTicket historialClasificacion) {
 		this.historialesClasificacion.add(historialClasificacion);
+	}
+	
+	public void setEstadoCerrado(EstadoTicket estado) {
+		try {
+			
+			this.historialesEstado.get(this.historialesEstado.size()-1).cerrarHistorialEstadoTicket();
+			this.historialesClasificacion.get(this.historialesClasificacion.size()-1).cerrarHistorialClasificacionTicket();
+			this.intervenciones.get(this.intervenciones.size()-1).setFechaFin();
+			this.estadoActual = estado;
+		
+		}
+		catch (Exception e) {
+//			JOptionPane.showMessageDialog(arg0, arg1, arg2, arg3);
+		}
+	}
+	
+	public Intervencion getUltimaIntervencion() {
+		return this.intervenciones.get(this.intervenciones.size()-1);
 	}
 }
 	

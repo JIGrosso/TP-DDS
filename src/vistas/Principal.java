@@ -26,18 +26,13 @@ public class Principal {
 
 	public static ArrayList<EstadoIntervencionDTO> estadosIntervencion;
 
-	public static ArrayList<ClasificacionDTO> clasificaciones;
-	
-	public static List<GrupoDeResolucion> gruposMapeados = new ArrayList<GrupoDeResolucion>();
-	
-	public static List<Soporte> soportesMapeados = new ArrayList<Soporte>();
+//	public static ArrayList<ClasificacionDTO> clasificaciones;
 
 	public static void main(String[] args) {
 
 		cargarEstados();
 
-		cargarClasificaciones();
-
+//		cargarClasificaciones();
 
 		javax.swing.SwingUtilities.invokeLater(new Runnable() {
 			public void run() {
@@ -70,8 +65,8 @@ public class Principal {
 		estadosIntervencion = GestorDeIntervencion.mapearEstadosIntervencionDTO();
 	}
 
-	public static void cargarClasificaciones() {
-		
-		clasificaciones = GestorDeClasificacion.getClasificaciones();
-	}
+//	public static void cargarClasificaciones() {
+//		
+//		clasificaciones = GestorDeClasificacion.getClasificaciones();
+//	}
 }

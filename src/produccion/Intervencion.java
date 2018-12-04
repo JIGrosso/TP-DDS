@@ -70,8 +70,8 @@ public class Intervencion {
 		return fechaFin;
 	}
 
-	public void setFechaFin(Date fechaFin) {
-		this.fechaFin = fechaFin;
+	public void setFechaFin() {
+		this.fechaFin = new Date();
 	}
 
 	public EstadoIntervencion getEstadoIntervencionActual() {

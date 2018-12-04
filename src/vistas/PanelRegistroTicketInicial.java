@@ -7,6 +7,7 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 
 import javax.swing.JPanel;
@@ -21,6 +22,7 @@ import javax.swing.SwingUtilities;
 
 import clasesDTO.ClasificacionDTO;
 import gestores.GestorBD;
+import gestores.GestorDeClasificacion;
 import gestores.GestorDeTicket;
 import produccion.Clasificacion;
 import produccion.Ticket;
@@ -75,7 +77,7 @@ public class PanelRegistroTicketInicial extends JPanel{
 		
 		// Fila 2
 		
-		Integer nroTicket = GestorBD.nroNuevoTicket();
+		Integer nroTicket = GestorDeTicket.nroNuevoTicket();
 		
 		txtNroTicket = new JTextField(""+nroTicket);
 		txtNroTicket.setEditable(false);
@@ -109,8 +111,8 @@ public class PanelRegistroTicketInicial extends JPanel{
 		this.add(lblClasificacion, gridConst);
 		
 		// Fila 6
-		
-		ClasificacionDTO[] auxClasificaciones = Principal.clasificaciones.toArray(new ClasificacionDTO[Principal.clasificaciones.size()]);
+		ArrayList<ClasificacionDTO> auxC = GestorDeClasificacion.getClasificaciones();
+		ClasificacionDTO[] auxClasificaciones = auxC.toArray(new ClasificacionDTO[auxC.size()]);
 		cmbClasificacion = new JComboBox(auxClasificaciones);
 		gridConst.gridy = 6;
 		gridConst.insets = new Insets(5, 5, 10, 0);
@@ -184,8 +186,8 @@ public class PanelRegistroTicketInicial extends JPanel{
 			if(noVacios) {
 				Integer nroLegajo = Integer.valueOf(txtNroLegajo.getText());
 				String descripcion = txtDescripcion.getText();
-				Clasificacion clasificacion = (Clasificacion) cmbClasificacion.getSelectedItem();
-				Ticket nuevoTicket = GestorDeTicket.crearTicket(Principal.usuarioIniciado, nroTicket, nroLegajo, fechaActual, clasificacion, descripcion);
+				ClasificacionDTO clasificacionDTO = (ClasificacionDTO) cmbClasificacion.getSelectedItem();
+				Ticket nuevoTicket = GestorDeTicket.crearTicket(Principal.usuarioIniciado, nroTicket, nroLegajo, fechaActual, clasificacionDTO, descripcion);
 				avanzar(nuevoTicket);
 			}
 			else {

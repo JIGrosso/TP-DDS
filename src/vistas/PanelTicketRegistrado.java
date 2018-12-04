@@ -4,6 +4,7 @@ import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
+import java.util.ArrayList;
 
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -11,7 +12,12 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
 
+import clasesDTO.ClasificacionDTO;
+import clasesDTO.GrupoDTO;
+import gestores.GestorDeGrupo;
+import gestores.GestorDeTicket;
 import produccion.Ticket;
+import usuarios.GrupoDeResolucion;
 
 public class PanelTicketRegistrado extends JPanel{
 
@@ -26,8 +32,8 @@ public class PanelTicketRegistrado extends JPanel{
 	private JButton btnDerivar;
 	private JButton btnSalir;
 	
-	public PanelTicketRegistrado(Ticket ticket) {
-		this.ticket = ticket;
+	public PanelTicketRegistrado(Ticket ticketCreado) {
+		this.ticket = ticketCreado;
 		this.setLayout(new GridBagLayout());
 		this.construir();
 	}
@@ -59,7 +65,7 @@ public class PanelTicketRegistrado extends JPanel{
 		btnCerrado = new JButton("Marcar como cerrado");
 		btnCerrado.addActionListener(e -> {
 			String obs = txtObservaciones.getText();
-			// GestorDeTicket.cerrarTicket(obs);
+			GestorDeTicket.cerrarTicket(ticket, obs);
 		});
 		gridConst.gridy = 3;
 		this.add(btnCerrado, gridConst);
@@ -69,9 +75,10 @@ public class PanelTicketRegistrado extends JPanel{
 		gridConst.gridx = 1;
 		this.add(lblGrupo, gridConst);
 		
-		String[] grupos = {"Grupo 1", "Grupo 2", "Grupo 3"};
+		ArrayList<GrupoDTO> gruposClasificados = GestorDeGrupo.getGruposClasificados(ticket.clasificacion);
+		GrupoDTO[] auxGrupos = gruposClasificados.toArray(new GrupoDTO[gruposClasificados.size()]);
 		
-		cmbGrupos = new JComboBox(grupos);
+		cmbGrupos = new JComboBox(auxGrupos);
 		gridConst.gridy = 2;
 		this.add(cmbGrupos, gridConst);
 		

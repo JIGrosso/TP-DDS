@@ -13,6 +13,7 @@ import java.util.List;
 import clasesDTO.ClasificacionDTO;
 import clasesDTO.EstadoIntervencionDTO;
 import clasesDTO.EstadoTicketDTO;
+import clasesDTO.GrupoDTO;
 import produccion.Clasificacion;
 import produccion.EstadoIntervencion;
 import produccion.EstadoTicket;
@@ -59,9 +60,9 @@ public class GestorBD {
 		
 		Soporte nuevoSoporte = null;
 		
-		for (int i=0; i < Principal.soportesMapeados.size(); i++) {
-			if (Principal.soportesMapeados.get(i).nroLegajo.equals(nroLegajo)) {
-				nuevoSoporte = Principal.soportesMapeados.get(i);
+		for (int i=0; i < GestorDeSoporte.soportesMapeados.size(); i++) {
+			if (GestorDeSoporte.soportesMapeados.get(i).nroLegajo.equals(nroLegajo)) {
+				nuevoSoporte = GestorDeSoporte.soportesMapeados.get(i);
 			}
 		}
 				
@@ -90,11 +91,9 @@ public class GestorBD {
 				
 				GrupoDeResolucion grupo = mapearGrupoDeResolucion(idGrupo);
 				Soporte soporte = new Soporte(nroLeg, "contrasenia", resultSet.getString("nombre"), dni, telefono, resultSet.getString("email"), grupo);
-				Principal.soportesMapeados.add(soporte);
+				GestorDeSoporte.soportesMapeados.add(soporte);
 				
 				System.out.println("Soporte: " + soporte.nroLegajo + " mapeado desde BDD.");
-				
-				
 				
 				return soporte;
 	
@@ -247,8 +246,6 @@ public class GestorBD {
 
 	}
 
-	// OJO A LA HORA DE NECESITAR CLASIFICACIONES PQ ESTAN EN UNA VARIABLE GLOBAL
-	
 	public static ArrayList<Clasificacion> mapearClasificaciones() {
 		
 		try (Connection connection = DriverManager.getConnection("jdbc:postgresql://localhost:5432/TP-DDS", "postgres", "postgres")) {
@@ -269,6 +266,51 @@ public class GestorBD {
 			
 			connection.close();
 			return resultado;
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		return null;
+	}
+	
+	public static Clasificacion mapearClasificacion(Integer idClasificacion) {
+		
+		try (Connection connection = DriverManager.getConnection("jdbc:postgresql://localhost:5432/TP-DDS", "postgres", "postgres")) {
+
+			Statement statement;
+			statement = connection.createStatement();
+			ResultSet resultSet = statement.executeQuery("SELECT * FROM public.clasificacion WHERE idClasificacion = "+ idClasificacion);
+
+			resultSet.next();
+			
+			Integer nroLegajoCreador = resultSet.getInt("nroLegajoSoporte");
+		
+			Statement statement2;
+			statement2 = connection.createStatement();
+			ResultSet resultSet2 = statement2.executeQuery("SELECT idGrupo FROM public.asocia WHERE idClasificacion = "+ idClasificacion);
+			
+			Integer idGrupo;
+			ArrayList<Integer> idGruposAsociados = new ArrayList<Integer>();
+			
+			while(resultSet2.next()) {
+				idGrupo = resultSet2.getInt("idGrupo");
+				idGruposAsociados.add(idGrupo);
+			}
+			
+			connection.close();
+			
+			Soporte soporte = mapearSoporte(nroLegajoCreador);
+			Clasificacion clasificacion = new Clasificacion (idClasificacion, resultSet.getString("nombre"), resultSet.getString("descripcionAlcance"), soporte);
+			
+			GrupoDeResolucion grupo;
+			
+			for(int i = 0; i < idGruposAsociados.size(); i++) {
+				grupo = mapearGrupoDeResolucion(idGruposAsociados.get(i));
+				clasificacion.gruposPertenecientes.add(grupo);
+			}
+			
+			return clasificacion;
 			
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -420,7 +462,7 @@ public class GestorBD {
 
 	}
 	
-public static EstadoIntervencionDTO mapearEstadoIntervencionDTO(String idEstadoIntervencion) {
+	public static EstadoIntervencionDTO mapearEstadoIntervencionDTO(String idEstadoIntervencion) {
 		
 		try (Connection connection = DriverManager.getConnection("jdbc:postgresql://localhost:5432/TP-DDS", "postgres", "postgres")) {
 
@@ -470,9 +512,9 @@ public static EstadoIntervencionDTO mapearEstadoIntervencionDTO(String idEstadoI
 		
 		GrupoDeResolucion nuevoGrupo = null;
 		
-		for (int i=0; i < Principal.gruposMapeados.size(); i++) {
-			if (Principal.gruposMapeados.get(i).idGrupo == idGrupo) {
-				nuevoGrupo = Principal.gruposMapeados.get(i);
+		for (int i=0; i < GestorDeGrupo.gruposMapeados.size(); i++) {
+			if (GestorDeGrupo.gruposMapeados.get(i).idGrupo == idGrupo) {
+				nuevoGrupo = GestorDeGrupo.gruposMapeados.get(i);
 			}
 		}
 		if (nuevoGrupo != null) {
@@ -521,7 +563,7 @@ public static EstadoIntervencionDTO mapearEstadoIntervencionDTO(String idEstadoI
 				
 				GrupoDeResolucion grupoDeResolucion = new GrupoDeResolucion(idNuevoGrupo, nombreGrupo, nivelGrupo, descripcionGrupo, intervencionesAsignadas);
 				System.out.println("Grupo: " + grupoDeResolucion.nombre + " mapeado desde BDD.");
-				Principal.gruposMapeados.add(grupoDeResolucion);
+				GestorDeGrupo.gruposMapeados.add(grupoDeResolucion);
 		
 				
 				return grupoDeResolucion;
@@ -636,7 +678,7 @@ public static EstadoIntervencionDTO mapearEstadoIntervencionDTO(String idEstadoI
 		
 	}
 
-	public static void guardarTicket (Ticket ticket, Soporte soporte) {
+	public static void guardarTicket(Ticket ticket, Intervencion intervencion, Soporte soporte) {
 		
 		try (Connection connection = DriverManager.getConnection("jdbc:postgresql://localhost:5432/TP-DDS", "postgres", "postgres")) {
 
@@ -664,6 +706,8 @@ public static EstadoIntervencionDTO mapearEstadoIntervencionDTO(String idEstadoI
 			Statement statement4;
 			statement4 = connection.createStatement();
 			statement4.execute("SELECT nextval('seqNroTicket')");
+			
+			GestorBD.guardarIntervencion(intervencion, soporte, ticket.nroTicket);
 			
 			connection.close();
 
@@ -713,9 +757,7 @@ public static EstadoIntervencionDTO mapearEstadoIntervencionDTO(String idEstadoI
 
 			while(resultSet.next()) {
 				Integer idClasificacion = resultSet.getInt("idClasificacion");
-				Integer nroLegajoCreador = Integer.valueOf(resultSet.getString("nroLegajoSoporte"));
-				Soporte soporte = mapearSoporte(nroLegajoCreador);
-				ClasificacionDTO clasificacion = new ClasificacionDTO (idClasificacion, resultSet.getString("nombre"), resultSet.getString("descripcionAlcance"), soporte);
+				ClasificacionDTO clasificacion = new ClasificacionDTO (idClasificacion, resultSet.getString("nombre"), resultSet.getString("descripcionAlcance"));
 				resultado.add(clasificacion);
 			}
 			
@@ -728,4 +770,39 @@ public static EstadoIntervencionDTO mapearEstadoIntervencionDTO(String idEstadoI
 		return null;
 	}
 	
+	public static GrupoDTO mapearGrupoDTO(Integer idGrupo){
+					
+		try (Connection connection = DriverManager.getConnection("jdbc:postgresql://localhost:5432/TP-DDS", "postgres", "postgres")) {
+			
+			String idGrupoConsulta = idGrupo.toString();
+				
+			// Informacion del grupo
+			
+			Statement infoGrupo;
+			infoGrupo = connection.createStatement();
+			ResultSet resultSet = infoGrupo.executeQuery("SELECT * FROM public.grupo_resolucion g WHERE g.idGrupo = " + idGrupoConsulta);
+			resultSet.next();
+			
+			Integer idNuevoGrupo = resultSet.getInt("idGrupo");
+			String nombreGrupo = resultSet.getString("nombre");
+			
+			connection.close();
+				
+			// Creacion de la instancia
+				
+			GrupoDTO grupoDeResolucionDTO = new GrupoDTO(idNuevoGrupo, nombreGrupo);
+		
+			return grupoDeResolucionDTO;
+			
+			}
+			catch (SQLException e) {
+				e.printStackTrace();
+				return null;
+			}	
+	}
+
+	public static void modificarTicket(Ticket ticket, Intervencion intervencion, Soporte soporte) {
+		
+	}
 }
+
