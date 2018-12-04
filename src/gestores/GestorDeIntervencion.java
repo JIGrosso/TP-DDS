@@ -1,13 +1,21 @@
 package gestores;
 
+import java.util.ArrayList;
 import java.util.Date;
 
+import clasesDTO.EstadoIntervencionDTO;
+import produccion.EstadoIntervencion;
 import produccion.HistorialEstadoIntervencion;
 import produccion.Intervencion;
 import usuarios.Soporte;
 
-public interface GestorDeIntervencion {
-
+public class GestorDeIntervencion {
+	
+	public static EstadoIntervencion asignada;
+	public static EstadoIntervencion activa;
+	public static EstadoIntervencion espera;
+	public static EstadoIntervencion cerrada;
+	
 	public static Intervencion crearIntervencion(Soporte soporte, Date fechaAsignacion) {
 
 		Integer IdIntervencion = GestorBD.nroNuevoIntervencion();
@@ -19,6 +27,24 @@ public interface GestorDeIntervencion {
 		soporte.getGrupo().intervenciones.add(intervencion);
 
 		return intervencion;
+	}
+
+	public static ArrayList<EstadoIntervencionDTO> mapearEstadosIntervencionDTO() {
+		ArrayList<EstadoIntervencionDTO> estadosIntervencion = new ArrayList<EstadoIntervencionDTO>();
+		EstadoIntervencionDTO asignadadto = GestorBD.mapearEstadoIntervencionDTO("ASIGNADA");
+		estadosIntervencion.add(asignadadto);
+		asignada = GestorBD.mapearEstadoIntervencion("ASIGNADA");
+		EstadoIntervencionDTO activadto = GestorBD.mapearEstadoIntervencionDTO("ACTIVA");
+		estadosIntervencion.add(activadto);
+		activa = GestorBD.mapearEstadoIntervencion("ACTIVA");
+		EstadoIntervencionDTO esperadto = GestorBD.mapearEstadoIntervencionDTO("ESPERA");
+		estadosIntervencion.add(esperadto);
+		espera = GestorBD.mapearEstadoIntervencion("ESPERA");
+		EstadoIntervencionDTO cerradadto = GestorBD.mapearEstadoIntervencionDTO("CERRADA");
+		estadosIntervencion.add(cerradadto);
+		cerrada = GestorBD.mapearEstadoIntervencion("CERRADA");
+		return estadosIntervencion;
+		
 	}
 
 }

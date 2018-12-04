@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import vistas.Principal;
+import gestores.GestorDeIntervencion;
 
 public class Intervencion {
 
@@ -23,7 +23,7 @@ public class Intervencion {
 		this.observaciones = "Intervencion por creacion de ticket";
 		this.fechaAsignacion = fechaAsignacion;
 		this.fechaFin = null;
-		this.estadoIntervencionActual = Principal.activa;
+		this.estadoIntervencionActual = GestorDeIntervencion.activa;
 		this.historialesEstado = new ArrayList<HistorialEstadoIntervencion>();
 		this.historialesEstado.add(primerHistorial);
 		
