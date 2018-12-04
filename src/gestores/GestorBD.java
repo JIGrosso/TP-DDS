@@ -589,14 +589,12 @@ public static EstadoIntervencionDTO mapearEstadoIntervencionDTO(String idEstadoI
 		
 	}
 	
-	public static EstadoTicketDTO buscarEstadoTicket(String idEstadoTicket) {
+	public static EstadoTicket buscarEstadoTicket(String idEstadoTicket) {
 		
-		for(EstadoTicketDTO estado : Principal.estadosTicket) {
-			if(idEstadoTicket.equalsIgnoreCase(estado.getIdEstadoTicket().name())){
-				return estado;
-			}
-		}
-		return null;
+		EstadoTicket estado = GestorBD.mapearEstadoTicket(idEstadoTicket);
+		
+		return estado;
+		
 	}
 
 	public static void guardarTicket (Ticket ticket, Soporte soporte) {

@@ -4,9 +4,9 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import gestores.GestorDeTicket;
 import usuarios.Cliente;
 import usuarios.GrupoDeResolucion;
-import vistas.Principal;
 
 public class Ticket {
 
@@ -32,7 +32,7 @@ public class Ticket {
 		this.descripcion = descripcion;
 		this.observaciones = null;
 		this.grupoAsignado = grupoAsignado;
-		this.estadoActual = Principal.abiertoMA;
+		this.estadoActual = GestorDeTicket.abiertoMA;
 		this.historialesEstado = new ArrayList<HistorialEstadoTicket>();
 		this.historialesClasificacion = new ArrayList<HistorialClasificacionTicket>();
 		this.intervenciones = new ArrayList<Intervencion>();

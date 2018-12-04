@@ -2,8 +2,8 @@ package produccion;
 
 import java.util.Date;
 
+import gestores.GestorDeIntervencion;
 import usuarios.Soporte;
-import vistas.Principal;
 
 public class HistorialEstadoIntervencion {
 
@@ -18,7 +18,7 @@ public class HistorialEstadoIntervencion {
 		this.fechaDesde = fechaDesde;
 		this.fechaHasta = null;
 		this.actor = actor;
-		this.estado = Principal.activa;
+		this.estado = GestorDeIntervencion.activa;
 	}
 	
 	public HistorialEstadoIntervencion(Integer idHistorial, Date fechaDesde, Date fechaHasta, Soporte actor, EstadoIntervencion estado) {

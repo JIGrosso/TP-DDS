@@ -3,8 +3,8 @@ package produccion;
 import java.util.Date;
 
 import gestores.GestorBD;
+import gestores.GestorDeTicket;
 import usuarios.Soporte;
-import vistas.Principal;
 
 public class HistorialEstadoTicket implements GestorBD{
 
@@ -18,7 +18,7 @@ public class HistorialEstadoTicket implements GestorBD{
 		this.idHistorialEstadoTic = GestorBD.nroNuevoHistorialET();
 		this.fechaDesde = fechaCreacion;
 		this.fechaHasta = null;
-		this.estado = Principal.abiertoMA;
+		this.estado = GestorDeTicket.abiertoMA;
 		this.actor = soporte;
 	};
 
