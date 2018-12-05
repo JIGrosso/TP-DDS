@@ -70,17 +70,36 @@ public class Ticket {
 			
 			this.historialesEstado.get(this.historialesEstado.size()-1).cerrarHistorialEstadoTicket();
 			this.historialesClasificacion.get(this.historialesClasificacion.size()-1).cerrarHistorialClasificacionTicket();
-			this.intervenciones.get(this.intervenciones.size()-1).setFechaFin();
 			this.estadoActual = estado;
-		
 		}
 		catch (Exception e) {
-//			JOptionPane.showMessageDialog(arg0, arg1, arg2, arg3);
+			throw e;
 		}
 	}
 	
 	public Intervencion getUltimaIntervencion() {
 		return this.intervenciones.get(this.intervenciones.size()-1);
 	}
+	
+	public Intervencion getPenultimaIntervencion() {
+		return this.intervenciones.get(this.intervenciones.size()-2);
+	}
+	
+	public HistorialEstadoTicket getUlitmoHistorialET() {
+		return this.historialesEstado.get(this.historialesEstado.size()-1);
+	}
+	
+	public HistorialEstadoTicket getPenulitmoHistorialET() {
+		return this.historialesEstado.get(this.historialesEstado.size()-2);
+	}
+	
+	public HistorialClasificacionTicket getUlitmoHistorialC() {
+		return this.historialesClasificacion.get(this.historialesClasificacion.size()-1);
+	}
+	
+	public HistorialClasificacionTicket getPenulitmoHistorialC() {
+		return this.historialesClasificacion.get(this.historialesClasificacion.size()-2);
+	}
+	
 }
 	

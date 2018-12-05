@@ -79,7 +79,15 @@ public class Intervencion {
 	}
 
 	public void setEstadoIntervencionActual(EstadoIntervencion estadoIntervencionActual) {
-		this.estadoIntervencionActual = estadoIntervencionActual;
+		try {
+			
+			this.getUltimoHistorialIntervencion().setFechaHasta();
+			this.estadoIntervencionActual = estadoIntervencionActual;
+		}
+		catch(Exception e) {
+			throw e;
+		}
+		
 	}
 
 	public List<HistorialEstadoIntervencion> getHistorialesEstado() {
@@ -88,6 +96,14 @@ public class Intervencion {
 
 	public void setHistorialesEstado(List<HistorialEstadoIntervencion> historialesEstado) {
 		this.historialesEstado = historialesEstado;
+	}
+	
+	public HistorialEstadoIntervencion getUltimoHistorialIntervencion() {
+		return this.historialesEstado.get(this.historialesEstado.size()-1);
+	}
+	
+	public HistorialEstadoIntervencion getPenultimoHistorialIntervencion() {
+		return this.historialesEstado.get(this.historialesEstado.size()-2);
 	}
 	
 	

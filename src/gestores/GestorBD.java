@@ -591,6 +591,7 @@ public class GestorBD {
 
 			Integer idInterv = resultSet.getInt("idIntervencion");
 			Date fechaAsignacion = resultSet.getDate("fechaAsignacion");
+			Date fechaFin = resultSet.getDate("fechaFin");
 			String idEstadoActual = resultSet.getString("idEstadoIntervencion");
 			EstadoIntervencion estadoActual = buscarEstadoIntervencion(idEstadoActual);
 			
@@ -618,7 +619,7 @@ public class GestorBD {
 			
 			//Creacion de la intervencion
 			
-			Intervencion intervencion = new Intervencion(idInterv, resultSet.getString("observacions"), fechaAsignacion, null, estadoActual, historiales);
+			Intervencion intervencion = new Intervencion(idInterv, resultSet.getString("observacions"), fechaAsignacion, fechaFin, estadoActual, historiales);
 			
 			
 			return intervencion;
@@ -724,11 +725,19 @@ public class GestorBD {
 			System.out.println("Connected to PostgreSQL database! --> Guardar Intervencion");
 			
 			String fechaAsignacion = formatFecha.format(intervencion.fechaAsignacion);
-			
-			Statement statement1;
-			statement1 = connection.createStatement();
-			statement1.executeUpdate("INSERT INTO public.intervencion VALUES (" + intervencion.getIdIntervencion() + ", '" + intervencion.getObservaciones() + "', '" + fechaAsignacion + "', " + nroTicket + ", '" + intervencion.getEstadoIntervencionActual().getIdEstadoInt().name() + "', " + soporte.getGrupo().idGrupo + ")");
+			String fechaFin = null;
+			if(!(intervencion.fechaFin == null)) {
+				fechaFin = formatFecha.format(intervencion.fechaFin);
+				Statement statement1;
+				statement1 = connection.createStatement();
+				statement1.executeUpdate("INSERT INTO public.intervencion VALUES (" + intervencion.getIdIntervencion() + ", '" + intervencion.getObservaciones() + "', '" + fechaAsignacion + "', " + nroTicket + ", '" + intervencion.getEstadoIntervencionActual().getIdEstadoInt().name() + "', " + soporte.getGrupo().idGrupo + ", '" + fechaFin + "')");
+			}
+			else {
+				Statement statement1;
+				statement1 = connection.createStatement();
+				statement1.executeUpdate("INSERT INTO public.intervencion VALUES (" + intervencion.getIdIntervencion() + ", '" + intervencion.getObservaciones() + "', '" + fechaAsignacion + "', " + nroTicket + ", '" + intervencion.getEstadoIntervencionActual().getIdEstadoInt().name() + "', " + soporte.getGrupo().idGrupo + ")");
 
+			}
 			// Hacer un for para guardar todas las intervenciones que sufren cambios
 			HistorialEstadoIntervencion auxHistorial = intervencion.historialesEstado.get(0);
 			String fechaDesdeHistorialEI = formatFecha.format(auxHistorial.fechaDesde);
@@ -801,8 +810,76 @@ public class GestorBD {
 			}	
 	}
 
-	public static void modificarTicket(Ticket ticket, Intervencion intervencion, Soporte soporte) {
+	public static void modificarTicket(Ticket ticket, Intervencion intervencion) {
 		
+		try (Connection connection = DriverManager.getConnection("jdbc:postgresql://localhost:5432/TP-DDS", "postgres", "postgres")) {
+
+			System.out.println("Connected to PostgreSQL database! --> Modificar Ticket");
+
+			Statement statement1;
+			statement1 = connection.createStatement();
+			statement1.executeUpdate("UPDATE public.ticket SET idEstadoTicket = '"+ ticket.estadoActual.getIdEstadoTicket() +"' WHERE nroTicket = "+ ticket.nroTicket);
+
+			// Implementar para el último y penúltimo
+			
+			String fechaHastaHistorialET = formatFecha.format(ticket.getUlitmoHistorialET().fechaHasta);
+			Integer idHistorialET = ticket.getUlitmoHistorialET().idHistorialEstadoTic;
+			
+			Statement statement2;
+			statement2 = connection.createStatement();
+			statement2.executeUpdate("UPDATE public.historial_estado_ticket SET fechaHasta = '"+ fechaHastaHistorialET +"' WHERE idHistorialEstadoTicket = "+ idHistorialET);
+			
+			String fechaHastaHistorialC = formatFecha.format(ticket.getUlitmoHistorialC().fechaHasta);
+			Integer idHistorialC = ticket.getUlitmoHistorialC().idHistorialClasificacion;
+			
+			Statement statement3;
+			statement3 = connection.createStatement();
+			statement3.executeUpdate("UPDATE public.historial_clasificacion_ticket SET fechaHasta = '"+ fechaHastaHistorialC +"' WHERE idHistorialClasificacion = "+ idHistorialC);
+			
+			Statement statement4;
+			statement4 = connection.createStatement();
+			statement4.executeUpdate("UPDATE public.ticket SET observaciones = '"+ ticket.observaciones +"' WHERE nroTicket = "+ ticket.nroTicket);
+			
+			GestorBD.modificarIntervencion(intervencion);
+			
+			connection.close();
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return;
+		}
+	}
+
+	private static void modificarIntervencion(Intervencion intervencion) {
+		
+		try (Connection connection = DriverManager.getConnection("jdbc:postgresql://localhost:5432/TP-DDS", "postgres", "postgres")) {
+
+			System.out.println("Connected to PostgreSQL database! --> Modificar Intervencion");
+			
+			Statement statement;
+			statement = connection.createStatement();
+			statement.executeUpdate("UPDATE public.intervencion SET idEstadoIntervencion = '"+ intervencion.estadoIntervencionActual.getIdEstadoInt() +"' WHERE idIntervencion = "+ intervencion.idIntervencion);
+			
+			String fechaFin = formatFecha.format(intervencion.fechaFin);
+			
+			Statement statement1;
+			statement1 = connection.createStatement();
+			statement1.executeUpdate("UPDATE public.intervencion SET fechaFin = '"+ fechaFin +"' WHERE idIntervencion = "+ intervencion.idIntervencion);
+
+			// Ultimo y penúltimo
+			HistorialEstadoIntervencion auxHistorial = intervencion.getUltimoHistorialIntervencion();
+			String fechaHastaHistorialEI = formatFecha.format(auxHistorial.fechaHasta);
+			
+			Statement statement2;
+			statement2 = connection.createStatement();
+			statement2.executeUpdate("UPDATE public.historial_estado_intervencion SET fechaHasta = '"+ fechaHastaHistorialEI +"' WHERE idHistorialEstadoIntervencion = "+ auxHistorial.idHistorialEstadoInt);
+
+			connection.close();
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return;
+		}
 	}
 }
 

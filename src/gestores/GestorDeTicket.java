@@ -3,6 +3,8 @@ package gestores;
 import java.util.ArrayList;
 import java.util.Date;
 
+import javax.swing.JOptionPane;
+
 import clasesDTO.ClasificacionDTO;
 import clasesDTO.EstadoTicketDTO;
 import produccion.Clasificacion;
@@ -58,9 +60,9 @@ public class GestorDeTicket {
 		ticket.setEstadoCerrado(cerrado);
 		ticket.observaciones = obs;
 		Intervencion intervencion = ticket.getUltimaIntervencion();
-		System.out.println("Nuevo estado = "+ticket.estadoActual);
-//		GestorBD.modificarTicket(ticket, intervencion, Principal.usuarioIniciado);
-		
+		GestorDeIntervencion.cerrarIntervencion(intervencion);
+		GestorBD.modificarTicket(ticket, intervencion);
+		JOptionPane.showMessageDialog(null, "El ticket "+ticket.nroTicket+" se ha cerrado con éxito!", "CierreExitoso", JOptionPane.INFORMATION_MESSAGE);
 	}
 
 	public static ArrayList<EstadoTicketDTO> mapearEstadosDTO() {

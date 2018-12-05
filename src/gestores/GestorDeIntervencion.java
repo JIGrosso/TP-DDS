@@ -28,6 +28,12 @@ public class GestorDeIntervencion {
 
 		return intervencion;
 	}
+	
+	public static void cerrarIntervencion(Intervencion intervencion) {
+		
+		intervencion.fechaFin = new Date();
+		intervencion.setEstadoIntervencionActual(cerrada);
+	}
 
 	public static ArrayList<EstadoIntervencionDTO> mapearEstadosIntervencionDTO() {
 		

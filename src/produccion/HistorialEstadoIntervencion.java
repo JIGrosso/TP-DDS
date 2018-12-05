@@ -29,4 +29,8 @@ public class HistorialEstadoIntervencion {
 		this.estado = estado;
 	}
 	
+	public void setFechaHasta() {
+		this.fechaHasta = new Date();
+	}
+	
 }
