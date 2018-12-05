@@ -15,7 +15,6 @@ import produccion.Intervencion;
 import produccion.Ticket;
 import usuarios.Cliente;
 import usuarios.Soporte;
-import vistas.Principal;
 
 public class GestorDeTicket {
 	

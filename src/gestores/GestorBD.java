@@ -25,7 +25,6 @@ import produccion.Ticket;
 import usuarios.Cliente;
 import usuarios.GrupoDeResolucion;
 import usuarios.Soporte;
-import vistas.Principal;
 
 public class GestorBD {
 
@@ -691,7 +690,8 @@ public class GestorBD {
 			Statement statement1;
 			statement1 = connection.createStatement();
 			statement1.executeUpdate("INSERT INTO public.ticket VALUES (" + ticket.nroTicket + ", '" + ticket.descripcion + "', '-' , '" + horaApertura + "', '" + fechaApertura + "', " + ticket.cliente.nroLegajo + ", '" + ticket.estadoActual.idEstadoTicket + "', " + ticket.clasificacion.idClasificacion + ")" );
-
+			
+			//Ultimo y penúltimo
 			String fechaDesdeHistorialET = formatFecha.format(ticket.historialesEstado.get(0).fechaDesde);
 
 			Statement statement2;
