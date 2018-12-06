@@ -886,13 +886,22 @@ public class GestorBD {
 	public static List<TicketDTO> buscarTickets(Integer nroTicket, Integer nroLegajo, Integer idClasificacion,
 			EstadosTicket idEstado, Date fechaApertura, Date fechaUltimoCambio, Integer idGrupo) {
 		// TODO Auto-generated method stub
+		
+		String fechaA = formatFecha.format(fechaApertura);
+		String fechaUC = formatFecha.format(fechaUltimoCambio);
+		
 		try (Connection connection = DriverManager.getConnection("jdbc:postgresql://localhost:5432/TP-DDS", "postgres", "postgres")) {
 
 			System.out.println("Connected to PostgreSQL database! --> Buscar Tickets");
 			
 			Statement statement;
 			statement = connection.createStatement();
-			statement.executeQuery("SELECT * FROM public.ticket WHERE ");
+			statement.executeQuery("SELECT * FROM public.ticket WHERE COALESCE(nroTicket = "+ nroTicket +", nroTicket IS NOT NULL) AND "
+					+ "COALESCE(nroLegajoCliente = "+ nroLegajo +", nroLegajoCliente IS NOT NULL) AND"
+					+ "COALESCE(idClasificacion = "+ idClasificacion +", idClasificacion IS NOT NULL) AND "
+					+ "COALESCE (idEstadoTicket = "+ idEstado +", idEstadoTicket IS NOT NULL) AND "
+					+ "COALESCE (fechaApertura = '"+ fechaA +"', fechaApertura IS NOT NULL AND "
+					+ "COALESCE (fechaApertura = '"+ fechaUC +"', fechaUltimo IS NOT NULL AND ");
 		}
 		catch (SQLException e) {
 			e.printStackTrace();
