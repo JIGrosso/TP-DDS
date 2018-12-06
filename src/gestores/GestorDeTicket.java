@@ -2,13 +2,16 @@ package gestores;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import javax.swing.JOptionPane;
 
 import clasesDTO.ClasificacionDTO;
 import clasesDTO.EstadoTicketDTO;
+import clasesDTO.TicketDTO;
 import produccion.Clasificacion;
 import produccion.EstadoTicket;
+import produccion.EstadosTicket;
 import produccion.HistorialClasificacionTicket;
 import produccion.HistorialEstadoTicket;
 import produccion.Intervencion;
@@ -89,6 +92,13 @@ public class GestorDeTicket {
 	
 	public static Integer nroNuevoTicket() { 
 		return GestorBD.nroNuevoTicket();
+	}
+
+	public static List<TicketDTO> buscarTickets(Integer nroTicket, Integer nroLegajo, Integer idClasificacion,
+			EstadosTicket idEstado, Date fechaApertura, Date fechaUltimoCambio, Integer idGrupo) {
+		// TODO Auto-generated method stub
+		return GestorBD.buscarTickets(nroTicket, nroLegajo, idClasificacion, idEstado, fechaApertura, fechaUltimoCambio, idGrupo);
+		
 	}
 
 }

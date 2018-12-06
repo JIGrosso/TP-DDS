@@ -68,6 +68,9 @@ public class PanelAcciones extends JPanel{
 		this.add(btnRegistroTicket, gridConst);
 		
 		btnConsultarTickets = new JButton("Consultar Tickets");
+		btnConsultarTickets.addActionListener(e -> {
+			consultarTickets();
+		});
 		gridConst.gridy = 3;
 		this.add(btnConsultarTickets, gridConst);
 		
@@ -95,6 +98,20 @@ public class PanelAcciones extends JPanel{
 		
 		PanelRegistroTicketInicial registro = new PanelRegistroTicketInicial();
 		newFrame.setContentPane(registro);
+		
+		Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
+        newFrame.setLocation(dim.width/2- newFrame.getSize().width/2, dim.height/2- newFrame.getSize().height/2);
+	}
+	
+	public void consultarTickets( ) {
+		
+		JFrame newFrame = new JFrame();
+		newFrame.setVisible(true);
+		newFrame.setSize(1400, 900);
+		newFrame.setTitle("Consultar Tickets");
+		
+		PanelBusquedaTicket busqueda = new PanelBusquedaTicket();
+		newFrame.setContentPane(busqueda);
 		
 		Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
         newFrame.setLocation(dim.width/2- newFrame.getSize().width/2, dim.height/2- newFrame.getSize().height/2);

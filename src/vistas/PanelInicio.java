@@ -55,7 +55,7 @@ public class PanelInicio extends JPanel{
 		gridConst.gridy = 3;
 		this.add(lblNro, gridConst);
 		
-		txtNro = new JTextField();
+		txtNro = new JTextField("23795");
 		txtNro.setColumns(10);
 		gridConst.gridy = 4;
 		this.add(txtNro, gridConst);
@@ -64,7 +64,7 @@ public class PanelInicio extends JPanel{
 		gridConst.gridy = 5;
 		this.add(lblPass, gridConst);
 		
-		txtPass = new JPasswordField();
+		txtPass = new JPasswordField("123");
 		txtPass.setColumns(10);
 		gridConst.gridy = 6;
 		this.add(txtPass, gridConst);

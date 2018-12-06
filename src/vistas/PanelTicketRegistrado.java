@@ -8,9 +8,11 @@ import java.util.ArrayList;
 
 import javax.swing.JButton;
 import javax.swing.JComboBox;
+import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
+import javax.swing.SwingUtilities;
 
 import clasesDTO.ClasificacionDTO;
 import clasesDTO.GrupoDTO;
@@ -66,6 +68,8 @@ public class PanelTicketRegistrado extends JPanel{
 		btnCerrado.addActionListener(e -> {
 			String obs = txtObservaciones.getText();
 			GestorDeTicket.cerrarTicket(ticket, obs);
+			JFrame frame = (JFrame) SwingUtilities.getAncestorOfClass(JFrame.class, this);
+			frame.dispose();
 		});
 		gridConst.gridy = 3;
 		this.add(btnCerrado, gridConst);

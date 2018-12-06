@@ -14,6 +14,7 @@ import clasesDTO.ClasificacionDTO;
 import clasesDTO.EstadoIntervencionDTO;
 import clasesDTO.EstadoTicketDTO;
 import clasesDTO.GrupoDTO;
+import clasesDTO.TicketDTO;
 import produccion.Clasificacion;
 import produccion.EstadoIntervencion;
 import produccion.EstadoTicket;
@@ -880,6 +881,24 @@ public class GestorBD {
 			e.printStackTrace();
 			return;
 		}
+	}
+
+	public static List<TicketDTO> buscarTickets(Integer nroTicket, Integer nroLegajo, Integer idClasificacion,
+			EstadosTicket idEstado, Date fechaApertura, Date fechaUltimoCambio, Integer idGrupo) {
+		// TODO Auto-generated method stub
+		try (Connection connection = DriverManager.getConnection("jdbc:postgresql://localhost:5432/TP-DDS", "postgres", "postgres")) {
+
+			System.out.println("Connected to PostgreSQL database! --> Buscar Tickets");
+			
+			Statement statement;
+			statement = connection.createStatement();
+			statement.executeQuery("SELECT * FROM public.ticket WHERE ");
+		}
+		catch (SQLException e) {
+			e.printStackTrace();
+			return null;
+		}
+		return null;
 	}
 }
 

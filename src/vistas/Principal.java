@@ -41,7 +41,6 @@ public class Principal {
 		});
 	}
 
-
 	private static void createAndShowGUI() {
 
 		JFrame frame = new JFrame();
@@ -56,7 +55,7 @@ public class Principal {
 
 		Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
         frame.setLocation(dim.width/2- frame.getSize().width/2, dim.height/2- frame.getSize().height/2);
-
+        
 	}
 
 	public static void cargarEstados() {
