@@ -8,7 +8,13 @@ public class EstadoTicketDTO {
 	public String nombre;
 	public String descripcion;
 	
-	public EstadoTicketDTO () {}
+	public EstadoTicketDTO () {};
+	
+	public EstadoTicketDTO (EstadosTicket idEstadoTicket, String nombre, String descripcion) {
+		this.idEstadoTicket = idEstadoTicket;
+		this.nombre = nombre;
+		this.descripcion = descripcion;
+	}
 	
 	public EstadosTicket getIdEstadoTicket() {
 		return idEstadoTicket;
@@ -29,4 +35,7 @@ public class EstadoTicketDTO {
 		this.descripcion = descripcion;
 	}
 
+	public String toString() {
+		return this.nombre;
+	}
 }

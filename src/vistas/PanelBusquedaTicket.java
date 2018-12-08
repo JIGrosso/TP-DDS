@@ -26,6 +26,8 @@ import clasesDTO.ClasificacionDTO;
 import clasesDTO.EstadoTicketDTO;
 import clasesDTO.GrupoDTO;
 import clasesDTO.TicketDTO;
+import gestores.GestorDeClasificacion;
+import gestores.GestorDeGrupo;
 import gestores.GestorDeTicket;
 import produccion.EstadosTicket;
 
@@ -102,7 +104,14 @@ public class PanelBusquedaTicket extends JPanel{
 		gridConst.gridy = 5;
 		this.add(lblClasificacion, gridConst);
 		
-		cmbClasificacion = new JComboBox();
+		//Combo Clasificaciones
+		ClasificacionDTO allC = new ClasificacionDTO(null, "Todas", null); 
+		ArrayList<ClasificacionDTO> clasificaciones = GestorDeClasificacion.getClasificaciones();
+		clasificaciones.add(allC);
+		ClasificacionDTO[] auxClasificaciones = clasificaciones.toArray(new ClasificacionDTO[clasificaciones.size()]);
+		
+		cmbClasificacion = new JComboBox(auxClasificaciones);
+		cmbClasificacion.setSelectedItem(allC);
 		cmbClasificacion.setEditable(false);
 		cmbClasificacion.setPreferredSize(new Dimension(180, 20));
 		gridConst.gridy = 6;
@@ -112,7 +121,13 @@ public class PanelBusquedaTicket extends JPanel{
 		gridConst.gridy = 7;
 		this.add(lblEstado, gridConst);
 		
-		cmbEstado = new JComboBox();
+		//Combo Estados
+		
+		ArrayList<EstadoTicketDTO> estados = GestorDeTicket.mapearEstadosDTO();
+		estados.add(new EstadoTicketDTO(null, "Todos", null));
+		EstadoTicketDTO[] auxEstados = estados.toArray(new EstadoTicketDTO[estados.size()]);
+		
+		cmbEstado = new JComboBox(auxEstados);
 		cmbEstado.setEditable(false);
 		cmbEstado.setPreferredSize(new Dimension(180, 20));
 		gridConst.gridy = 8;
@@ -141,24 +156,46 @@ public class PanelBusquedaTicket extends JPanel{
 		gridConst.gridy = 5;
 		this.add(lblGrupo, gridConst);
 		
-		ClasificacionDTO[] clasificaciones = {};
-		cmbGrupo = new JComboBox(clasificaciones);
+		//Combo grupos
+		GrupoDTO allG = new GrupoDTO(null, "Todos");
+		ArrayList<GrupoDTO> grupos = GestorDeGrupo.getAll();
+		grupos.add(allG);
+		GrupoDTO[] auxGrupos = grupos.toArray(new GrupoDTO[grupos.size()]);
+		
+		cmbGrupo = new JComboBox(auxGrupos);
+		cmbGrupo.setSelectedItem(allG);
 		cmbGrupo.setEditable(false);
 		cmbGrupo.setPreferredSize(new Dimension(180, 20));
 		gridConst.gridy = 6;
 		this.add(cmbGrupo, gridConst);
 		
+		//Busqueda 
+		
 		btnConsultar = new JButton("Consultar");
 		btnConsultar.addActionListener(e -> {
-			Integer nroTicket = Integer.valueOf(txtNroTicket.getText());
-			Integer nroLegajo = Integer.valueOf(txtNroLegajo.getText());
+			Integer nroTicket = null;
+			Integer nroLegajo = null;
+			Date fechaApertura = null;
+			Date fechaUltimoCambio = null;
+			
+			if(!txtNroTicket.getText().isEmpty()) {
+				nroTicket = Integer.valueOf(txtNroTicket.getText());
+			}
+			if(!txtNroLegajo.getText().isEmpty()) {
+				nroLegajo = Integer.valueOf(txtNroLegajo.getText());
+			}
+			
+			if(!(txtFechaApertura.getDate() == null)) {
+				fechaApertura = txtFechaApertura.getDate();
+			}
+			if(!(txtFechaUltimoCambio.getDate() == null)) {
+				fechaUltimoCambio = txtFechaUltimoCambio.getDate();
+			}
 			Integer idClasificacion = ((ClasificacionDTO) cmbClasificacion.getSelectedItem()).idClasificacion;
 			EstadosTicket idEstado = ((EstadoTicketDTO) cmbEstado.getSelectedItem()).idEstadoTicket;
-			Date fechaApertura = txtFechaApertura.getDate();
-			Date fechaUltimoCambio = txtFechaUltimoCambio.getDate();
 			Integer idGrupo = ((GrupoDTO) cmbGrupo.getSelectedItem()).idGrupo;
 			
-			GestorDeTicket.buscarTickets(nroTicket, nroLegajo, idClasificacion, idEstado, fechaApertura, fechaUltimoCambio, idGrupo);
+			setResultado(GestorDeTicket.buscarTickets(nroTicket, nroLegajo, idClasificacion, idEstado, fechaApertura, fechaUltimoCambio, idGrupo), true);
 		});
 		gridConst.gridy = 8;
 		this.add(btnConsultar, gridConst);
@@ -224,7 +261,7 @@ public class PanelBusquedaTicket extends JPanel{
 		this.add(btnCancelar, gridConst);
 		
 	}
-	
+
 	public void setResultado(List<TicketDTO> listaResultado, boolean actualizar) {
 		this.tablaResultados.setTickets(listaResultado);
 		if(actualizar) {

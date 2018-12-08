@@ -9,7 +9,6 @@ public class GrupoDTO {
 	public String nombre;
 	
 	public GrupoDTO(Integer idGrupo, String nombre) {
-		
 		this.idGrupo = idGrupo;
 		this.nombre = nombre;
 	}

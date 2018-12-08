@@ -22,11 +22,8 @@ import usuarios.Soporte;
 public class GestorDeTicket {
 	
 	public static EstadoTicket abiertoMA;
-	
 	public static EstadoTicket abiertoD;
-	
 	public static EstadoTicket solucionadoOK;
-	
 	public static EstadoTicket cerrado;
 
 	public static Ticket crearTicket(Soporte soporte, Integer nroTicket, Integer nroLegajo, Date fechaCreacion, ClasificacionDTO clasificacionDTO, String descripcion){

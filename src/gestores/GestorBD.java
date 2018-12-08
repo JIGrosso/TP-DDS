@@ -5,6 +5,8 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -14,6 +16,7 @@ import clasesDTO.ClasificacionDTO;
 import clasesDTO.EstadoIntervencionDTO;
 import clasesDTO.EstadoTicketDTO;
 import clasesDTO.GrupoDTO;
+import clasesDTO.HistorialEstadoTicketDTO;
 import clasesDTO.TicketDTO;
 import produccion.Clasificacion;
 import produccion.EstadoIntervencion;
@@ -31,6 +34,7 @@ public class GestorBD {
 
 	private static SimpleDateFormat formatFecha = new SimpleDateFormat("yyyy-MM-dd");
 	private static SimpleDateFormat formatHora = new SimpleDateFormat("HH:mm:ss.SSS");
+	private static SimpleDateFormat parseFecha = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
 
 	public static boolean validarSoporte(Integer nroLegajo, String password) {
 		
@@ -755,6 +759,37 @@ public class GestorBD {
 		}
 	}
 
+	public static ClasificacionDTO mapearClasificacionDTO(Integer idClasificacion) {
+		
+		try (Connection connection = DriverManager.getConnection("jdbc:postgresql://localhost:5432/TP-DDS", "postgres", "postgres")) {
+			
+				
+			// Informacion del grupo
+			
+			Statement statement;
+			statement = connection.createStatement();
+			ResultSet resultSet = statement.executeQuery("SELECT * FROM public.clasificacion WHERE idClasificacion = " + idClasificacion);
+			
+			resultSet.next();
+			
+			String nombre = resultSet.getString("nombre");
+			String alcance = resultSet.getString("descripcionAlcance");
+			
+			connection.close();
+				
+			// Creacion de la instancia
+				
+			ClasificacionDTO clasificacionDTO = new ClasificacionDTO(idClasificacion, nombre, alcance);
+		
+			return clasificacionDTO;
+			
+			}
+			catch (SQLException e) {
+				e.printStackTrace();
+				return null;
+			}
+	}
+	
 	public static ArrayList<ClasificacionDTO> mapearClasificacionesDTO() {
 
 		try (Connection connection = DriverManager.getConnection("jdbc:postgresql://localhost:5432/TP-DDS", "postgres", "postgres")) {
@@ -809,6 +844,32 @@ public class GestorBD {
 				e.printStackTrace();
 				return null;
 			}	
+	}
+	
+	public static ArrayList<GrupoDTO> mapearGruposDTO() {
+		
+		try (Connection connection = DriverManager.getConnection("jdbc:postgresql://localhost:5432/TP-DDS", "postgres", "postgres")) {
+
+			Statement statement;
+			statement = connection.createStatement();
+			ResultSet resultSet = statement.executeQuery("SELECT * FROM public.grupo_resolucion");
+
+			ArrayList<GrupoDTO> resultado = new ArrayList<GrupoDTO>();
+
+			while(resultSet.next()) {
+				Integer idGrupo = resultSet.getInt("idGrupo");
+				GrupoDTO grupo = new GrupoDTO (idGrupo, resultSet.getString("nombre"));
+				resultado.add(grupo);
+			}
+			
+			return resultado;
+			
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+
+		return null;
+		
 	}
 
 	public static void modificarTicket(Ticket ticket, Intervencion intervencion) {
@@ -885,10 +946,19 @@ public class GestorBD {
 
 	public static List<TicketDTO> buscarTickets(Integer nroTicket, Integer nroLegajo, Integer idClasificacion,
 			EstadosTicket idEstado, Date fechaApertura, Date fechaUltimoCambio, Integer idGrupo) {
-		// TODO Auto-generated method stub
+		String idEstadoS = null;
+		String fechaA = null;
+		String fechaUC = null;
 		
-		String fechaA = formatFecha.format(fechaApertura);
-		String fechaUC = formatFecha.format(fechaUltimoCambio);
+		if(!(idEstado == null)) {
+			idEstadoS = "'"+String.valueOf(idEstado)+"'";
+		}
+		if(!(fechaApertura == null)) {
+			fechaA = "'"+formatFecha.format(fechaApertura)+"'";
+		}
+		if(!(fechaUltimoCambio == null)) {
+			fechaUC = "'"+formatFecha.format(fechaUltimoCambio)+"'";
+		}
 		
 		try (Connection connection = DriverManager.getConnection("jdbc:postgresql://localhost:5432/TP-DDS", "postgres", "postgres")) {
 
@@ -896,17 +966,67 @@ public class GestorBD {
 			
 			Statement statement;
 			statement = connection.createStatement();
-			statement.executeQuery("SELECT * FROM public.ticket WHERE COALESCE(nroTicket = "+ nroTicket +", nroTicket IS NOT NULL) AND "
-					+ "COALESCE(nroLegajoCliente = "+ nroLegajo +", nroLegajoCliente IS NOT NULL) AND"
-					+ "COALESCE(idClasificacion = "+ idClasificacion +", idClasificacion IS NOT NULL) AND "
-					+ "COALESCE (idEstadoTicket = "+ idEstado +", idEstadoTicket IS NOT NULL) AND "
-					+ "COALESCE (fechaApertura = '"+ fechaA +"', fechaApertura IS NOT NULL AND "
-					+ "COALESCE (fechaApertura = '"+ fechaUC +"', fechaUltimo IS NOT NULL AND ");
+			ResultSet rs = statement.executeQuery("SELECT t.nroticket, t.nrolegajocliente, t.idclasificacion, t.fechaapertura, t.horaapertura, t.idestadoticket, i.idgrupo "
+					+ "FROM public.ticket t, public.intervencion i "
+					+ "WHERE COALESCE(t.nroTicket = "+ nroTicket +", t.nroTicket IS NOT NULL) AND "
+					+ "COALESCE(t.nroLegajoCliente = "+ nroLegajo +", t.nroLegajoCliente IS NOT NULL) AND "
+					+ "COALESCE(t.idClasificacion = "+ idClasificacion +", t.idClasificacion IS NOT NULL) AND "
+					+ "COALESCE (t.idEstadoTicket = "+ idEstadoS +", t.idEstadoTicket IS NOT NULL) AND "
+					+ "COALESCE (t.fechaApertura = "+ fechaA +", t.fechaApertura IS NOT NULL) AND "
+					+ "t.nroTicket = i.nroTicket");
+			
+			List<TicketDTO> resultado = new ArrayList<TicketDTO>();
+			TicketDTO aux = null;
+			
+			while(rs.next()) {
+				String fecha = rs.getString("fechaapertura");
+				String hora = rs.getString("horaapertura");
+				Date apertura;
+				apertura = parseFecha.parse(fecha+" "+hora);
+				GrupoDTO grupo = mapearGrupoDTO(rs.getInt("idgrupo"));
+				ClasificacionDTO clasificacion = mapearClasificacionDTO(rs.getInt("idclasificacion"));
+				EstadoTicketDTO estado = mapearEstadoTicketDTO(rs.getString("idestadoticket"));
+				
+				aux = new TicketDTO(rs.getInt("nroticket"), rs.getInt("nrolegajocliente"), grupo, clasificacion, apertura, estado);
+				resultado.add(aux);
+			}
+			
+			for(int i = 0; i < resultado.size()-1; i++) {
+				TicketDTO ticket = resultado.get(i);
+				ticket.historialesEstado = mapearHistorialesEstadoTicket(ticket.nroTicket);
+			}
+			
+			return resultado;
 		}
-		catch (SQLException e) {
+		catch (Exception e) {
 			e.printStackTrace();
 			return null;
 		}
+	}
+
+	private static List<HistorialEstadoTicketDTO> mapearHistorialesEstadoTicket(Integer nroTicket) {
+
+		try (Connection connection = DriverManager.getConnection("jdbc:postgresql://localhost:5432/TP-DDS", "postgres", "postgres")) {
+			
+			Statement statement;
+			statement = connection.createStatement();
+			ResultSet resultSet = statement.executeQuery("SELECT * FROM historial_estado_ticket WHERE nroTicket = "+ nroTicket);
+			
+			List<HistorialEstadoTicketDTO> resultado = new ArrayList<HistorialEstadoTicketDTO>();
+			HistorialEstadoTicketDTO aux;
+			
+			while(resultSet.next()) {
+				aux = new HistorialEstadoTicketDTO(resultSet.getInt("idHistorialEstadoTicket"), resultSet.getDate("fechaDesde"), resultSet.getDate("fechaHasta"),
+						resultSet.getString("idEstadoTicket"), resultSet.getInt("nroLegajo"));
+				resultado.add(aux);
+			}
+			
+			return resultado;
+		}
+		catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
 		return null;
 	}
 }

@@ -28,4 +28,8 @@ public class GestorDeGrupo {
 		
 		return resultado;
 	}
+	
+	public static ArrayList<GrupoDTO> getAll() {
+		return GestorBD.mapearGruposDTO();
+	}
 }

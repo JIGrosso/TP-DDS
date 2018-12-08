@@ -1,19 +1,30 @@
 package clasesDTO;
 
 import java.util.Date;
+import java.util.List;
+
+import produccion.HistorialEstadoTicket;
 
 public class TicketDTO {
 
 	public Integer nroTicket;
-	public Integer NroLegajoCliente;
-	public String soporteCreador;
+	public Integer nroLegajoCliente;
 	public GrupoDTO grupoAsignado;
 	public ClasificacionDTO clasificacion;
 	public Date fechaYHoraApertura;
 	public String descripcion;
 	public String observaciones;
 	public EstadoTicketDTO estadoActual;
-	public Date ultimoCambioEstado;
+	public List<HistorialEstadoTicketDTO> historialesEstado;
+	
+	public TicketDTO(Integer nroTicket, Integer nroLegajo, GrupoDTO grupoAsignado, ClasificacionDTO clasificacion, Date fechaYHora, EstadoTicketDTO estadoActual) {
+		this.nroTicket = nroTicket;
+		this.nroLegajoCliente = nroLegajo;
+		this.grupoAsignado = grupoAsignado;
+		this.clasificacion = clasificacion;
+		this.fechaYHoraApertura = fechaYHora;
+		this.estadoActual = estadoActual;
+	}
 	
 	public Integer getNroTicket() {
 		return nroTicket;
@@ -24,11 +35,11 @@ public class TicketDTO {
 	}
 	
 	public Integer getNroLegajoCliente() {
-		return NroLegajoCliente;
+		return nroLegajoCliente;
 	}
 	
 	public void setNroLegajoCliente(Integer nroLegajoCliente) {
-		NroLegajoCliente = nroLegajoCliente;
+		this.nroLegajoCliente = nroLegajoCliente;
 	}
 	
 	public GrupoDTO getGrupoAsignado() {
