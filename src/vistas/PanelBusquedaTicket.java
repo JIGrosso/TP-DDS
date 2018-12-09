@@ -6,6 +6,7 @@ import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
+import java.awt.Toolkit;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -13,7 +14,9 @@ import java.util.List;
 import javax.swing.Box;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
+import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -60,8 +63,6 @@ public class PanelBusquedaTicket extends JPanel{
 	private JButton btnDerivar;
 	private JButton btnCerrar;
 	private JButton btnCancelar;
-	
-	
 	
 	public PanelBusquedaTicket() {
 		this.setLayout(new GridBagLayout());
@@ -220,6 +221,17 @@ public class PanelBusquedaTicket extends JPanel{
 		gridConst.gridy = 11;
 		gridConst.gridwidth = 1;
 		this.add(btnVerDetalle, gridConst);
+		btnVerDetalle.addActionListener(e ->{
+			try {
+				int filaSeleccionada = tabla.getSelectedRow();
+				TicketDTO ticketDTO = (tablaResultados.getTickets()).get(filaSeleccionada);
+				System.out.println("Ticket Seleccionado: " + ticketDTO.nroTicket);
+				verDetalleTicket(ticketDTO);
+			}
+			catch(Exception ex){
+				JOptionPane.showMessageDialog(null, "Debe seleccionar un Ticket de la tabla para poder continuar.", "Error", JOptionPane.OK_OPTION);
+			}	
+		});
 		
 		btnReporte = new JButton("Configurar Reporte");
 		gridConst.gridx = 1;
@@ -268,4 +280,20 @@ public class PanelBusquedaTicket extends JPanel{
 			this.tablaResultados.fireTableDataChanged();
 		}
 	}
+
+	public void verDetalleTicket(TicketDTO ticketSeleccionado) {
+		
+		JFrame newFrame = new JFrame();
+		newFrame.setVisible(true);
+		newFrame.setSize(1000, 500);
+		newFrame.setTitle("Ver Detalle Ticket");
+		
+		PanelVerDetalleTicket verDetalle = new PanelVerDetalleTicket(ticketSeleccionado);
+		newFrame.setContentPane(verDetalle);
+		
+		Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
+        newFrame.setLocation(dim.width/2- newFrame.getSize().width/2, dim.height/2- newFrame.getSize().height/2);
+	}
+
+
 }

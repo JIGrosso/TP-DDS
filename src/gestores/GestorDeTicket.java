@@ -28,7 +28,7 @@ public class GestorDeTicket {
 
 	public static Ticket crearTicket(Soporte soporte, Integer nroTicket, Integer nroLegajo, Date fechaCreacion, ClasificacionDTO clasificacionDTO, String descripcion){
 
-		Cliente cliente = GestorBD.mapearCliente(nroLegajo);
+		Cliente cliente = GestorDeCliente.mapearCliente(nroLegajo);
 
 		Clasificacion clasificacion = GestorBD.mapearClasificacion(clasificacionDTO.idClasificacion);
 		
