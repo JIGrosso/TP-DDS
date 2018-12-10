@@ -623,7 +623,7 @@ public class GestorBD {
 			
 			//Creacion de la intervencion
 			
-			Intervencion intervencion = new Intervencion(idInterv, resultSet.getString("observacions"), fechaAsignacion, fechaFin, estadoActual, historiales);
+			Intervencion intervencion = new Intervencion(idInterv, resultSet.getString("observaciones"), fechaAsignacion, fechaFin, estadoActual, historiales);
 			
 			
 			return intervencion;
@@ -763,7 +763,6 @@ public class GestorBD {
 		
 		try (Connection connection = DriverManager.getConnection("jdbc:postgresql://localhost:5432/TP-DDS", "postgres", "postgres")) {
 			
-				
 			// Informacion del grupo
 			
 			Statement statement;
