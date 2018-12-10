@@ -1,15 +1,17 @@
 package auxiliares;
 
+import java.text.SimpleDateFormat;
 import java.util.List;
 
 import javax.swing.table.AbstractTableModel;
 
+import clasesDTO.HistorialEstadoTicketDTO;
 import clasesDTO.TicketDTO;
 
 public class TablaBusquedaTicket extends AbstractTableModel {
 
 	private List<TicketDTO> tickets;
-	private String[] columnas = {"Nro. Ticket", "Nro.Legajo", "Fecha Apertura", "Hora Apertura", "Operador", "Clasificacion", "Estado", "Ult. Cambio de Estado", "Grupo de Resolución"};
+	private String[] columnas = {"Nro. Ticket", "Nro.Legajo", "Fecha Apertura", "Hora Apertura", "Operador Inicial", "Clasificacion", "Estado", "Ult. Cambio de Estado", "Grupo de Resolución"};
 	
 	public List<TicketDTO> getTickets() {
 		return tickets;
@@ -44,14 +46,15 @@ public class TablaBusquedaTicket extends AbstractTableModel {
 			valor = this.tickets.get(rowIndex).getNroLegajoCliente();
 			break;
 		case 2:
-			valor = this.tickets.get(rowIndex).getFechaYHoraApertura();
+			SimpleDateFormat formatFecha = new SimpleDateFormat("yyyy-MM-dd");
+			valor = formatFecha.format(this.tickets.get(rowIndex).getFechaYHoraApertura());
 			break;
 		case 3:
-			valor = this.tickets.get(rowIndex).getFechaYHoraApertura();
+			SimpleDateFormat formatHora = new SimpleDateFormat("HH:mm:ss.SSS");
+			valor = formatHora.format(this.tickets.get(rowIndex).getFechaYHoraApertura());
 			break;
 		case 4:
-			// Obtener el primer historial y de ahi el soporte que abrio el ticket
-			valor = "soporte";
+			valor = this.tickets.get(rowIndex).historialesEstado.get(0).legajoCreador;
 			break;
 		case 5:
 			valor = this.tickets.get(rowIndex).getClasificacion().nombre;
@@ -60,8 +63,8 @@ public class TablaBusquedaTicket extends AbstractTableModel {
 			valor = this.tickets.get(rowIndex).getEstadoActual().nombre;
 			break;
 		case 7:
-			// Obtener el ultimo historial de cambio de estado
-			valor = "ultimo cambio";
+			List<HistorialEstadoTicketDTO> auxHistoriales = this.tickets.get(rowIndex).historialesEstado;
+			valor = auxHistoriales.get(auxHistoriales.size()-1).fechaDesde;	
 			break;
 		case 8:
 			valor = this.tickets.get(rowIndex).getGrupoAsignado().nombre;

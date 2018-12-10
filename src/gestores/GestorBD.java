@@ -946,18 +946,15 @@ public class GestorBD {
 
 	public static List<TicketDTO> buscarTickets(Integer nroTicket, Integer nroLegajo, Integer idClasificacion,
 			EstadosTicket idEstado, Date fechaApertura, Date fechaUltimoCambio, Integer idGrupo) {
+		
 		String idEstadoS = null;
 		String fechaA = null;
-		String fechaUC = null;
 		
 		if(!(idEstado == null)) {
 			idEstadoS = "'"+String.valueOf(idEstado)+"'";
 		}
 		if(!(fechaApertura == null)) {
 			fechaA = "'"+formatFecha.format(fechaApertura)+"'";
-		}
-		if(!(fechaUltimoCambio == null)) {
-			fechaUC = "'"+formatFecha.format(fechaUltimoCambio)+"'";
 		}
 		
 		try (Connection connection = DriverManager.getConnection("jdbc:postgresql://localhost:5432/TP-DDS", "postgres", "postgres")) {
@@ -991,11 +988,10 @@ public class GestorBD {
 				resultado.add(aux);
 			}
 			
-			for(int i = 0; i < resultado.size()-1; i++) {
+			for(int i = 0; i < resultado.size(); i++) {
 				TicketDTO ticket = resultado.get(i);
-				ticket.historialesEstado = mapearHistorialesEstadoTicket(ticket.nroTicket);
+				ticket.setHistoriales(mapearHistorialesEstadoTicket(ticket.nroTicket));	
 			}
-			
 			return resultado;
 		}
 		catch (Exception e) {

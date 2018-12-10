@@ -18,5 +18,4 @@ public class HistorialEstadoTicketDTO {
 		this.legajoCreador = legajoCreador;
 	}
 	
-	
 }

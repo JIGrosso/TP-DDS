@@ -89,5 +89,9 @@ public class TicketDTO {
 	public void setEstadoActual(EstadoTicketDTO estadoActual) {
 		this.estadoActual = estadoActual;
 	}
+	
+	public void setHistoriales(List<HistorialEstadoTicketDTO> historiales) {
+		this.historialesEstado = historiales;
+	}
 
 }

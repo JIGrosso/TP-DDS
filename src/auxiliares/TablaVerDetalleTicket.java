@@ -4,19 +4,19 @@ import java.util.List;
 
 import javax.swing.table.AbstractTableModel;
 
-import clasesDTO.TicketDTO;
+import clasesDTO.HistorialEstadoTicketDTO;
 
 public class TablaVerDetalleTicket extends AbstractTableModel {
 
-	private List<TicketDTO> tickets;
+	private List<HistorialEstadoTicketDTO> historiales;
 	private String[] columnas = {"Fecha Cambio Estado", "Hora Cambio Estado", "Operador", "Estado", "Grupo de Resolución", "Observaciones", "Clasificacion"};
 	
-	public List<TicketDTO> getTickets() {
-		return tickets;
+	public List<HistorialEstadoTicketDTO> getHistoriales() {
+		return historiales;
 	}
 	
-	public void setTickets (List<TicketDTO> tickets) {
-		this.tickets = tickets;
+	public void setHistoriales(List<HistorialEstadoTicketDTO> tickets) {
+		this.historiales = tickets;
 	}
 	
 	public String getColumnName(int indice) {
@@ -30,7 +30,7 @@ public class TablaVerDetalleTicket extends AbstractTableModel {
 
 	@Override
 	public int getRowCount() {
-		return tickets.size();
+		return historiales.size();
 	}
 
 	@Override
@@ -38,33 +38,26 @@ public class TablaVerDetalleTicket extends AbstractTableModel {
 		Object valor = null;
 		switch(columnIndex) {
 		case 0:
-			valor = this.tickets.get(rowIndex).getNroTicket();
+			valor = this.historiales.get(rowIndex).fechaDesde;
 			break;
 		case 1:
-			valor = this.tickets.get(rowIndex).getNroLegajoCliente();
+			valor = "hora?";
 			break;
 		case 2:
-			valor = this.tickets.get(rowIndex).getFechaYHoraApertura();
+			valor = this.historiales.get(rowIndex).legajoCreador;
 			break;
 		case 3:
-			valor = this.tickets.get(rowIndex).getFechaYHoraApertura();
+			valor = this.historiales.get(rowIndex).estado;
 			break;
 		case 4:
-			// Obtener el primer historial y de ahi el soporte que abrio el ticket
-			valor = "soporte";
+			// A traves del soporte encontrar el grupo
+			valor = "grupo?";
 			break;
 		case 5:
-			valor = this.tickets.get(rowIndex).getClasificacion().nombre;
+			valor = "observaciones?";
 			break;
 		case 6:
-			valor = this.tickets.get(rowIndex).getEstadoActual().nombre;
-			break;
-		case 7:
-			// Obtener el ultimo historial de cambio de estado
-			valor = "ultimo cambio";
-			break;
-		case 8:
-			valor = this.tickets.get(rowIndex).getGrupoAsignado().nombre;
+			valor = "clasificacion?";
 			break;
 		default:
 			break;
