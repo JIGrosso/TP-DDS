@@ -100,12 +100,12 @@ public class GestorDeTicket {
 
 	public static List<TicketDTO> buscarTickets(Integer nroTicket, Integer nroLegajo, Integer idClasificacion,
 			EstadosTicket idEstado, Date fechaApertura, Date fechaUltimoCambio, Integer idGrupo) {
-		// TODO Auto-generated method stub
 		return GestorBD.buscarTickets(nroTicket, nroLegajo, idClasificacion, idEstado, fechaApertura, fechaUltimoCambio, idGrupo);
 		
 	}
 
 	public static void derivarTicket(TicketDTO ticket, EstadoTicketDTO nuevoEstado, ClasificacionDTO clasificacionDto, GrupoDTO grupoDto, String observaciones) {
+		
 		if(clasificacionDto != ticket.getClasificacion()) {
 			ticket.setClasificacion(clasificacionDto);
 			HistorialClasificacionDTO ultimoHistorial = ticket.getUltimoHistorialClasificacion();
@@ -134,12 +134,13 @@ public class GestorDeTicket {
 			ultimoEstado.setFechaHasta(fechaActual);
 			ticket.setEstadoActual(nuevoEstado);
 			
-			//Constructor con observaciones, revisar
+			//	Constructor con observaciones, revisar
 			
 			HistorialEstadoTicketDTO nuevoHistorial = new HistorialEstadoTicketDTO(GestorBD.nroNuevoHistorialET(), fechaActual, null, observaciones, Principal.usuarioIniciado.nroLegajo);
 			ticket.addHistorialEstadoTicket(nuevoHistorial);
 			
-			//GUARDAR TICKET Y GRUPO
+			//	GUARDAR TICKET Y GRUPO
+			
 		}
 		
 	}

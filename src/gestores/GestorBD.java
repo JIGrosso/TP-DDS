@@ -1034,7 +1034,7 @@ public class GestorBD {
 
 	//Nacho BD
 	
-	private static List<HistorialClasificacionDTO>mapearHistorialesClasificacion(Integer nroTicket) {
+	private static List<HistorialClasificacionDTO> mapearHistorialesClasificacion(Integer nroTicket) {
 		try (Connection connection = DriverManager.getConnection("jdbc:postgresql://localhost:5432/TP-DDS", "postgres", "postgres")) {
 			
 			Statement statement;

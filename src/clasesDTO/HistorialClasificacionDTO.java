@@ -15,6 +15,13 @@ public class HistorialClasificacionDTO {
 		this.fechaHasta = null;
 		this.idClasificacion = idClasificacion;
 	}
+	
+	public HistorialClasificacionDTO(Integer idClasificacionHis, Date fechaDesde, Date fechaHasta, Integer idClasificacion) {
+		this.idHistorialClasificacion = idClasificacionHis;
+		this.fechaDesde = fechaDesde;
+		this.fechaHasta = fechaHasta;
+		this.idClasificacion = idClasificacion;
+	}
 
 	public void setFechaHasta(Date cierreHist) {
 		this.fechaHasta = cierreHist;

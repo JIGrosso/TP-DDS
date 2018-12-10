@@ -51,7 +51,7 @@ public class PanelDerivacionTicket extends JPanel{
 	private JLabel lblObservaciones;
 	private JTextArea txtObservaciones;
 	
-	public void derivacionTicket(TicketDTO ticket) {
+	public PanelDerivacionTicket(TicketDTO ticket) {
 		this.setLayout(new GridBagLayout());
 		this.construir(ticket);
 	}
