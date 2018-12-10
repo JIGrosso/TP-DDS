@@ -4,10 +4,13 @@ import java.util.ArrayList;
 import java.util.Date;
 
 import clasesDTO.EstadoIntervencionDTO;
+import clasesDTO.HistorialEstadoIntervencionDTO;
+import clasesDTO.IntervencionDTO;
 import produccion.EstadoIntervencion;
 import produccion.HistorialEstadoIntervencion;
 import produccion.Intervencion;
 import usuarios.Soporte;
+import vistas.Principal;
 
 public class GestorDeIntervencion {
 	
@@ -52,6 +55,30 @@ public class GestorDeIntervencion {
 		cerrada = GestorBD.mapearEstadoIntervencion("CERRADA");
 		return estadosIntervencion;
 		
+	}
+
+	public static void activarIntervencionDTO(IntervencionDTO intervencionDTO) {
+		intervencionDTO.setHistoriales(GestorBD.mapearHistorialesEstadosIntervencion(intervencionDTO.idIntervencion));
+		HistorialEstadoIntervencionDTO ultimoHistorial = intervencionDTO.getUltimoHistEstInt();
+		Date fechaActual = new Date();
+		ultimoHistorial.setFechaHasta(fechaActual);
+		EstadoIntervencionDTO nuevoEstado = GestorBD.mapearEstadoIntervencionDTO("ACTIVA");
+		HistorialEstadoIntervencionDTO nuevo = new HistorialEstadoIntervencionDTO(GestorBD.nroNuevoHistorialEI(), fechaActual, null,
+										nuevoEstado, Principal.usuarioIniciado);
+		intervencionDTO.addHistorial(nuevo);
+		intervencionDTO.setEstado(nuevoEstado);
+	}
+	
+	public static IntervencionDTO crearIntervencionDTO() {
+		Date fechaActual = new Date();
+		EstadoIntervencionDTO nuevoEstado = GestorBD.mapearEstadoIntervencionDTO("ASIGNADA");
+		IntervencionDTO nuevaIntervencion = new IntervencionDTO(GestorBD.nroNuevoIntervencion(), fechaActual,
+				null, GestorBD.mapearEstadoIntervencionDTO("ASIGNADA"));
+		HistorialEstadoIntervencionDTO nuevo = new HistorialEstadoIntervencionDTO(GestorBD.nroNuevoHistorialEI(), fechaActual, null,
+				nuevoEstado, Principal.usuarioIniciado);
+		nuevaIntervencion.addHistorial(nuevo);
+		nuevaIntervencion.setEstado(nuevoEstado);
+		return nuevaIntervencion;
 	}
 
 }

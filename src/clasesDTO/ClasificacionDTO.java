@@ -18,4 +18,8 @@ public class ClasificacionDTO {
 	public String toString() {
 		return this.nombre;
 	}
+
+	public Integer getIdClasificacion() {
+		return this.idClasificacion;
+	}
 }

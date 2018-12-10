@@ -16,6 +16,8 @@ public class TicketDTO {
 	public String observaciones;
 	public EstadoTicketDTO estadoActual;
 	public List<HistorialEstadoTicketDTO> historialesEstado;
+	public List<HistorialClasificacionDTO> historialesClasificacion;
+	public List<IntervencionDTO> intervenciones;
 	
 	public TicketDTO(Integer nroTicket, Integer nroLegajo, GrupoDTO grupoAsignado, ClasificacionDTO clasificacion, Date fechaYHora, EstadoTicketDTO estadoActual) {
 		this.nroTicket = nroTicket;
@@ -94,4 +96,35 @@ public class TicketDTO {
 		this.historialesEstado = historiales;
 	}
 
+	public void setHistorialesClasificacion(List<HistorialClasificacionDTO> historiales) {
+		this.historialesClasificacion = historiales;
+	}
+	
+	public void addHistorialclasificacion(HistorialClasificacionDTO ultimoHistorial) {
+		this.historialesClasificacion.add(ultimoHistorial);
+	}
+
+	public HistorialClasificacionDTO getUltimoHistorialClasificacion() {
+		return this.historialesClasificacion.get((this.historialesClasificacion.size()-1));
+	}
+
+	public void setIntervenciones(List<IntervencionDTO> intervencionesDto) {
+		this.intervenciones = intervencionesDto;
+	}
+
+	public List<IntervencionDTO> getIntervenciones() {
+		return this.intervenciones;
+	}
+
+	public void addIntervencion(IntervencionDTO nuevaIntervencion) {
+		this.intervenciones.add(nuevaIntervencion);
+	}
+
+	public HistorialEstadoTicketDTO getUltimoHistorialEstado() {
+		return this.historialesEstado.get((this.historialesEstado.size()-1));
+	}
+
+	public void addHistorialEstadoTicket(HistorialEstadoTicketDTO nuevoHistorial) {
+		this.historialesEstado.add(nuevoHistorial);		
+	}
 }
