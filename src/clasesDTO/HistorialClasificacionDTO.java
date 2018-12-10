@@ -9,10 +9,10 @@ public class HistorialClasificacionDTO {
 	public Date fechaHasta;
 	public Integer idClasificacion;
 	
-	public HistorialClasificacionDTO(Integer idClasificacionHis, Date fechaDesde, Integer idClasificacion) {
+	public HistorialClasificacionDTO(Integer idClasificacionHis, Date fechaDesde, Date fechaHasta, Integer idClasificacion) {
 		this.idHistorialClasificacion = idClasificacionHis;
 		this.fechaDesde = fechaDesde;
-		this.fechaHasta = null;
+		this.fechaHasta = fechaHasta;
 		this.idClasificacion = idClasificacion;
 	}
 

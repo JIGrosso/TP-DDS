@@ -30,4 +30,17 @@ public class IntervencionDTO {
 		return this.historialEstados.get(this.historialEstados.size()-1);
 	}
 
+	public void setHistoriales(List<HistorialEstadoIntervencionDTO> historial) {
+		this.historialEstados = historial;
+		
+	}
+
+	public void addHistorial(HistorialEstadoIntervencionDTO nuevo) {
+		this.historialEstados.add(nuevo);
+	}
+
+	public void setEstado(EstadoIntervencionDTO nuevoEstado) {
+		this.estadoIntervencionActual = nuevoEstado;
+	}
+
 }

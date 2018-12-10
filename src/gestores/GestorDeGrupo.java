@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import clasesDTO.GrupoDTO;
+import clasesDTO.IntervencionDTO;
 import produccion.Clasificacion;
 import usuarios.GrupoDeResolucion;
 
@@ -32,4 +33,13 @@ public class GestorDeGrupo {
 	public static ArrayList<GrupoDTO> getAll() {
 		return GestorBD.mapearGruposDTO();
 	}
+
+	public static void setIntervenciones(GrupoDTO grupoDto, List<IntervencionDTO> mapearIntervencionesGrupoDTO) {
+		grupoDto.setIntervenciones(GestorBD.mapearIntervencionesGrupoDTO(grupoDto.idGrupo));
+	}
+
+	public static void addIntervencion(GrupoDTO grupoDto, IntervencionDTO nuevaIntervencion) {
+		grupoDto.addIntervencion(nuevaIntervencion);
+	}
+	
 }
