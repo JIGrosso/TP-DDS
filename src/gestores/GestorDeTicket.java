@@ -8,16 +8,23 @@ import javax.swing.JOptionPane;
 
 import clasesDTO.ClasificacionDTO;
 import clasesDTO.EstadoTicketDTO;
+import clasesDTO.GrupoDTO;
+import clasesDTO.HistorialClasificacionDTO;
+import clasesDTO.HistorialEstadoTicketDTO;
+import clasesDTO.IntervencionDTO;
 import clasesDTO.TicketDTO;
 import produccion.Clasificacion;
 import produccion.EstadoTicket;
+import produccion.EstadosIntervencion;
 import produccion.EstadosTicket;
 import produccion.HistorialClasificacionTicket;
 import produccion.HistorialEstadoTicket;
 import produccion.Intervencion;
 import produccion.Ticket;
+import produccion.EstadoIntervencion; 
 import usuarios.Cliente;
 import usuarios.Soporte;
+import vistas.Principal;
 
 public class GestorDeTicket {
 	
@@ -96,6 +103,49 @@ public class GestorDeTicket {
 		// TODO Auto-generated method stub
 		return GestorBD.buscarTickets(nroTicket, nroLegajo, idClasificacion, idEstado, fechaApertura, fechaUltimoCambio, idGrupo);
 		
+	}
+
+	public static void derivarTicket(TicketDTO ticket, EstadoTicketDTO nuevoEstado, ClasificacionDTO clasificacionDto, GrupoDTO grupoDto, String observaciones) {
+		if(clasificacionDto != ticket.getClasificacion()) {
+			ticket.setClasificacion(clasificacionDto);
+			HistorialClasificacionDTO ultimoHistorial = ticket.getUltimoHistorialClasificacion();
+			Date fechaActual = new Date();
+			ultimoHistorial.setFechaHasta(fechaActual);
+			HistorialClasificacionDTO nuevo = new HistorialClasificacionDTO(GestorBD.nroNuevoHistorialC(), fechaActual, null, clasificacionDto.getIdClasificacion());
+			ticket.addHistorialclasificacion(nuevo);
+			List<IntervencionDTO> intervenciones = ticket.getIntervenciones();
+			Integer aux = (intervenciones.size() - 1);
+			while(aux >= 0) {
+				GrupoDTO grupoIntervencion = GestorBD.mapearGrupoIntervencionDTO(intervenciones.get(aux).getId());
+				if(grupoIntervencion == grupoDto && intervenciones.get(aux).getEstado().getIdEstadoInt() == EstadosIntervencion.ESPERA) {
+					GestorDeIntervencion.activarIntervencionDTO(intervenciones.get(aux));
+					aux = 0;
+				} else {
+					aux--;
+				}
+			}
+			if(aux != 0) {
+				IntervencionDTO nuevaIntervencion = GestorDeIntervencion.crearIntervencionDTO();
+				GestorDeGrupo.setIntervenciones(grupoDto, GestorBD.mapearIntervencionesGrupoDTO(grupoDto.idGrupo));
+				GestorDeGrupo.addIntervencion(grupoDto, nuevaIntervencion);
+				ticket.addIntervencion(nuevaIntervencion);
+			}
+			HistorialEstadoTicketDTO ultimoEstado = ticket.getUltimoHistorialEstado();
+			ultimoEstado.setFechaHasta(fechaActual);
+			ticket.setEstadoActual(nuevoEstado);
+			
+			//Constructor con observaciones, revisar
+			
+			HistorialEstadoTicketDTO nuevoHistorial = new HistorialEstadoTicketDTO(GestorBD.nroNuevoHistorialET(), fechaActual, null, observaciones, Principal.usuarioIniciado.nroLegajo);
+			ticket.addHistorialEstadoTicket(nuevoHistorial);
+			
+			//GUARDAR TICKET Y GRUPO
+		}
+		
+	}
+	
+	public static EstadoTicketDTO devolverEstadoDTO(String idEstado) {
+		return GestorBD.mapearEstadoTicketDTO(idEstado);
 	}
 
 }

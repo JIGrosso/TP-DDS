@@ -17,5 +17,9 @@ public class HistorialEstadoTicketDTO {
 		this.estado = estado;
 		this.legajoCreador = legajoCreador;
 	}
+
+	public void setFechaHasta(Date fechaActual) {
+		this.fechaHasta = fechaActual;
+	}
 	
 }
