@@ -54,7 +54,7 @@ public class TablaBusquedaTicket extends AbstractTableModel {
 			valor = formatHora.format(this.tickets.get(rowIndex).getFechaYHoraApertura());
 			break;
 		case 4:
-			valor = this.tickets.get(rowIndex).historialesEstado.get(0).legajoCreador;
+			valor = "Legajo: " + this.tickets.get(rowIndex).historialesEstado.get(0).legajoCreador;
 			break;
 		case 5:
 			valor = this.tickets.get(rowIndex).getClasificacion().nombre;
