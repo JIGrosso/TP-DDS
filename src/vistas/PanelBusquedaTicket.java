@@ -26,12 +26,12 @@ import com.toedter.calendar.JDateChooser;
 
 import auxiliares.TablaBusquedaTicket;
 import clasesDTO.ClasificacionDTO;
-import clasesDTO.EstadoTicketDTO;
 import clasesDTO.GrupoDTO;
 import clasesDTO.TicketDTO;
 import gestores.GestorDeClasificacion;
 import gestores.GestorDeGrupo;
 import gestores.GestorDeTicket;
+import produccion.EstadoTicket;
 import produccion.EstadosTicket;
 
 public class PanelBusquedaTicket extends JPanel{
@@ -124,9 +124,9 @@ public class PanelBusquedaTicket extends JPanel{
 		
 		//Combo Estados
 		
-		ArrayList<EstadoTicketDTO> estados = GestorDeTicket.mapearEstadosDTO();
-		estados.add(new EstadoTicketDTO(null, "Todos", null));
-		EstadoTicketDTO[] auxEstados = estados.toArray(new EstadoTicketDTO[estados.size()]);
+		ArrayList<EstadoTicket> estados = GestorDeTicket.mapearEstadosTicket();
+		estados.add(new EstadoTicket(null, "Todos", null));
+		EstadoTicket[] auxEstados = estados.toArray(new EstadoTicket[estados.size()]);
 		
 		cmbEstado = new JComboBox(auxEstados);
 		cmbEstado.setEditable(false);
@@ -193,7 +193,7 @@ public class PanelBusquedaTicket extends JPanel{
 				fechaUltimoCambio = txtFechaUltimoCambio.getDate();
 			}
 			Integer idClasificacion = ((ClasificacionDTO) cmbClasificacion.getSelectedItem()).idClasificacion;
-			EstadosTicket idEstado = ((EstadoTicketDTO) cmbEstado.getSelectedItem()).idEstadoTicket;
+			EstadosTicket idEstado = ((EstadoTicket) cmbEstado.getSelectedItem()).idEstadoTicket;
 			Integer idGrupo = ((GrupoDTO) cmbGrupo.getSelectedItem()).idGrupo;
 			
 			setResultado(GestorDeTicket.buscarTickets(nroTicket, nroLegajo, idClasificacion, idEstado, fechaApertura, fechaUltimoCambio, idGrupo), true);

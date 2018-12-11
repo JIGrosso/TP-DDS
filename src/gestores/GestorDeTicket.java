@@ -71,23 +71,23 @@ public class GestorDeTicket {
 		JOptionPane.showMessageDialog(null, "El ticket "+ticket.nroTicket+" se ha cerrado con éxito!", "CierreExitoso", JOptionPane.INFORMATION_MESSAGE);
 	}
 
-	public static ArrayList<EstadoTicketDTO> mapearEstadosDTO() {
+	public static ArrayList<EstadoTicket> mapearEstadosTicket() {
 		
-		ArrayList<EstadoTicketDTO> estadosTickets = new ArrayList<EstadoTicketDTO>();
+		ArrayList<EstadoTicket> estadosTickets = new ArrayList<EstadoTicket>();
 		
-		EstadoTicketDTO abiertoMAdto = GestorBD.mapearEstadoTicketDTO("ABIERTO_MA");
+		EstadoTicket abiertoMAdto = GestorBD.mapearEstadoTicket("ABIERTO_MA");
 		estadosTickets.add(abiertoMAdto);
 		abiertoMA = GestorBD.mapearEstadoTicket("ABIERTO_MA");
 		
-		EstadoTicketDTO abiertoDdto = GestorBD.mapearEstadoTicketDTO("ABIERTO_D");
+		EstadoTicket abiertoDdto = GestorBD.mapearEstadoTicket("ABIERTO_D");
 		estadosTickets.add(abiertoDdto);
 		abiertoD = GestorBD.mapearEstadoTicket("ABIERTO_D");
 		
-		EstadoTicketDTO solucionadoOKdto = GestorBD.mapearEstadoTicketDTO("SOLUCIONADO_OK");
+		EstadoTicket solucionadoOKdto = GestorBD.mapearEstadoTicket("SOLUCIONADO_OK");
 		estadosTickets.add(solucionadoOKdto);
 		solucionadoOK = GestorBD.mapearEstadoTicket("SOLUCIONADO_OK");
 		
-		EstadoTicketDTO cerradodto = GestorBD.mapearEstadoTicketDTO("CERRADO");
+		EstadoTicket cerradodto = GestorBD.mapearEstadoTicket("CERRADO");
 		estadosTickets.add(cerradodto);
 		cerrado = GestorBD.mapearEstadoTicket("CERRADO");
 		

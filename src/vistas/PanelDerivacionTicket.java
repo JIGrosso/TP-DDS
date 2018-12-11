@@ -18,15 +18,12 @@ import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
 
 import clasesDTO.ClasificacionDTO;
-import clasesDTO.EstadoTicketDTO;
 import clasesDTO.GrupoDTO;
 import clasesDTO.TicketDTO;
 import gestores.GestorDeClasificacion;
 import gestores.GestorDeGrupo;
 import gestores.GestorDeTicket;
 import produccion.EstadoTicket;
-import produccion.Ticket;
-import usuarios.Soporte;
 
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
@@ -100,7 +97,7 @@ public class PanelDerivacionTicket extends JPanel{
 		txtEstadoActual = new JTextField();
 		txtEstadoActual.setEditable(false);
 		txtEstadoActual.setColumns(20);
-		EstadoTicketDTO estado = ticket.getEstadoActual();
+		EstadoTicket estado = ticket.getEstadoActual();
 		txtEstadoActual.setText(estado.getNombre());	
 		gridConst.gridx = 2;
 		gridConst.insets = new Insets(5, 0, 5, 5);

@@ -3,7 +3,6 @@ package gestores;
 import java.util.ArrayList;
 import java.util.Date;
 
-import clasesDTO.EstadoIntervencionDTO;
 import clasesDTO.HistorialEstadoIntervencionDTO;
 import clasesDTO.IntervencionDTO;
 import produccion.EstadoIntervencion;
@@ -38,19 +37,19 @@ public class GestorDeIntervencion {
 		intervencion.setEstadoIntervencionActual(cerrada);
 	}
 
-	public static ArrayList<EstadoIntervencionDTO> mapearEstadosIntervencionDTO() {
+	public static ArrayList<EstadoIntervencion> mapearEstadosIntervencion() {
 		
-		ArrayList<EstadoIntervencionDTO> estadosIntervencion = new ArrayList<EstadoIntervencionDTO>();
-		EstadoIntervencionDTO asignadadto = GestorBD.mapearEstadoIntervencionDTO("ASIGNADA");
+		ArrayList<EstadoIntervencion> estadosIntervencion = new ArrayList<EstadoIntervencion>();
+		EstadoIntervencion asignadadto = GestorBD.mapearEstadoIntervencion("ASIGNADA");
 		estadosIntervencion.add(asignadadto);
 		asignada = GestorBD.mapearEstadoIntervencion("ASIGNADA");
-		EstadoIntervencionDTO activadto = GestorBD.mapearEstadoIntervencionDTO("ACTIVA");
+		EstadoIntervencion activadto = GestorBD.mapearEstadoIntervencion("ACTIVA");
 		estadosIntervencion.add(activadto);
 		activa = GestorBD.mapearEstadoIntervencion("ACTIVA");
-		EstadoIntervencionDTO esperadto = GestorBD.mapearEstadoIntervencionDTO("ESPERA");
+		EstadoIntervencion esperadto = GestorBD.mapearEstadoIntervencion("ESPERA");
 		estadosIntervencion.add(esperadto);
 		espera = GestorBD.mapearEstadoIntervencion("ESPERA");
-		EstadoIntervencionDTO cerradadto = GestorBD.mapearEstadoIntervencionDTO("CERRADA");
+		EstadoIntervencion cerradadto = GestorBD.mapearEstadoIntervencion("CERRADA");
 		estadosIntervencion.add(cerradadto);
 		cerrada = GestorBD.mapearEstadoIntervencion("CERRADA");
 		return estadosIntervencion;
