@@ -35,9 +35,9 @@ import usuarios.Soporte;
 
 public class GestorBD {
 
-	private static SimpleDateFormat formatFecha = new SimpleDateFormat("yyyy-MM-dd");
-	private static SimpleDateFormat formatHora = new SimpleDateFormat("HH:mm:ss.SSS");
-	private static SimpleDateFormat parseFecha = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
+//	private static SimpleDateFormat formatFecha = new SimpleDateFormat("yyyy-MM-dd");
+//	private static SimpleDateFormat formatHora = new SimpleDateFormat("HH:mm:ss.SSS");
+//	private static SimpleDateFormat parseFecha = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
 
 	public static boolean validarSoporte(Integer nroLegajo, String password) {
 		
@@ -82,22 +82,27 @@ public class GestorBD {
 
 			try (Connection connection = DriverManager.getConnection("jdbc:postgresql://localhost:5432/TP-DDS", "postgres", "postgres")) {
 
-				String nroLegajoConsulta = nroLegajo.toString();
-	
 				Statement statement;
 				statement = connection.createStatement();
-				ResultSet resultSet = statement.executeQuery("SELECT * FROM public.soporte WHERE nroLegajo = "+ nroLegajoConsulta);
+				ResultSet resultSet = statement.executeQuery("SELECT * FROM public.soporte WHERE nroLegajo = "+ nroLegajo);
 	
 				resultSet.next();
-				Integer nroLeg = Integer.valueOf(resultSet.getString("nrolegajo"));
-				Integer dni = Integer.valueOf(resultSet.getString("dni"));
+				Integer nroLeg = resultSet.getInt("nrolegajo");
+				String password = resultSet.getString("contrasenia");
+				String nombre = resultSet.getString("nombre");
+				Integer dni = resultSet.getInt("dni");
 				String telefono = resultSet.getString("telefono");
-				Integer idGrupo = Integer.valueOf(resultSet.getString("idGrupo"));
+				Integer telefonoInterno = resultSet.getInt("telefono_interno");
+				String ubicacion = resultSet.getString("ubicacion");
+				String email = resultSet.getString("email");
+				String cargo = resultSet.getString("cargo");
+				Integer idGrupo = resultSet.getInt("idGrupo");
+				
 				
 				connection.close();
 				
 				GrupoDeResolucion grupo = mapearGrupoDeResolucion(idGrupo);
-				Soporte soporte = new Soporte(nroLeg, "contrasenia", resultSet.getString("nombre"), dni, telefono, resultSet.getString("email"), grupo);
+				Soporte soporte = new Soporte(nroLeg, password, nombre, dni, telefono, telefonoInterno, ubicacion, email, cargo, grupo);
 				GestorDeSoporte.soportesMapeados.add(soporte);
 				
 				System.out.println("Soporte: " + soporte.nroLegajo + " mapeado desde BDD.");
@@ -123,8 +128,8 @@ public class GestorBD {
 			
 			Integer nroTicket = resultSet.getInt("last_value");
 			
-			resultSet.close();
 			connection.close();
+			
 			return nroTicket;
 
 		} catch (SQLException e) {
@@ -144,9 +149,8 @@ public class GestorBD {
 			
 			Integer idIntervencion = resultSet.getInt("last_value");
 			
-			statement.execute("SELECT nextval('seqIntervencion')");
-			
-			resultSet.close();
+			statement.executeQuery("SELECT nextval('seqIntervencion')");
+
 			connection.close();
 			return idIntervencion;
 
@@ -167,9 +171,8 @@ public class GestorBD {
 
 			Integer idHistorial = resultSet.getInt("last_value");
 			
-			statement.execute("SELECT nextval('seqHistorialEstadoTicket')");
-			
-			resultSet.close();
+			statement.executeQuery("SELECT nextval('seqHistorialEstadoTicket')");
+
 			connection.close();
 			return idHistorial;
 
@@ -190,9 +193,8 @@ public class GestorBD {
 
 			Integer idHistorialEI = resultSet.getInt("last_value");
 			
-			statement.execute("SELECT nextval('seqHistorialEstadoIntervencion')");
-			
-			resultSet.close();
+			statement.executeQuery("SELECT nextval('seqHistorialEstadoIntervencion')");
+
 			connection.close();
 			return idHistorialEI;
 
@@ -213,9 +215,8 @@ public class GestorBD {
 
 			Integer idHistorialC = resultSet.getInt("last_value");
 			
-			statement.execute("SELECT nextval('seqHistorialClasificacion')");
-			
-			resultSet.close();
+			statement.executeQuery("SELECT nextval('seqHistorialClasificacion')");
+
 			connection.close();
 			return idHistorialC;
 
@@ -237,13 +238,19 @@ public class GestorBD {
 
 			resultSet.next();
 
-			Integer nroLeg = Integer.valueOf(resultSet.getString("nrolegajoc"));
-			Integer dni = Integer.valueOf(resultSet.getString("dni"));
+			Integer nroLeg = resultSet.getInt("nrolegajoc");
+			String nombre = resultSet.getString("nombre");
+			Integer dni = resultSet.getInt("dni");
+			String email = resultSet.getString("email");
 			String telefono = resultSet.getString("telefono");
-			Cliente cliente = new Cliente(resultSet.getString("nombre"), dni, resultSet.getString("email"), telefono, nroLeg);
-
-			resultSet.close();
+			Integer interno = resultSet.getInt("telefono_interno");
+			String ubicacion = resultSet.getString("ubicacion");
+			String cargo = resultSet.getString("cargo");
+			
 			connection.close();
+			
+			Cliente cliente = new Cliente(nombre, dni, email, telefono, interno, ubicacion, cargo, nroLeg);
+
 			return cliente;
 
 		} catch (SQLException e) {
@@ -364,7 +371,6 @@ public class GestorBD {
 				estadoTicket.setDescripcion(resultSet.getString("descripcion"));
 			}
 
-			resultSet.close();
 			connection.close();
 			return estadoTicket;
 
@@ -457,8 +463,7 @@ public class GestorBD {
 				estadoIntervencion.setNombre(resultSet.getString("nombre"));
 				estadoIntervencion.setDescripcion(resultSet.getString("descripcion"));
 			}
-			
-			resultSet.close();
+
 			connection.close();
 			return estadoIntervencion;
 
@@ -540,7 +545,9 @@ public class GestorBD {
 				Statement infoGrupo;
 				infoGrupo = connection.createStatement();
 				ResultSet resultSet = infoGrupo.executeQuery("SELECT * FROM public.grupo_resolucion g WHERE g.idGrupo = " + idGrupoConsulta);
+				
 				resultSet.next();
+				
 				Integer idNuevoGrupo = resultSet.getInt("idGrupo");
 				String nombreGrupo = resultSet.getString("nombre");
 				String nivelGrupo = resultSet.getString("nivel");
@@ -597,9 +604,10 @@ public class GestorBD {
 			resultSet.next();
 
 			Integer idInterv = resultSet.getInt("idIntervencion");
-			Date fechaAsignacion = resultSet.getDate("fechaAsignacion");
-			Date fechaFin = resultSet.getDate("fechaFin");
+			Date fechaAsignacion = resultSet.getTimestamp("fechaAsignacion");
+			Date fechaFin = resultSet.getTimestamp("fechaFin");
 			String idEstadoActual = resultSet.getString("idEstadoIntervencion");
+			String observaciones = resultSet.getString("observaciones");
 			EstadoIntervencion estadoActual = buscarEstadoIntervencion(idEstadoActual);
 			
 			// Historiales de estado de intervencion
@@ -626,7 +634,7 @@ public class GestorBD {
 			
 			//Creacion de la intervencion
 			
-			Intervencion intervencion = new Intervencion(idInterv, resultSet.getString("observacions"), fechaAsignacion, fechaFin, estadoActual, historiales);
+			Intervencion intervencion = new Intervencion(idInterv, observaciones, fechaAsignacion, fechaFin, estadoActual, historiales);
 			
 			
 			return intervencion;
@@ -642,25 +650,22 @@ public class GestorBD {
 		
 		try (Connection connection = DriverManager.getConnection("jdbc:postgresql://localhost:5432/TP-DDS", "postgres", "postgres")) {
 
-			String idHistorialConsulta = idHistorialEstadoIntervencion.toString();
-
 			Statement statement;
 			statement = connection.createStatement();
-			ResultSet resultSet = statement.executeQuery("SELECT * FROM public.historial_estado_intervencion WHERE idHistorialEstadoIntervencion = "+ idHistorialConsulta);
+			ResultSet resultSet = statement.executeQuery("SELECT * FROM public.historial_estado_intervencion WHERE idHistorialEstadoIntervencion = "+ idHistorialEstadoIntervencion);
 
 			resultSet.next();
 
 			Integer idHistorial = resultSet.getInt("idHistorialEstadoIntervencion");
-			Date fechaDesde = resultSet.getDate("fechaDesde");
-			Date fechaHasta = resultSet.getDate("fechaHasta");
+			Date fechaDesde = resultSet.getTimestamp("fechaDesde");
+			Date fechaHasta = resultSet.getTimestamp("fechaHasta");
 			String idEstadoIntervencion = resultSet.getString("idEstadoIntervencion");
 			EstadoIntervencion estado = GestorBD.mapearEstadoIntervencion(idEstadoIntervencion);
 			Integer nroSoporte = resultSet.getInt("nroLegajoSoporte");
 			Soporte actor = mapearSoporte(nroSoporte);
 				
 			HistorialEstadoIntervencion aux = new HistorialEstadoIntervencion(idHistorial, fechaDesde, fechaHasta, actor, estado);
-			
-			resultSet.close();
+
 			connection.close();
 			return aux;
 
@@ -691,22 +696,19 @@ public class GestorBD {
 		try (Connection connection = DriverManager.getConnection("jdbc:postgresql://localhost:5432/TP-DDS", "postgres", "postgres")) {
 
 			System.out.println("Connected to PostgreSQL database! --> Guardar Ticket");
-
-			String fechaApertura = formatFecha.format(ticket.fechaYHoraApertura);
-			String horaApertura = formatHora.format(ticket.fechaYHoraApertura);
 			
 			Statement statement1;
 			statement1 = connection.createStatement();
-			statement1.executeUpdate("INSERT INTO public.ticket VALUES (" + ticket.nroTicket + ", '" + ticket.descripcion + "', '-' , '" + horaApertura + "', '" + fechaApertura + "', " + ticket.cliente.nroLegajo + ", '" + ticket.estadoActual.idEstadoTicket + "', " + ticket.clasificacion.idClasificacion + ")" );
+			statement1.executeUpdate("INSERT INTO public.ticket VALUES (" + ticket.nroTicket + ", '" + ticket.descripcion + "', '" + ticket.observaciones + "', '" + ticket.fechaYHoraApertura + "', " + ticket.cliente.nroLegajo + ", '" + ticket.estadoActual.idEstadoTicket + "', " + ticket.clasificacion.idClasificacion + ")" );
 			
 			//Ultimo y penúltimo
-			String fechaDesdeHistorialET = formatFecha.format(ticket.historialesEstado.get(0).fechaDesde);
+			String fechaDesdeHistorialET = String.valueOf(ticket.historialesEstado.get(0).fechaDesde);
 
 			Statement statement2;
 			statement2 = connection.createStatement();
 			statement2.executeUpdate("INSERT INTO public.historial_estado_ticket VALUES (" + ticket.historialesEstado.get(0).idHistorialEstadoTic + ", '" + fechaDesdeHistorialET + "', null, " + ticket.nroTicket + ", '" + ticket.estadoActual.idEstadoTicket + "', " + soporte.nroLegajo + ")" );
 			
-			String fechaDesdeHistorialC = formatFecha.format(ticket.historialesClasificacion.get(0).fechaDesde);
+			String fechaDesdeHistorialC = String.valueOf(ticket.historialesClasificacion.get(0).fechaDesde);
 			
 			Statement statement3;
 			statement3 = connection.createStatement();
@@ -714,7 +716,7 @@ public class GestorBD {
 			
 			Statement statement4;
 			statement4 = connection.createStatement();
-			statement4.execute("SELECT nextval('seqNroTicket')");
+			statement4.executeQuery("SELECT nextval('seqNroTicket')");
 			
 			GestorBD.guardarIntervencion(intervencion, soporte, ticket.nroTicket);
 			
@@ -732,23 +734,23 @@ public class GestorBD {
 
 			System.out.println("Connected to PostgreSQL database! --> Guardar Intervencion");
 			
-			String fechaAsignacion = formatFecha.format(intervencion.fechaAsignacion);
+			String fechaAsignacion = String.valueOf(intervencion.fechaAsignacion);
 			String fechaFin = null;
 			if(!(intervencion.fechaFin == null)) {
-				fechaFin = formatFecha.format(intervencion.fechaFin);
+				fechaFin = String.valueOf(intervencion.fechaFin);
 				Statement statement1;
 				statement1 = connection.createStatement();
-				statement1.executeUpdate("INSERT INTO public.intervencion VALUES (" + intervencion.getIdIntervencion() + ", '" + intervencion.getObservaciones() + "', '" + fechaAsignacion + "', " + nroTicket + ", '" + intervencion.getEstadoIntervencionActual().getIdEstadoInt().name() + "', " + soporte.getGrupo().idGrupo + ", '" + fechaFin + "')");
+				statement1.executeUpdate("INSERT INTO public.intervencion VALUES (" + intervencion.getIdIntervencion() + ", '" + intervencion.getObservaciones() + "', '" + fechaAsignacion + "', '" + fechaFin + "', " + nroTicket + ", '" + intervencion.getEstadoIntervencionActual().getIdEstadoInt().name() + "', " + soporte.getGrupo().idGrupo + ")");
 			}
 			else {
 				Statement statement1;
 				statement1 = connection.createStatement();
-				statement1.executeUpdate("INSERT INTO public.intervencion VALUES (" + intervencion.getIdIntervencion() + ", '" + intervencion.getObservaciones() + "', '" + fechaAsignacion + "', " + nroTicket + ", '" + intervencion.getEstadoIntervencionActual().getIdEstadoInt().name() + "', " + soporte.getGrupo().idGrupo + ")");
+				statement1.executeUpdate("INSERT INTO public.intervencion VALUES (" + intervencion.getIdIntervencion() + ", '" + intervencion.getObservaciones() + "', '" + fechaAsignacion + "', null, " + nroTicket + ", '" + intervencion.getEstadoIntervencionActual().getIdEstadoInt().name() + "', " + soporte.getGrupo().idGrupo + ")");
 
 			}
 			// Hacer un for para guardar todas las intervenciones que sufren cambios
 			HistorialEstadoIntervencion auxHistorial = intervencion.historialesEstado.get(0);
-			String fechaDesdeHistorialEI = formatFecha.format(auxHistorial.fechaDesde);
+			String fechaDesdeHistorialEI = String.valueOf(auxHistorial.fechaDesde);
 			
 			Statement statement2;
 			statement2 = connection.createStatement();
@@ -766,7 +768,6 @@ public class GestorBD {
 		
 		try (Connection connection = DriverManager.getConnection("jdbc:postgresql://localhost:5432/TP-DDS", "postgres", "postgres")) {
 			
-				
 			// Informacion del grupo
 			
 			Statement statement;
@@ -804,8 +805,7 @@ public class GestorBD {
 			ArrayList<ClasificacionDTO> resultado = new ArrayList<ClasificacionDTO>();
 
 			while(resultSet.next()) {
-				Integer idClasificacion = resultSet.getInt("idClasificacion");
-				ClasificacionDTO clasificacion = new ClasificacionDTO (idClasificacion, resultSet.getString("nombre"), resultSet.getString("descripcionAlcance"));
+				ClasificacionDTO clasificacion = new ClasificacionDTO (resultSet.getInt("idClasificacion"), resultSet.getString("nombre"), resultSet.getString("descripcionAlcance"));
 				resultado.add(clasificacion);
 			}
 			
@@ -881,20 +881,24 @@ public class GestorBD {
 
 			System.out.println("Connected to PostgreSQL database! --> Modificar Ticket");
 
+			// Modifica solo el estado
+			
 			Statement statement1;
 			statement1 = connection.createStatement();
 			statement1.executeUpdate("UPDATE public.ticket SET idEstadoTicket = '"+ ticket.estadoActual.getIdEstadoTicket() +"' WHERE nroTicket = "+ ticket.nroTicket);
 
 			// Implementar para el último y penúltimo
 			
-			String fechaHastaHistorialET = formatFecha.format(ticket.getUlitmoHistorialET().fechaHasta);
+			String fechaHastaHistorialET = String.valueOf(ticket.getUlitmoHistorialET().fechaHasta);
 			Integer idHistorialET = ticket.getUlitmoHistorialET().idHistorialEstadoTic;
+			
+			// Modifica fecha del historial estado, clasificacio y observaciones de ticket
 			
 			Statement statement2;
 			statement2 = connection.createStatement();
 			statement2.executeUpdate("UPDATE public.historial_estado_ticket SET fechaHasta = '"+ fechaHastaHistorialET +"' WHERE idHistorialEstadoTicket = "+ idHistorialET);
 			
-			String fechaHastaHistorialC = formatFecha.format(ticket.getUlitmoHistorialC().fechaHasta);
+			String fechaHastaHistorialC = String.valueOf(ticket.getUlitmoHistorialC().fechaHasta);
 			Integer idHistorialC = ticket.getUlitmoHistorialC().idHistorialClasificacion;
 			
 			Statement statement3;
@@ -925,7 +929,7 @@ public class GestorBD {
 			statement = connection.createStatement();
 			statement.executeUpdate("UPDATE public.intervencion SET idEstadoIntervencion = '"+ intervencion.estadoIntervencionActual.getIdEstadoInt() +"' WHERE idIntervencion = "+ intervencion.idIntervencion);
 			
-			String fechaFin = formatFecha.format(intervencion.fechaFin);
+			String fechaFin = String.valueOf(intervencion.fechaFin);
 			
 			Statement statement1;
 			statement1 = connection.createStatement();
@@ -933,7 +937,7 @@ public class GestorBD {
 
 			// Ultimo y penúltimo
 			HistorialEstadoIntervencion auxHistorial = intervencion.getUltimoHistorialIntervencion();
-			String fechaHastaHistorialEI = formatFecha.format(auxHistorial.fechaHasta);
+			String fechaHastaHistorialEI = String.valueOf(auxHistorial.fechaHasta);
 			
 			Statement statement2;
 			statement2 = connection.createStatement();
@@ -957,7 +961,7 @@ public class GestorBD {
 			idEstadoS = "'"+String.valueOf(idEstado)+"'";
 		}
 		if(!(fechaApertura == null)) {
-			fechaA = "'"+formatFecha.format(fechaApertura)+"'";
+			fechaA = "'"+String.valueOf(fechaApertura)+"'";
 		}
 		
 		try (Connection connection = DriverManager.getConnection("jdbc:postgresql://localhost:5432/TP-DDS", "postgres", "postgres")) {
@@ -966,7 +970,7 @@ public class GestorBD {
 			
 			Statement statement;
 			statement = connection.createStatement();
-			ResultSet rs = statement.executeQuery("SELECT t.nroticket, t.nrolegajocliente, t.idclasificacion, t.fechaapertura, t.horaapertura, t.idestadoticket, i.idgrupo "
+			ResultSet rs = statement.executeQuery("SELECT t.nroticket, t.nrolegajocliente, t.idclasificacion, t.fechaapertura, t.idestadoticket, i.idgrupo "
 					+ "FROM public.ticket t, public.intervencion i "
 					+ "WHERE COALESCE(t.nroTicket = "+ nroTicket +", t.nroTicket IS NOT NULL) AND "
 					+ "COALESCE(t.nroLegajoCliente = "+ nroLegajo +", t.nroLegajoCliente IS NOT NULL) AND "
@@ -979,10 +983,7 @@ public class GestorBD {
 			TicketDTO aux = null;
 			
 			while(rs.next()) {
-				String fecha = rs.getString("fechaapertura");
-				String hora = rs.getString("horaapertura");
-				Date apertura;
-				apertura = parseFecha.parse(fecha+" "+hora);
+				Date apertura = rs.getTimestamp("fechaapertura");
 				GrupoDTO grupo = mapearGrupoDTO(rs.getInt("idgrupo"));
 				ClasificacionDTO clasificacion = mapearClasificacionDTO(rs.getInt("idclasificacion"));
 				EstadoTicketDTO estado = mapearEstadoTicketDTO(rs.getString("idestadoticket"));
@@ -995,11 +996,11 @@ public class GestorBD {
 				TicketDTO ticket = resultado.get(i);
 				ticket.setHistoriales(mapearHistorialesEstadoTicket(ticket.nroTicket));
 				ticket.setHistorialesClasificacion(mapearHistorialesClasificacion(ticket.nroTicket));
-				ticket.setIntervenciones(mapearIntervencionesTicket(ticket.nroTicket));
+				ticket.setIntervenciones(mapearIntervencionesDTOTicket(ticket.nroTicket));
 			}
 			return resultado;
 		}
-		catch (Exception e) {
+		catch (SQLException e) {
 			e.printStackTrace();
 			return null;
 		}
@@ -1017,7 +1018,7 @@ public class GestorBD {
 			HistorialEstadoTicketDTO aux;
 			
 			while(resultSet.next()) {
-				aux = new HistorialEstadoTicketDTO(resultSet.getInt("idHistorialEstadoTicket"), resultSet.getDate("fechaDesde"), resultSet.getDate("fechaHasta"),
+				aux = new HistorialEstadoTicketDTO(resultSet.getInt("idHistorialEstadoTicket"), resultSet.getTimestamp("fechaDesde"), resultSet.getTimestamp("fechaHasta"),
 						resultSet.getString("idEstadoTicket"), resultSet.getInt("nroLegajo"));
 				resultado.add(aux);
 			}
@@ -1033,9 +1034,8 @@ public class GestorBD {
 		return null;
 	}
 
-	//Nacho BD
-	
-	private static List<HistorialClasificacionDTO>mapearHistorialesClasificacion(Integer nroTicket) {
+	private static List<HistorialClasificacionDTO> mapearHistorialesClasificacion(Integer nroTicket) {
+		
 		try (Connection connection = DriverManager.getConnection("jdbc:postgresql://localhost:5432/TP-DDS", "postgres", "postgres")) {
 			
 			Statement statement;
@@ -1046,7 +1046,7 @@ public class GestorBD {
 			HistorialClasificacionDTO aux;
 			
 			while(resultSet.next()) {
-				aux = new HistorialClasificacionDTO(resultSet.getInt("idClasificacionHis"), resultSet.getDate("fechaDesde"), resultSet.getDate("fechaHasta"), resultSet.getInt("idClasificacion"));
+				aux = new HistorialClasificacionDTO(resultSet.getInt("idHistorialClasificacion"), resultSet.getTimestamp("fechaDesde"), resultSet.getTimestamp("fechaHasta"), resultSet.getInt("idClasificacion"));
 				resultado.add(aux);
 			}
 			
@@ -1060,7 +1060,8 @@ public class GestorBD {
 		return null;
 	}
 	
-	private static List<IntervencionDTO> mapearIntervencionesTicket(Integer nroTicket) {
+	private static List<IntervencionDTO> mapearIntervencionesDTOTicket(Integer nroTicket) {
+		
 		try (Connection connection = DriverManager.getConnection("jdbc:postgresql://localhost:5432/TP-DDS", "postgres", "postgres")) {
 			
 			Statement statement;
@@ -1072,7 +1073,7 @@ public class GestorBD {
 			
 			while(resultSet.next()) {
 				EstadoIntervencionDTO estadoActual = mapearEstadoIntervencionDTO(resultSet.getString("idEstadoIntervencion"));
-				aux = new IntervencionDTO(resultSet.getInt("idIntervencion"),resultSet.getDate("fechaAsignacion"), resultSet.getDate("fechaFin"), estadoActual);
+				aux = new IntervencionDTO(resultSet.getInt("idIntervencion"),resultSet.getTimestamp("fechaAsignacion"), resultSet.getTimestamp("fechaFin"), estadoActual);
 				resultado.add(aux);
 			}
 			
@@ -1088,18 +1089,17 @@ public class GestorBD {
 	}
 
 	public static GrupoDTO mapearGrupoIntervencionDTO(Integer idIntervencion) {
+		
 		try (Connection connection = DriverManager.getConnection("jdbc:postgresql://localhost:5432/TP-DDS", "postgres", "postgres")) {
-			
-			String idIntConsulta = idIntervencion.toString();
 			
 			Statement infoGrupo;
 			infoGrupo = connection.createStatement();
-			ResultSet resultSet = infoGrupo.executeQuery("SELECT * FROM public.intervencion g WHERE g.idIntervencion = " + idIntConsulta);
+			ResultSet resultSet = infoGrupo.executeQuery("SELECT * FROM public.intervencion WHERE idIntervencion = " + idIntervencion);
 			resultSet.next();
 
 			connection.close();
 
-			GrupoDTO grupoDeResolucionDTO = new GrupoDTO( resultSet.getInt("idGrupo"), resultSet.getString("nombre"));
+			GrupoDTO grupoDeResolucionDTO = new GrupoDTO( resultSet.getInt("idGrupo"), "nombre grupo");
 		
 			return grupoDeResolucionDTO;
 			
@@ -1122,8 +1122,8 @@ public class GestorBD {
 			HistorialEstadoIntervencionDTO aux;
 			
 			while(resultSet.next()) {
-				aux = new HistorialEstadoIntervencionDTO(resultSet.getInt("idEstadoIntHis"), resultSet.getDate("fechaDesde"), 
-						resultSet.getDate("fechaHasta"), GestorBD.mapearEstadoIntervencionDTO(resultSet.getString("idEstadoInt")), GestorBD.mapearSoporte(Integer.parseInt(resultSet.getString("nroLegajo"))));
+				aux = new HistorialEstadoIntervencionDTO(resultSet.getInt("idEstadoIntHis"), resultSet.getTimestamp("fechaDesde"), 
+						resultSet.getTimestamp("fechaHasta"), GestorBD.mapearEstadoIntervencionDTO(resultSet.getString("idEstadoInt")), GestorBD.mapearSoporte(resultSet.getInt("nroLegajo")));
 				resultado.add(aux);
 			}
 			
@@ -1138,6 +1138,7 @@ public class GestorBD {
 	}
 
 	public static List<IntervencionDTO> mapearIntervencionesGrupoDTO(Integer idGrupo) {
+		
 		try (Connection connection = DriverManager.getConnection("jdbc:postgresql://localhost:5432/TP-DDS", "postgres", "postgres")) {
 			
 			Statement statement;
@@ -1149,7 +1150,7 @@ public class GestorBD {
 			
 			while(resultSet.next()) {
 				EstadoIntervencionDTO estadoActual = mapearEstadoIntervencionDTO(resultSet.getString("idEstadoIntervencion"));
-				aux = new IntervencionDTO(resultSet.getInt("idIntervencion"),resultSet.getDate("fechaAsignacion"), resultSet.getDate("fechaFin"), estadoActual);
+				aux = new IntervencionDTO(resultSet.getInt("idIntervencion"),resultSet.getTimestamp("fechaAsignacion"), resultSet.getTimestamp("fechaFin"), estadoActual);
 				resultado.add(aux);
 			}
 			

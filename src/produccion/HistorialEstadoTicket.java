@@ -15,6 +15,7 @@ public class HistorialEstadoTicket {
 	public Soporte actor;
 
 	public HistorialEstadoTicket(Soporte soporte, Date fechaCreacion) {
+		
 		this.idHistorialEstadoTic = GestorBD.nroNuevoHistorialET();
 		this.fechaDesde = fechaCreacion;
 		this.fechaHasta = null;
@@ -23,6 +24,7 @@ public class HistorialEstadoTicket {
 	};
 
 	public HistorialEstadoTicket(Soporte soporte, EstadoTicket estado, Date fechaCreacion) {
+		
 		idHistorialEstadoTic = null;
 		fechaDesde = fechaCreacion;
 		this.estado = estado;

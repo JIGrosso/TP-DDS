@@ -100,24 +100,28 @@ public class GestorDeTicket {
 
 	public static List<TicketDTO> buscarTickets(Integer nroTicket, Integer nroLegajo, Integer idClasificacion,
 			EstadosTicket idEstado, Date fechaApertura, Date fechaUltimoCambio, Integer idGrupo) {
-		// TODO Auto-generated method stub
 		return GestorBD.buscarTickets(nroTicket, nroLegajo, idClasificacion, idEstado, fechaApertura, fechaUltimoCambio, idGrupo);
 		
 	}
 
-	public static void derivarTicket(TicketDTO ticket, EstadoTicketDTO nuevoEstado, ClasificacionDTO clasificacionDto, GrupoDTO grupoDto, String observaciones) {
-		if(clasificacionDto != ticket.getClasificacion()) {
-			ticket.setClasificacion(clasificacionDto);
+	public static void derivarTicket(TicketDTO ticketDTO, EstadoTicket nuevoEstado, ClasificacionDTO clasificacionDTO, GrupoDTO grupoDTO, String observaciones) {
+		
+		Ticket ticket = GestorBD.mapearTicket(ticketDTO.nroTicket);
+		
+		
+		if(clasificacionDTO.idClasificacion != ticket.clasificacion.idClasificacion) {
+			
+			ticket.setClasificacion(clasificacionDTO);
 			HistorialClasificacionDTO ultimoHistorial = ticket.getUltimoHistorialClasificacion();
 			Date fechaActual = new Date();
 			ultimoHistorial.setFechaHasta(fechaActual);
-			HistorialClasificacionDTO nuevo = new HistorialClasificacionDTO(GestorBD.nroNuevoHistorialC(), fechaActual, null, clasificacionDto.getIdClasificacion());
+			HistorialClasificacionDTO nuevo = new HistorialClasificacionDTO(GestorBD.nroNuevoHistorialC(), fechaActual, null, clasificacionDTO.getIdClasificacion());
 			ticket.addHistorialclasificacion(nuevo);
 			List<IntervencionDTO> intervenciones = ticket.getIntervenciones();
 			Integer aux = (intervenciones.size() - 1);
 			while(aux >= 0) {
 				GrupoDTO grupoIntervencion = GestorBD.mapearGrupoIntervencionDTO(intervenciones.get(aux).getId());
-				if(grupoIntervencion == grupoDto && intervenciones.get(aux).getEstado().getIdEstadoInt() == EstadosIntervencion.ESPERA) {
+				if(grupoIntervencion == grupoDTO && intervenciones.get(aux).getEstado().getIdEstadoInt() == EstadosIntervencion.ESPERA) {
 					GestorDeIntervencion.activarIntervencionDTO(intervenciones.get(aux));
 					aux = 0;
 				} else {
@@ -126,20 +130,21 @@ public class GestorDeTicket {
 			}
 			if(aux != 0) {
 				IntervencionDTO nuevaIntervencion = GestorDeIntervencion.crearIntervencionDTO();
-				GestorDeGrupo.setIntervenciones(grupoDto, GestorBD.mapearIntervencionesGrupoDTO(grupoDto.idGrupo));
-				GestorDeGrupo.addIntervencion(grupoDto, nuevaIntervencion);
+				GestorDeGrupo.setIntervenciones(grupoDTO, GestorBD.mapearIntervencionesGrupoDTO(grupoDTO.idGrupo));
+				GestorDeGrupo.addIntervencion(grupoDTO, nuevaIntervencion);
 				ticket.addIntervencion(nuevaIntervencion);
 			}
 			HistorialEstadoTicketDTO ultimoEstado = ticket.getUltimoHistorialEstado();
 			ultimoEstado.setFechaHasta(fechaActual);
 			ticket.setEstadoActual(nuevoEstado);
 			
-			//Constructor con observaciones, revisar
+			//	Constructor con observaciones, revisar
 			
 			HistorialEstadoTicketDTO nuevoHistorial = new HistorialEstadoTicketDTO(GestorBD.nroNuevoHistorialET(), fechaActual, null, observaciones, Principal.usuarioIniciado.nroLegajo);
 			ticket.addHistorialEstadoTicket(nuevoHistorial);
 			
-			//GUARDAR TICKET Y GRUPO
+			//	GUARDAR TICKET Y GRUPO
+			
 		}
 		
 	}

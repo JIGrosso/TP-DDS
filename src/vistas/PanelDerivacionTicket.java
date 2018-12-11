@@ -51,7 +51,7 @@ public class PanelDerivacionTicket extends JPanel{
 	private JLabel lblObservaciones;
 	private JTextArea txtObservaciones;
 	
-	public void derivacionTicket(TicketDTO ticket) {
+	public PanelDerivacionTicket(TicketDTO ticket) {
 		this.setLayout(new GridBagLayout());
 		this.construir(ticket);
 	}
@@ -66,7 +66,7 @@ public class PanelDerivacionTicket extends JPanel{
 		// Título
 		
 		lblTitulo = new JLabel("Derivación Ticket");
-		lblTitulo.setFont(new Font(Font.DIALOG, Font.BOLD, 20));
+		lblTitulo.setFont(new Font(Font.DIALOG, Font.BOLD, 16));
 		gridConst.gridx = 1;
 		gridConst.gridy = 0;
 		gridConst.insets = new Insets(1, 5, 10, 0);
@@ -79,6 +79,7 @@ public class PanelDerivacionTicket extends JPanel{
 		gridConst.insets = new Insets(5, 5, 5, 0);
 		this.add(lblNroTicket, gridConst);
 		Integer nroTicket = ticket.getNroTicket();
+		
 		txtNroTicket = new JTextField(""+nroTicket);
 		txtNroTicket.setEditable(false);
 		txtNroTicket.setColumns(10);
@@ -136,7 +137,7 @@ public class PanelDerivacionTicket extends JPanel{
 		
 		txtNuevoEstado = new JTextField();
 		txtNuevoEstado.setEditable(false);
-		EstadoTicketDTO nuevoEstado = GestorDeTicket.devolverEstadoDTO("ABIERTO_D");
+		EstadoTicket nuevoEstado = GestorDeTicket.abiertoD;
 		txtNuevoEstado.setText(nuevoEstado.getNombre());
 		gridConst.gridx = 2;
 		gridConst.insets = new Insets(5, 0, 5, 5);
@@ -213,16 +214,16 @@ public class PanelDerivacionTicket extends JPanel{
 		btnConfirmar.addActionListener(e -> {
 			ClasificacionDTO clasificacionDto = (ClasificacionDTO) cmbClasificacion.getSelectedItem();
 			GrupoDTO grupoDto = (GrupoDTO) cmbGrupo.getSelectedItem();
-			String observaciones = txtDescripcion.toString();
+			String observaciones = txtDescripcion.getText();
 			
 			//hacer validación estatica si no se usa interfaz dinámica
 			
 			if (validarCamposNoVacios(clasificacionDto, grupoDto, observaciones)) {
 				GestorDeTicket.derivarTicket(ticket, nuevoEstado, clasificacionDto, grupoDto, observaciones);
-				JOptionPane.showMessageDialog(null,"El ticket se ha derivado correctamente", "Éxito", JOptionPane.OK_OPTION);
+				JOptionPane.showMessageDialog(null, "El ticket se ha derivado correctamente", "Éxito", JOptionPane.OK_OPTION);
 			}
 			else {
-				JOptionPane.showMessageDialog(null,"Ningún campo puede ser vacío", "Error", JOptionPane.ERROR_MESSAGE);
+				JOptionPane.showMessageDialog(null, "Ningún campo puede ser vacío", "Error", JOptionPane.ERROR_MESSAGE);
 			}
 		});
 		gridConst.anchor = GridBagConstraints.LINE_START;
@@ -245,7 +246,7 @@ public class PanelDerivacionTicket extends JPanel{
 	}
 
 
-	private boolean validarCamposNoVacios(ClasificacionDTO clasificacionDto,GrupoDTO grupoDto, String observaciones) {
+	private boolean validarCamposNoVacios(ClasificacionDTO clasificacionDto, GrupoDTO grupoDto, String observaciones) {
 		if(clasificacionDto != null || grupoDto != null || observaciones != "") {
 			return true;
 		}

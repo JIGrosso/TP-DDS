@@ -1,16 +1,19 @@
 package clasesDTO;
 
 import java.util.List;
+
+import produccion.EstadoIntervencion;
+
 import java.util.Date;
 
 public class IntervencionDTO {
 	public Integer idIntervencion;
 	public Date fechaAsignacion;
 	public Date fechaFin;
-	public EstadoIntervencionDTO estadoIntervencionActual;
+	public EstadoIntervencion estadoIntervencionActual;
 	public List<HistorialEstadoIntervencionDTO> historialEstados;
 	
-	public IntervencionDTO(Integer idInt, Date fechaAs, Date fechaFn, EstadoIntervencionDTO estadoIntervencion) {
+	public IntervencionDTO(Integer idInt, Date fechaAs, Date fechaFn, EstadoIntervencion estadoIntervencion) {
 		this.idIntervencion = idInt;
 		this.fechaAsignacion = fechaAs;
 		this.fechaFin = fechaFn;
@@ -22,7 +25,7 @@ public class IntervencionDTO {
 		return this.idIntervencion;
 	}
 
-	public EstadoIntervencionDTO getEstado() {
+	public EstadoIntervencion getEstado() {
 		return estadoIntervencionActual;
 	}
 

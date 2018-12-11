@@ -6,17 +6,23 @@ public class Soporte {
 	public Integer dni;
 	public String email;
 	public String telefono;
+	public Integer telefonoInterno;
+	public String ubicacion;
+	public String cargo;
 	public Integer nroLegajo;
 	public String password;
 	public GrupoDeResolucion grupo;
 	
-	public Soporte(Integer nroLegajo, String password, String nombre, Integer dni, String telefono2, String email, GrupoDeResolucion grupo) {
+	public Soporte(Integer nroLegajo, String password, String nombre, Integer dni, String telefono, Integer interno, String ubicacion,  String email, String cargo, GrupoDeResolucion grupo) {
 		this.nroLegajo = nroLegajo;
 		this.password = password;
 		this.nombre = nombre;
 		this.dni = dni;
-		this.telefono = telefono2;
+		this.telefono = telefono;
+		this.telefonoInterno = interno;
+		this.ubicacion = ubicacion;
 		this.email = email;
+		this.cargo = cargo;
 		this.grupo = grupo;
 	}
 

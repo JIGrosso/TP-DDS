@@ -225,7 +225,6 @@ public class PanelBusquedaTicket extends JPanel{
 			try {
 				int filaSeleccionada = tabla.getSelectedRow();
 				TicketDTO ticketDTO = (tablaResultados.getTickets()).get(filaSeleccionada);
-				System.out.println("Ticket Seleccionado: " + ticketDTO.nroTicket);
 				verDetalleTicket(ticketDTO);
 			}
 			catch(Exception ex){
@@ -238,6 +237,11 @@ public class PanelBusquedaTicket extends JPanel{
 		this.add(btnReporte, gridConst);
 		
 		btnDerivar = new JButton("Derivar Ticket");
+		btnDerivar.addActionListener(e -> {
+			int filaSeleccionada = tabla.getSelectedRow();
+			TicketDTO ticketDTO = (tablaResultados.getTickets()).get(filaSeleccionada);
+			derivarTicket(ticketDTO);
+		});
 		gridConst.gridx = 2;
 		this.add(btnDerivar, gridConst);
 		
@@ -293,6 +297,21 @@ public class PanelBusquedaTicket extends JPanel{
 		
 		Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
         newFrame.setLocation(dim.width/2- newFrame.getSize().width/2, dim.height/2- newFrame.getSize().height/2);
+	}
+	
+	public void derivarTicket(TicketDTO ticketSeleccionado) {
+		
+		JFrame newFrame = new JFrame();
+		newFrame.setVisible(true);
+		newFrame.setSize(1000, 500);
+		newFrame.setTitle("Derivar Ticket");
+		
+		PanelDerivacionTicket derivarTicket = new PanelDerivacionTicket(ticketSeleccionado);
+		newFrame.setContentPane(derivarTicket);
+		
+		Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
+        newFrame.setLocation(dim.width/2- newFrame.getSize().width/2, dim.height/2- newFrame.getSize().height/2);
+		
 	}
 
 
