@@ -34,7 +34,7 @@ public class GestorDeIntervencion {
 	public static void cerrarIntervencion(Intervencion intervencion) {
 		
 		intervencion.fechaFin = new Date();
-		intervencion.setEstadoIntervencionActual(cerrada);
+		intervencion.setEstadoIntervencionActual(mapearEstadoIntervencion("CERRADA"));
 	}
 
 	public static ArrayList<EstadoIntervencion> mapearEstadosIntervencion() {
@@ -70,7 +70,7 @@ public class GestorDeIntervencion {
 	
 	public static IntervencionDTO crearIntervencionDTO() {
 		Date fechaActual = new Date();
-		EstadoIntervencionDTO nuevoEstado = GestorBD.mapearEstadoIntervencionDTO("ASIGNADA");
+		EstadoIntervencion nuevoEstado = GestorBD.mapearEstadoIntervencion("ASIGNADA");
 		IntervencionDTO nuevaIntervencion = new IntervencionDTO(GestorBD.nroNuevoIntervencion(), fechaActual,
 				null, GestorBD.mapearEstadoIntervencionDTO("ASIGNADA"));
 		HistorialEstadoIntervencionDTO nuevo = new HistorialEstadoIntervencionDTO(GestorBD.nroNuevoHistorialEI(), fechaActual, null,
@@ -78,6 +78,10 @@ public class GestorDeIntervencion {
 		nuevaIntervencion.addHistorial(nuevo);
 		nuevaIntervencion.setEstado(nuevoEstado);
 		return nuevaIntervencion;
+	}
+
+	public static EstadoIntervencion mapearEstadoIntervencion(String idEstado) {
+		return GestorBD.mapearEstadoIntervencion(idEstado);
 	}
 
 }

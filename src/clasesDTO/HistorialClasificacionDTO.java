@@ -1,7 +1,5 @@
 package clasesDTO;
 
-import java.util.Date;
-
 public class HistorialClasificacionDTO {
 
 	public Integer idHistorialClasificacion;
