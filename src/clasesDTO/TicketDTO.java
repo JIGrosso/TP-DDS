@@ -3,6 +3,7 @@ package clasesDTO;
 import java.util.Date;
 import java.util.List;
 
+import produccion.EstadoTicket;
 import produccion.HistorialEstadoTicket;
 
 public class TicketDTO {
@@ -14,12 +15,12 @@ public class TicketDTO {
 	public Date fechaYHoraApertura;
 	public String descripcion;
 	public String observaciones;
-	public EstadoTicketDTO estadoActual;
+	public EstadoTicket estadoActual;
 	public List<HistorialEstadoTicketDTO> historialesEstado;
 	public List<HistorialClasificacionDTO> historialesClasificacion;
 	public List<IntervencionDTO> intervenciones;
 	
-	public TicketDTO(Integer nroTicket, Integer nroLegajo, GrupoDTO grupoAsignado, ClasificacionDTO clasificacion, Date fechaYHora, EstadoTicketDTO estadoActual) {
+	public TicketDTO(Integer nroTicket, Integer nroLegajo, GrupoDTO grupoAsignado, ClasificacionDTO clasificacion, Date fechaYHora, EstadoTicket estadoActual) {
 		this.nroTicket = nroTicket;
 		this.nroLegajoCliente = nroLegajo;
 		this.grupoAsignado = grupoAsignado;
@@ -84,11 +85,11 @@ public class TicketDTO {
 		this.observaciones = observaciones;
 	}
 	
-	public EstadoTicketDTO getEstadoActual() {
+	public EstadoTicket getEstadoActual() {
 		return estadoActual;
 	}
 	
-	public void setEstadoActual(EstadoTicketDTO estadoActual) {
+	public void setEstadoActual(EstadoTicket estadoActual) {
 		this.estadoActual = estadoActual;
 	}
 	

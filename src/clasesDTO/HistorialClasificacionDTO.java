@@ -22,9 +22,4 @@ public class HistorialClasificacionDTO {
 		this.fechaHasta = fechaHasta;
 		this.idClasificacion = idClasificacion;
 	}
-
-	public void setFechaHasta(Date cierreHist) {
-		this.fechaHasta = cierreHist;
-	}
-
 }

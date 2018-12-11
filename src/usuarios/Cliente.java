@@ -6,13 +6,19 @@ public class Cliente {
 	public Integer dni;
 	public String email;
 	public String telefono;
+	public Integer telefonoInterno;
+	public String ubicacion;
+	public String cargo;
 	public Integer nroLegajo;
 	
-	public Cliente(String nombre, Integer dni, String email, String telefono, Integer nroLegajo) {
+	public Cliente(String nombre, Integer dni, String email, String telefono, Integer interno, String ubicacion, String cargo, Integer nroLegajo) {
 		this.nombre = nombre;
 		this.dni = dni;
 		this.email = email;
 		this.telefono = telefono;
+		this.telefonoInterno = interno;
+		this.ubicacion = ubicacion;
+		this.cargo = cargo;
 		this.nroLegajo = nroLegajo;
 	}
 	

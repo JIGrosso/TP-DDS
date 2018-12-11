@@ -50,7 +50,7 @@ public class TablaBusquedaTicket extends AbstractTableModel {
 			valor = formatFecha.format(this.tickets.get(rowIndex).getFechaYHoraApertura());
 			break;
 		case 3:
-			SimpleDateFormat formatHora = new SimpleDateFormat("HH:mm:ss.SSS");
+			SimpleDateFormat formatHora = new SimpleDateFormat("HH:mm:ss");
 			valor = formatHora.format(this.tickets.get(rowIndex).getFechaYHoraApertura());
 			break;
 		case 4:

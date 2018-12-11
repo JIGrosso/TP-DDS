@@ -65,7 +65,6 @@ public class Ticket {
 	
 	public void setEstadoCerrado(EstadoTicket estado) {
 		try {
-			
 			this.historialesEstado.get(this.historialesEstado.size()-1).cerrarHistorialEstadoTicket();
 			this.historialesClasificacion.get(this.historialesClasificacion.size()-1).cerrarHistorialClasificacionTicket();
 			this.estadoActual = estado;

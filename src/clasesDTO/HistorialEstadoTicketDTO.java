@@ -11,15 +11,12 @@ public class HistorialEstadoTicketDTO {
 	public Integer legajoCreador;
 	
 	public HistorialEstadoTicketDTO(Integer idHistorial, Date fechaDesde, Date fechaHasta, String estado, Integer legajoCreador) {
+		
 		this.idHistorial = idHistorial;
 		this.fechaDesde = fechaDesde;
 		this.fechaHasta = fechaHasta;
 		this.estado = estado;
 		this.legajoCreador = legajoCreador;
-	}
-
-	public void setFechaHasta(Date fechaActual) {
-		this.fechaHasta = fechaActual;
 	}
 	
 }
