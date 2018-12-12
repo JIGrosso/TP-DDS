@@ -7,7 +7,6 @@ import java.util.List;
 import javax.swing.JOptionPane;
 
 import clasesDTO.ClasificacionDTO;
-import clasesDTO.EstadoTicketDTO;
 import clasesDTO.GrupoDTO;
 import clasesDTO.HistorialClasificacionDTO;
 import clasesDTO.HistorialEstadoTicketDTO;
@@ -23,6 +22,7 @@ import produccion.Intervencion;
 import produccion.Ticket;
 import produccion.EstadoIntervencion; 
 import usuarios.Cliente;
+import usuarios.GrupoDeResolucion;
 import usuarios.Soporte;
 import vistas.Principal;
 
@@ -102,34 +102,42 @@ public class GestorDeTicket {
 	public static void derivarTicket(TicketDTO ticketDTO, EstadoTicket nuevoEstado, ClasificacionDTO clasificacionDTO, GrupoDTO grupoDTO, String observaciones) {
 		
 		Ticket ticket = GestorBD.mapearTicket(ticketDTO.nroTicket);
+		GrupoDeResolucion grupo = GestorBD.mapearGrupoDeResolucion(grupoDTO.idGrupo);
 		
 		System.out.println("Ticket mapeado: "+ticket.nroTicket);
 		
 		if(clasificacionDTO.idClasificacion != ticket.clasificacion.idClasificacion) {
 			
-			ticket.setClasificacion(clasificacionDTO);
-			HistorialClasificacionDTO ultimoHistorial = ticket.getUltimoHistorialClasificacion();
+			//Seteo Clasificacion nueva
+			Clasificacion clasificacion = GestorBD.mapearClasificacion(clasificacionDTO.idClasificacion);
+			ticket.setClasificacion(clasificacion);
+			
+			//Cierro el HistorialClasificacionTicket actual y creo uno nuevo con la nueva Clasificacion con fecha actual
+			HistorialClasificacionTicket ultimoHistorialClasificacion = ticket.getUlitmoHistorialC();
 			Date fechaActual = new Date();
-			ultimoHistorial.setFechaHasta(fechaActual);
-			HistorialClasificacionDTO nuevo = new HistorialClasificacionDTO(GestorBD.nroNuevoHistorialC(), fechaActual, null, clasificacionDTO.getIdClasificacion());
-			ticket.addHistorialclasificacion(nuevo);
-			List<IntervencionDTO> intervenciones = ticket.getIntervenciones();
+			ultimoHistorialClasificacion.cerrarHistorialClasificacionTicket();
+			HistorialClasificacionTicket nuevoHistorialClasificacion = new HistorialClasificacionTicket(clasificacion, fechaActual);
+			ticket.addHistorialClasificacionTicket(nuevoHistorialClasificacion);
+			
+			
+			List<Intervencion> intervenciones = grupo.getIntervenciones();
 			Integer aux = (intervenciones.size() - 1);
 			while(aux >= 0) {
-				GrupoDTO grupoIntervencion = GestorBD.mapearGrupoIntervencionDTO(intervenciones.get(aux).getId());
-				if(grupoIntervencion == grupoDTO && intervenciones.get(aux).getEstado().getIdEstadoInt() == EstadosIntervencion.ESPERA) {
-					GestorDeIntervencion.activarIntervencionDTO(intervenciones.get(aux));
+				Intervencion intervencionAux = intervenciones.get(aux);
+				if(intervencionAux.getEstadoIntervencionActual().idEstadoInt == EstadosIntervencion.ESPERA && (ticket.intervenciones.contains(intervencionAux))) {
+					GestorDeIntervencion.activarIntervencion(intervencionAux);
 					aux = 0;
 				} else {
 					aux--;
 				}
 			}
 			if(aux != 0) {
-				IntervencionDTO nuevaIntervencion = GestorDeIntervencion.crearIntervencionDTO();
+				Intervencion nuevaIntervencion = GestorDeIntervencion.crearIntervencion();
 				GestorDeGrupo.setIntervenciones(grupoDTO, GestorBD.mapearIntervencionesGrupoDTO(grupoDTO.idGrupo));
 				GestorDeGrupo.addIntervencion(grupoDTO, nuevaIntervencion);
 				ticket.addIntervencion(nuevaIntervencion);
 			}
+			
 			HistorialEstadoTicketDTO ultimoEstado = ticket.getUltimoHistorialEstado();
 			ultimoEstado.setFechaHasta(fechaActual);
 			ticket.setEstadoActual(nuevoEstado);

@@ -21,9 +21,9 @@ public class GestorDeIntervencion {
 	public static Intervencion crearIntervencion(Soporte soporte, Date fechaAsignacion) {
 
 		Integer IdIntervencion = GestorBD.nroNuevoIntervencion();
-		Integer idPrimerHistorial = GestorBD.nroNuevoHistorialEI();
+		Integer idHistorial = GestorBD.nroNuevoHistorialEI();
 
-		HistorialEstadoIntervencion primerHistorial = new HistorialEstadoIntervencion(idPrimerHistorial, fechaAsignacion, soporte);
+		HistorialEstadoIntervencion primerHistorial = new HistorialEstadoIntervencion(idHistorial, fechaAsignacion, soporte);
 		Intervencion intervencion = new Intervencion(IdIntervencion, fechaAsignacion, primerHistorial);
 		
 		soporte.getGrupo().intervenciones.add(intervencion);
@@ -56,19 +56,17 @@ public class GestorDeIntervencion {
 		
 	}
 
-	public static void activarIntervencionDTO(IntervencionDTO intervencionDTO) {
-		intervencionDTO.setHistoriales(GestorBD.mapearHistorialesEstadosIntervencion(intervencionDTO.idIntervencion));
-		HistorialEstadoIntervencionDTO ultimoHistorial = intervencionDTO.getUltimoHistEstInt();
-		Date fechaActual = new Date();
-		ultimoHistorial.setFechaHasta(fechaActual);
-		EstadoIntervencionDTO nuevoEstado = GestorBD.mapearEstadoIntervencionDTO("ACTIVA");
-		HistorialEstadoIntervencionDTO nuevo = new HistorialEstadoIntervencionDTO(GestorBD.nroNuevoHistorialEI(), fechaActual, null,
-										nuevoEstado, Principal.usuarioIniciado);
-		intervencionDTO.addHistorial(nuevo);
-		intervencionDTO.setEstado(nuevoEstado);
+	public static void activarIntervencion(Intervencion intervencion) {
+		
+		EstadoIntervencion nuevoEstado = GestorBD.mapearEstadoIntervencion("ASIGNADA");
+		intervencion.setEstadoIntervencionActual(nuevoEstado);
+		
+		HistorialEstadoIntervencion nuevoHistorial = new HistorialEstadoIntervencion(GestorBD.nroNuevoHistorialEI(), new Date(), null, Principal.usuarioIniciado, nuevoEstado);	
+		intervencion.addHistorialEstadoIntervencion(nuevoHistorial);
 	}
 	
 	public static IntervencionDTO crearIntervencionDTO() {
+		
 		Date fechaActual = new Date();
 		EstadoIntervencion nuevoEstado = GestorBD.mapearEstadoIntervencion("ASIGNADA");
 		IntervencionDTO nuevaIntervencion = new IntervencionDTO(GestorBD.nroNuevoIntervencion(), fechaActual,
@@ -83,5 +81,4 @@ public class GestorDeIntervencion {
 	public static EstadoIntervencion mapearEstadoIntervencion(String idEstado) {
 		return GestorBD.mapearEstadoIntervencion(idEstado);
 	}
-
 }

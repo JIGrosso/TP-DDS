@@ -98,5 +98,13 @@ public class Ticket {
 		return this.historialesClasificacion.get(this.historialesClasificacion.size()-2);
 	}
 	
+	public void setClasificacion (Clasificacion clasificacion) {
+		this.clasificacion = clasificacion;
+	}
+	
+	public List<Intervencion> getIntervenciones(){
+		return this.intervenciones;
+	}
+	
 }
 	

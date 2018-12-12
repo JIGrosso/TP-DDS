@@ -105,6 +105,10 @@ public class Intervencion {
 	public HistorialEstadoIntervencion getPenultimoHistorialIntervencion() {
 		return this.historialesEstado.get(this.historialesEstado.size()-2);
 	}
+
+	public void addHistorialEstadoIntervencion (HistorialEstadoIntervencion nuevoHistorial) {
+		this.historialesEstado.add(nuevoHistorial);
+	}
 	
 	
 }
