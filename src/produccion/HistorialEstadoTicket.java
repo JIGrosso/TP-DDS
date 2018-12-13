@@ -23,10 +23,11 @@ public class HistorialEstadoTicket {
 		this.actor = soporte;
 	};
 
-	public HistorialEstadoTicket(Soporte soporte, EstadoTicket estado, Date fechaCreacion) {
+	public HistorialEstadoTicket(Integer idHistorial, Soporte soporte, EstadoTicket estado, Date fechaCreacion, Date fechaHasta) {
 		
-		idHistorialEstadoTic = null;
-		fechaDesde = fechaCreacion;
+		this.idHistorialEstadoTic = idHistorial;
+		this.fechaDesde = fechaCreacion;
+		this.fechaHasta = fechaHasta;
 		this.estado = estado;
 		this.actor = soporte;
 	}

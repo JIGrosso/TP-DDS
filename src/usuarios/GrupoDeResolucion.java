@@ -62,4 +62,8 @@ public class GrupoDeResolucion {
 	public void setDescripcion(String descripcion) {
 		this.descripcion = descripcion;
 	}
+	
+	public List<Intervencion> getIntervenciones() {
+		return this.intervenciones;
+	}
 }

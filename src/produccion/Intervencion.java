@@ -23,7 +23,7 @@ public class Intervencion {
 		this.observaciones = "Intervencion por creacion de ticket";
 		this.fechaAsignacion = fechaAsignacion;
 		this.fechaFin = null;
-		this.estadoIntervencionActual = GestorDeIntervencion.activa;
+		this.estadoIntervencionActual = GestorDeIntervencion.mapearEstadoIntervencion("ACTIVA");
 		this.historialesEstado = new ArrayList<HistorialEstadoIntervencion>();
 		this.historialesEstado.add(primerHistorial);
 		
@@ -104,6 +104,10 @@ public class Intervencion {
 	
 	public HistorialEstadoIntervencion getPenultimoHistorialIntervencion() {
 		return this.historialesEstado.get(this.historialesEstado.size()-2);
+	}
+
+	public void addHistorialEstadoIntervencion (HistorialEstadoIntervencion nuevoHistorial) {
+		this.historialesEstado.add(nuevoHistorial);
 	}
 	
 	

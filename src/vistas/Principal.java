@@ -9,8 +9,7 @@ import javax.swing.JFrame;
 import javax.swing.WindowConstants;
 
 import clasesDTO.ClasificacionDTO;
-import clasesDTO.EstadoTicketDTO;
-import clasesDTO.EstadoIntervencionDTO;
+
 import gestores.GestorBD;
 import gestores.GestorDeClasificacion;
 import gestores.GestorDeIntervencion;
@@ -22,15 +21,15 @@ public class Principal {
 
 	public static Soporte usuarioIniciado;
 
-	public static ArrayList<EstadoTicketDTO> estadosTicket;
+//	public static ArrayList<EstadoTicketDTO> estadosTicket;
 
-	public static ArrayList<EstadoIntervencionDTO> estadosIntervencion;
+//	public static ArrayList<EstadoIntervencionDTO> estadosIntervencion;
 
 //	public static ArrayList<ClasificacionDTO> clasificaciones;
 
 	public static void main(String[] args) {
 
-		cargarEstados();
+//		cargarEstados();
 
 //		cargarClasificaciones();
 
@@ -58,11 +57,11 @@ public class Principal {
         
 	}
 
-	public static void cargarEstados() {
-
-		estadosTicket = GestorDeTicket.mapearEstadosDTO();
-		estadosIntervencion = GestorDeIntervencion.mapearEstadosIntervencionDTO();
-	}
+//	public static void cargarEstados() {
+//
+//		estadosTicket = GestorDeTicket.mapearEstadosDTO();
+//		estadosIntervencion = GestorDeIntervencion.mapearEstadosIntervencionDTO();
+//	}
 
 //	public static void cargarClasificaciones() {
 //		

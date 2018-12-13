@@ -7,7 +7,6 @@ import java.util.List;
 import javax.swing.JOptionPane;
 
 import clasesDTO.ClasificacionDTO;
-import clasesDTO.EstadoTicketDTO;
 import clasesDTO.GrupoDTO;
 import clasesDTO.HistorialClasificacionDTO;
 import clasesDTO.HistorialEstadoTicketDTO;
@@ -23,6 +22,7 @@ import produccion.Intervencion;
 import produccion.Ticket;
 import produccion.EstadoIntervencion; 
 import usuarios.Cliente;
+import usuarios.GrupoDeResolucion;
 import usuarios.Soporte;
 import vistas.Principal;
 
@@ -46,13 +46,8 @@ public class GestorDeTicket {
 		nuevoTicket.addHistorialEstadoTicket(primerHistorialEstado);
 		nuevoTicket.addHistorialClasificacionTicket(historialClasificacion);
 
-		System.out.println("Historial Estado Ticket: " + nuevoTicket.historialesEstado.get(0).estado.nombre);
-
 		Intervencion nuevaIntervencion = GestorDeIntervencion.crearIntervencion(soporte, fechaCreacion);
 		nuevoTicket.intervenciones.add(nuevaIntervencion);
-		
-		System.out.println("Ticket creado: Nro Ticket: " + nuevoTicket.nroTicket);
-		System.out.println("Estado Actual: " + nuevoTicket.estadoActual.nombre);
 
 		GestorBD.guardarTicket(nuevoTicket, nuevaIntervencion, soporte);
 		// GuardarGrupo pq se actualiza su lista de intervenciones
@@ -63,7 +58,7 @@ public class GestorDeTicket {
 	
 	public static void cerrarTicket(Ticket ticket, String obs) {
 		
-		ticket.setEstadoCerrado(cerrado);
+		ticket.setEstadoCerrado(mapearEstadoTicket("CERRADO"));
 		ticket.observaciones = obs;
 		Intervencion intervencion = ticket.getUltimaIntervencion();
 		GestorDeIntervencion.cerrarIntervencion(intervencion);
@@ -71,23 +66,23 @@ public class GestorDeTicket {
 		JOptionPane.showMessageDialog(null, "El ticket "+ticket.nroTicket+" se ha cerrado con éxito!", "CierreExitoso", JOptionPane.INFORMATION_MESSAGE);
 	}
 
-	public static ArrayList<EstadoTicketDTO> mapearEstadosDTO() {
+	public static ArrayList<EstadoTicket> mapearEstadosTicket() {
 		
-		ArrayList<EstadoTicketDTO> estadosTickets = new ArrayList<EstadoTicketDTO>();
+		ArrayList<EstadoTicket> estadosTickets = new ArrayList<EstadoTicket>();
 		
-		EstadoTicketDTO abiertoMAdto = GestorBD.mapearEstadoTicketDTO("ABIERTO_MA");
+		EstadoTicket abiertoMAdto = GestorBD.mapearEstadoTicket("ABIERTO_MA");
 		estadosTickets.add(abiertoMAdto);
 		abiertoMA = GestorBD.mapearEstadoTicket("ABIERTO_MA");
 		
-		EstadoTicketDTO abiertoDdto = GestorBD.mapearEstadoTicketDTO("ABIERTO_D");
+		EstadoTicket abiertoDdto = GestorBD.mapearEstadoTicket("ABIERTO_D");
 		estadosTickets.add(abiertoDdto);
 		abiertoD = GestorBD.mapearEstadoTicket("ABIERTO_D");
 		
-		EstadoTicketDTO solucionadoOKdto = GestorBD.mapearEstadoTicketDTO("SOLUCIONADO_OK");
+		EstadoTicket solucionadoOKdto = GestorBD.mapearEstadoTicket("SOLUCIONADO_OK");
 		estadosTickets.add(solucionadoOKdto);
 		solucionadoOK = GestorBD.mapearEstadoTicket("SOLUCIONADO_OK");
 		
-		EstadoTicketDTO cerradodto = GestorBD.mapearEstadoTicketDTO("CERRADO");
+		EstadoTicket cerradodto = GestorBD.mapearEstadoTicket("CERRADO");
 		estadosTickets.add(cerradodto);
 		cerrado = GestorBD.mapearEstadoTicket("CERRADO");
 		
@@ -107,33 +102,42 @@ public class GestorDeTicket {
 	public static void derivarTicket(TicketDTO ticketDTO, EstadoTicket nuevoEstado, ClasificacionDTO clasificacionDTO, GrupoDTO grupoDTO, String observaciones) {
 		
 		Ticket ticket = GestorBD.mapearTicket(ticketDTO.nroTicket);
+		GrupoDeResolucion grupo = GestorBD.mapearGrupoDeResolucion(grupoDTO.idGrupo);
 		
+		System.out.println("Ticket mapeado: "+ticket.nroTicket);
 		
 		if(clasificacionDTO.idClasificacion != ticket.clasificacion.idClasificacion) {
 			
-			ticket.setClasificacion(clasificacionDTO);
-			HistorialClasificacionDTO ultimoHistorial = ticket.getUltimoHistorialClasificacion();
+			//Seteo Clasificacion nueva
+			Clasificacion clasificacion = GestorBD.mapearClasificacion(clasificacionDTO.idClasificacion);
+			ticket.setClasificacion(clasificacion);
+			
+			//Cierro el HistorialClasificacionTicket actual y creo uno nuevo con la nueva Clasificacion con fecha actual
+			HistorialClasificacionTicket ultimoHistorialClasificacion = ticket.getUlitmoHistorialC();
 			Date fechaActual = new Date();
-			ultimoHistorial.setFechaHasta(fechaActual);
-			HistorialClasificacionDTO nuevo = new HistorialClasificacionDTO(GestorBD.nroNuevoHistorialC(), fechaActual, null, clasificacionDTO.getIdClasificacion());
-			ticket.addHistorialclasificacion(nuevo);
-			List<IntervencionDTO> intervenciones = ticket.getIntervenciones();
+			ultimoHistorialClasificacion.cerrarHistorialClasificacionTicket();
+			HistorialClasificacionTicket nuevoHistorialClasificacion = new HistorialClasificacionTicket(clasificacion, fechaActual);
+			ticket.addHistorialClasificacionTicket(nuevoHistorialClasificacion);
+			
+			
+			List<Intervencion> intervenciones = grupo.getIntervenciones();
 			Integer aux = (intervenciones.size() - 1);
 			while(aux >= 0) {
-				GrupoDTO grupoIntervencion = GestorBD.mapearGrupoIntervencionDTO(intervenciones.get(aux).getId());
-				if(grupoIntervencion == grupoDTO && intervenciones.get(aux).getEstado().getIdEstadoInt() == EstadosIntervencion.ESPERA) {
-					GestorDeIntervencion.activarIntervencionDTO(intervenciones.get(aux));
+				Intervencion intervencionAux = intervenciones.get(aux);
+				if(intervencionAux.getEstadoIntervencionActual().idEstadoInt == EstadosIntervencion.ESPERA && (ticket.intervenciones.contains(intervencionAux))) {
+					GestorDeIntervencion.activarIntervencion(intervencionAux);
 					aux = 0;
 				} else {
 					aux--;
 				}
 			}
 			if(aux != 0) {
-				IntervencionDTO nuevaIntervencion = GestorDeIntervencion.crearIntervencionDTO();
+				Intervencion nuevaIntervencion = GestorDeIntervencion.crearIntervencion();
 				GestorDeGrupo.setIntervenciones(grupoDTO, GestorBD.mapearIntervencionesGrupoDTO(grupoDTO.idGrupo));
 				GestorDeGrupo.addIntervencion(grupoDTO, nuevaIntervencion);
 				ticket.addIntervencion(nuevaIntervencion);
 			}
+			
 			HistorialEstadoTicketDTO ultimoEstado = ticket.getUltimoHistorialEstado();
 			ultimoEstado.setFechaHasta(fechaActual);
 			ticket.setEstadoActual(nuevoEstado);
@@ -148,9 +152,9 @@ public class GestorDeTicket {
 		}
 		
 	}
-	
-	public static EstadoTicketDTO devolverEstadoDTO(String idEstado) {
-		return GestorBD.mapearEstadoTicketDTO(idEstado);
+
+	public static EstadoTicket mapearEstadoTicket(String idEstado) {
+		return GestorBD.mapearEstadoTicket(idEstado);
 	}
 
 }

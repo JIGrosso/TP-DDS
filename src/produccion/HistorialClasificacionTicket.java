@@ -17,6 +17,13 @@ public class HistorialClasificacionTicket {
 		this.clasificacion = clasificacion;
 	}
 	
+	public HistorialClasificacionTicket(Integer idHistorial, Date fechaDesde, Date fechaHasta, Clasificacion clasificacion) {
+		this.idHistorialClasificacion = idHistorial;
+		this.fechaDesde = fechaDesde;
+		this.fechaHasta = fechaHasta;
+		this.clasificacion = clasificacion;
+	}
+	
 	public void cerrarHistorialClasificacionTicket() {
 		this.fechaHasta = new Date();
 	}

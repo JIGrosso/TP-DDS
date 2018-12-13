@@ -14,6 +14,7 @@ public class HistorialEstadoIntervencionDTO {
 	
 	public HistorialEstadoIntervencionDTO(Integer idHistorialEstadoInt, Date desde, Date hasta,
 			EstadoIntervencion estadoIntervencion, Integer soporte) {
+		
 		this.idHistorialEstadoIntervencion = idHistorialEstadoInt;
 		this.fechaDesde = desde;
 		this.fechaHasta = hasta;

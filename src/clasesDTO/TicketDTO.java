@@ -4,7 +4,6 @@ import java.util.Date;
 import java.util.List;
 
 import produccion.EstadoTicket;
-import produccion.HistorialEstadoTicket;
 
 public class TicketDTO {
 

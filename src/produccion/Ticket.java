@@ -32,21 +32,21 @@ public class Ticket {
 		this.descripcion = descripcion;
 		this.observaciones = null;
 		this.grupoAsignado = grupoAsignado;
-		this.estadoActual = GestorDeTicket.abiertoMA;
+		this.estadoActual = GestorDeTicket.mapearEstadoTicket("ABIERTO_MA");
 		this.historialesEstado = new ArrayList<HistorialEstadoTicket>();
 		this.historialesClasificacion = new ArrayList<HistorialClasificacionTicket>();
 		this.intervenciones = new ArrayList<Intervencion>();
 		
 	};
 	
-	public Ticket(Integer nroTicket, Cliente cliente, Clasificacion clasificacion, GrupoDeResolucion grupoAsignado, Date fechaApertura, Date horaApertura, String descripcion, EstadoTicket estadoActual) {
+	public Ticket(Integer nroTicket, Cliente cliente, Clasificacion clasificacion, GrupoDeResolucion grupoAsignado, Date fechaApertura, String descripcion, String observaciones, EstadoTicket estadoActual) {
 		
 		this.nroTicket = nroTicket;
 		this.cliente = cliente;
 		this.clasificacion = clasificacion;
 		this.fechaYHoraApertura = fechaApertura;
 		this.descripcion = descripcion;
-		this.observaciones = null;
+		this.observaciones = observaciones;
 		this.grupoAsignado = grupoAsignado;
 		this.estadoActual = estadoActual;
 		this.historialesEstado = new ArrayList<HistorialEstadoTicket>();
@@ -96,6 +96,14 @@ public class Ticket {
 	
 	public HistorialClasificacionTicket getPenulitmoHistorialC() {
 		return this.historialesClasificacion.get(this.historialesClasificacion.size()-2);
+	}
+	
+	public void setClasificacion (Clasificacion clasificacion) {
+		this.clasificacion = clasificacion;
+	}
+	
+	public List<Intervencion> getIntervenciones(){
+		return this.intervenciones;
 	}
 	
 }
