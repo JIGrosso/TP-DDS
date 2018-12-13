@@ -57,5 +57,9 @@ public class Clasificacion {
 		
 		return resultado;
 	}
+	
+	public String toString() {
+		return this.nombre;
+	}
 
 }

@@ -606,13 +606,6 @@ public class GestorBD {
 
 			System.out.println("Connected to PostgreSQL database! --> Guardar Ticket");
 			
-			System.out.println(ticket.nroTicket);
-			System.out.println(ticket.descripcion);
-			System.out.println(ticket.observaciones);
-			System.out.println(ticket.fechaYHoraApertura);
-			System.out.println(ticket.cliente.nroLegajo);
-			System.out.println(ticket.clasificacion.idClasificacion);
-			
 			Statement statement1;
 			statement1 = connection.createStatement();
 			statement1.executeUpdate("INSERT INTO public.ticket VALUES (" + ticket.nroTicket + ", '" + ticket.descripcion + "', '" + ticket.observaciones + "', '" + ticket.fechaYHoraApertura + "', " + ticket.cliente.nroLegajo + ", '" + ticket.estadoActual.idEstadoTicket + "', " + ticket.clasificacion.idClasificacion + ")" );
@@ -1181,6 +1174,8 @@ public class GestorBD {
 			Integer idClasificacion = resultSet.getInt("idClasificacion");
 			
 			resultSet = statement.executeQuery("SELECT idGrupo FROM intervencion WHERE nroTicket = " + nroTicket + " AND idEstadoIntervencion = 'ACTIVA';");
+			
+			resultSet.next();
 			
 			Integer grupoAsignado = resultSet.getInt("idGrupo");
 			

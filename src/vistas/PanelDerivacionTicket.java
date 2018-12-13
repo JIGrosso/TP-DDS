@@ -134,7 +134,7 @@ public class PanelDerivacionTicket extends JPanel{
 		
 		txtNuevoEstado = new JTextField();
 		txtNuevoEstado.setEditable(false);
-		EstadoTicket nuevoEstado = GestorDeTicket.abiertoD;
+		EstadoTicket nuevoEstado = GestorDeTicket.mapearEstadoTicket("ABIERTO_D");
 		txtNuevoEstado.setText(nuevoEstado.getNombre());
 		gridConst.gridx = 2;
 		gridConst.insets = new Insets(5, 0, 5, 5);
@@ -217,7 +217,7 @@ public class PanelDerivacionTicket extends JPanel{
 			
 			if (validarCamposNoVacios(clasificacionDto, grupoDto, observaciones)) {
 				GestorDeTicket.derivarTicket(ticket, nuevoEstado, clasificacionDto, grupoDto, observaciones);
-				JOptionPane.showMessageDialog(null, "El ticket se ha derivado correctamente", "Éxito", JOptionPane.OK_OPTION);
+				JOptionPane.showMessageDialog(null, "El ticket se ha derivado correctamente", "Éxito", JOptionPane.INFORMATION_MESSAGE);
 			}
 			else {
 				JOptionPane.showMessageDialog(null, "Ningún campo puede ser vacío", "Error", JOptionPane.ERROR_MESSAGE);

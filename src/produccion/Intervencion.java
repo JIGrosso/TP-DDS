@@ -36,9 +36,14 @@ public class Intervencion {
 		this.idIntervencion = idIntervencion;
 		this.observaciones = observaciones;
 		this.fechaAsignacion = fechaAsignacion;
-		this.fechaFin = null;
+		this.fechaFin = fechaFin;
 		this.estadoIntervencionActual = estadoActual;
-		this.historialesEstado = historiales;
+		if(historiales == null) {
+			this.historialesEstado = new ArrayList<HistorialEstadoIntervencion>();
+		}
+		else {
+			this.historialesEstado = historiales;
+		}
 		
 	}
 

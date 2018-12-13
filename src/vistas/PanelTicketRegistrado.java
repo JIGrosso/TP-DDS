@@ -1,9 +1,11 @@
 package vistas;
 
+import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
+import java.awt.Toolkit;
 import java.util.ArrayList;
 
 import javax.swing.JButton;
@@ -16,6 +18,7 @@ import javax.swing.SwingUtilities;
 
 import clasesDTO.ClasificacionDTO;
 import clasesDTO.GrupoDTO;
+import clasesDTO.TicketDTO;
 import gestores.GestorDeGrupo;
 import gestores.GestorDeTicket;
 import produccion.Ticket;
@@ -87,11 +90,29 @@ public class PanelTicketRegistrado extends JPanel{
 		this.add(cmbGrupos, gridConst);
 		
 		btnDerivar = new JButton("Derivar");
+		btnDerivar.addActionListener(e -> {
+			GrupoDTO grupoAux = new GrupoDTO(ticket.grupoAsignado.idGrupo, ticket.grupoAsignado.nombre);
+			ClasificacionDTO clasificacionAux = new ClasificacionDTO(ticket.clasificacion.idClasificacion, ticket.clasificacion.nombre, ticket.clasificacion.descripcionAlcance);
+			TicketDTO ticketAux = new TicketDTO(ticket.nroTicket, ticket.cliente.nroLegajo, grupoAux, clasificacionAux, ticket.fechaYHoraApertura, ticket.estadoActual);
+			derivarTicket(ticketAux);
+		});
 		gridConst.gridy = 3;
 		this.add(btnDerivar, gridConst);
+
+	}
+	
+	public void derivarTicket(TicketDTO ticket) {
 		
+		JFrame newFrame = new JFrame();
+		newFrame.setVisible(true);
+		newFrame.setSize(1000, 500);
+		newFrame.setTitle("Derivar Ticket");
 		
+		PanelDerivacionTicket derivarTicket = new PanelDerivacionTicket(ticket);
+		newFrame.setContentPane(derivarTicket);
 		
+		Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
+        newFrame.setLocation(dim.width/2- newFrame.getSize().width/2, dim.height/2- newFrame.getSize().height/2);
 		
 	}
 }

@@ -108,17 +108,18 @@ public class GestorDeTicket {
 		
 		if(clasificacionDTO.idClasificacion != ticket.clasificacion.idClasificacion) {
 			
-			//Seteo Clasificacion nueva
+			//Clasificacion
+			
 			Clasificacion clasificacion = GestorBD.mapearClasificacion(clasificacionDTO.idClasificacion);
 			ticket.setClasificacion(clasificacion);
 			
-			//Cierro el HistorialClasificacionTicket actual y creo uno nuevo con la nueva Clasificacion con fecha actual
 			HistorialClasificacionTicket ultimoHistorialClasificacion = ticket.getUlitmoHistorialC();
 			Date fechaActual = new Date();
 			ultimoHistorialClasificacion.cerrarHistorialClasificacionTicket();
 			HistorialClasificacionTicket nuevoHistorialClasificacion = new HistorialClasificacionTicket(clasificacion, fechaActual);
 			ticket.addHistorialClasificacionTicket(nuevoHistorialClasificacion);
 			
+			// Intervenciones
 			
 			List<Intervencion> intervenciones = grupo.getIntervenciones();
 			Integer aux = (intervenciones.size() - 1);
@@ -132,22 +133,24 @@ public class GestorDeTicket {
 				}
 			}
 			if(aux != 0) {
-				Intervencion nuevaIntervencion = GestorDeIntervencion.crearIntervencion();
-				GestorDeGrupo.setIntervenciones(grupoDTO, GestorBD.mapearIntervencionesGrupoDTO(grupoDTO.idGrupo));
-				GestorDeGrupo.addIntervencion(grupoDTO, nuevaIntervencion);
-				ticket.addIntervencion(nuevaIntervencion);
+				Intervencion nuevaIntervencion = GestorDeIntervencion.crearIntervencion(Principal.usuarioIniciado, fechaActual, GestorDeIntervencion.mapearEstadoIntervencion("ASIGNADA"));
+				ticket.intervenciones.add(nuevaIntervencion);
 			}
 			
-			HistorialEstadoTicketDTO ultimoEstado = ticket.getUltimoHistorialEstado();
-			ultimoEstado.setFechaHasta(fechaActual);
-			ticket.setEstadoActual(nuevoEstado);
+			//Historial Estado Ticket
 			
-			//	Constructor con observaciones, revisar
-			
-			HistorialEstadoTicketDTO nuevoHistorial = new HistorialEstadoTicketDTO(GestorBD.nroNuevoHistorialET(), fechaActual, null, observaciones, Principal.usuarioIniciado.nroLegajo);
+			HistorialEstadoTicket ultimoHistorialEstado = ticket.getUlitmoHistorialET();
+			ultimoHistorialEstado.cerrarHistorialEstadoTicket();;
+			ticket.estadoActual = nuevoEstado;
+
+			HistorialEstadoTicket nuevoHistorial = new HistorialEstadoTicket(GestorBD.nroNuevoHistorialET(), Principal.usuarioIniciado, nuevoEstado, fechaActual, null);
 			ticket.addHistorialEstadoTicket(nuevoHistorial);
 			
 			//	GUARDAR TICKET Y GRUPO
+			
+			System.out.println("Ticket derivado: "+ticket.nroTicket);
+			System.out.println("Nuevo Estado: "+ticket.estadoActual);
+			System.out.println("Clasificacion: "+ticket.clasificacion);
 			
 		}
 		
