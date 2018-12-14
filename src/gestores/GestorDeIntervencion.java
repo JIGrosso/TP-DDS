@@ -2,6 +2,7 @@ package gestores;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import clasesDTO.ClasificacionDTO;
 import clasesDTO.GrupoDTO;
@@ -10,6 +11,7 @@ import clasesDTO.IntervencionDTO;
 import clasesDTO.TicketDTO;
 import produccion.EstadoIntervencion;
 import produccion.EstadoTicket;
+import produccion.EstadosIntervencion;
 import produccion.HistorialEstadoIntervencion;
 import produccion.Intervencion;
 import usuarios.Soporte;
@@ -128,5 +130,11 @@ public class GestorDeIntervencion {
 		HistorialEstadoIntervencion historialEstInt = new HistorialEstadoIntervencion(GestorBD.nroNuevoHistorialEI(), new Date(), null, Principal.usuarioIniciado, nuevoEstadoIntervencion);
 		intervencion.addHistorialEstadoIntervencion(historialEstInt);
 		GestorDeTicket.actualizarTicket(ticket.nroTicket, intervencion, clasificacionDto);
+	}
+
+	public static List<IntervencionDTO> buscarIntervenciones(Integer nroTicket, Integer nroLegajo,
+			EstadosIntervencion idEstado, Date fechaDesde, Date fechaHasta) {
+		
+		return null;
 	}
 }
