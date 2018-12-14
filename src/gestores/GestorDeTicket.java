@@ -119,7 +119,7 @@ public class GestorDeTicket {
 			ticket.addHistorialClasificacionTicket(nuevoHistorialClasificacion);
 		}
 		
-		// Intervenciones
+			// Intervenciones
 			
 		List<Intervencion> intervenciones = grupo.getIntervenciones();
 		Intervencion intervencionAux = null;
@@ -142,7 +142,6 @@ public class GestorDeTicket {
 		
 		Intervencion intervencionActual = null;
 		Intervencion auxInt = null;
-		intervenciones = ticket.intervenciones;
 		
 		for(int i = 0; i < intervenciones.size(); i++) {
 			auxInt = intervenciones.get(i);
@@ -157,7 +156,6 @@ public class GestorDeTicket {
 		else {
 			intervencionActual.setObservaciones(observaciones);
 		}
-		
 		GestorDeIntervencion.intervencionEnEspera(intervencionActual);
 		
 		//Historial Estado Ticket

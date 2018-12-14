@@ -211,15 +211,13 @@ public class PanelDerivacionTicket extends JPanel{
 		btnConfirmar.addActionListener(e -> {
 			ClasificacionDTO clasificacionDto = (ClasificacionDTO) cmbClasificacion.getSelectedItem();
 			GrupoDTO grupoDto = (GrupoDTO) cmbGrupo.getSelectedItem();
-			String observaciones = txtObservaciones.getText();
+			String observaciones = txtDescripcion.getText();
 			
 			//hacer validación estatica si no se usa interfaz dinámica
 			
 			if (validarCamposNoVacios(clasificacionDto, grupoDto, observaciones)) {
 				GestorDeTicket.derivarTicket(ticket, nuevoEstado, clasificacionDto, grupoDto, observaciones);
 				JOptionPane.showMessageDialog(null, "El ticket se ha derivado correctamente", "Éxito", JOptionPane.INFORMATION_MESSAGE);
-				JFrame frame = (JFrame) SwingUtilities.getAncestorOfClass(JFrame.class, this);
-				frame.dispose();
 			}
 			else {
 				JOptionPane.showMessageDialog(null, "Ningún campo puede ser vacío", "Error", JOptionPane.ERROR_MESSAGE);

@@ -31,12 +31,6 @@ public class PanelVerDetalleTicket extends JPanel {
 	private JTextField txtTelefono;
 	private JLabel lblApellidoNombre;
 	private JTextField txtApellidoNombre;
-	private JLabel lblCargo;
-	private JTextField txtCargo;
-	private JLabel lblTelefonoInterno;
-	private JTextField txtTelefonoInterno;
-	private JLabel lblUbicacion;
-	private JTextField txtUbicacion;
 	
 	private TablaVerDetalleTicket tablaDetalleTicket;
 	
@@ -109,56 +103,14 @@ public class PanelVerDetalleTicket extends JPanel {
 		gridConst.insets = new Insets(0, 5, 15, 5);
 		this.add(lblApellidoNombre, gridConst);
 		
-		txtApellidoNombre = new JTextField(10);
+		txtApellidoNombre = new JTextField(7);
 		txtApellidoNombre.setEditable(false);
 		txtApellidoNombre.setText(String.valueOf(cliente.nombre));
 		gridConst.gridx = 1;
 		this.add(txtApellidoNombre, gridConst);
+		
 
-		lblCargo = new JLabel("Cargo: ");
-		gridConst.gridx = 2;
-		gridConst.insets = new Insets(0, 5, 15, 5);
-		this.add(lblCargo, gridConst);
-		
-		txtCargo = new JTextField(13);
-		txtCargo.setEditable(false);
-		txtCargo.setText(String.valueOf(cliente.cargo));
-		gridConst.gridx = 3;
-		this.add(txtCargo, gridConst);
-		
-		lblTelefonoInterno = new JLabel("Telefono Interno: ");
-		gridConst.gridy = 5;
-		gridConst.gridx = 0;
-		gridConst.insets = new Insets(0, 5, 15, 5);
-		this.add(lblTelefonoInterno, gridConst);
-		
-		txtTelefonoInterno = new JTextField(10);
-		txtTelefonoInterno.setEditable(false);
-		txtTelefonoInterno.setText(String.valueOf(cliente.telefonoInterno));
-		gridConst.gridx = 1;
-		this.add(txtTelefonoInterno, gridConst);	
-		
-		lblUbicacion = new JLabel("Ubicación: ");
-		gridConst.gridx = 2;
-		gridConst.insets = new Insets(0, 5, 15, 5);
-		this.add(lblUbicacion, gridConst);
-		
-		txtUbicacion = new JTextField(10);
-		txtUbicacion.setEditable(false);
-		txtUbicacion.setText(String.valueOf(cliente.ubicacion));
-		gridConst.gridx = 3;
-		this.add(txtUbicacion, gridConst);
-		
-		gridConst.fill = GridBagConstraints.BOTH;
-		tabla = new JTable(tablaDetalleTicket);
-		tabla.setFillsViewportHeight(true);
-		tabla.setRowSelectionAllowed(true);
-		JScrollPane scrollPane = new JScrollPane(tabla);
-		gridConst.gridy = 6;
-		gridConst.gridwidth = 7;
-		this.add(scrollPane, gridConst);
-		gridConst.fill = GridBagConstraints.NONE;
-		
+				
 		
 	}
 	
