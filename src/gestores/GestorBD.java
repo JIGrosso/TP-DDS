@@ -905,6 +905,11 @@ public class GestorBD {
 				Statement statement3;
 				statement3 = connection.createStatement();
 				statement3.executeUpdate("INSERT INTO public.historial_estado_intervencion VALUES (" + nuevoHistorial.idHistorialEstadoInt + ", '" + fechaDesdeHistorialEI + "', null, " + intervencion.getIdIntervencion() + ", '" + intervencion.getEstadoIntervencionActual().idEstadoInt.name() + "', " + Principal.usuarioIniciado.nroLegajo + ")");
+				
+				Statement statement4;
+				statement4 = connection.createStatement();
+				statement4.executeUpdate("UPDATE public.intervencion SET observaciones = '"+ intervencion.observaciones +"' WHERE idIntervencion = "+ intervencion.idIntervencion);
+				
 			}
 			connection.close();
 
