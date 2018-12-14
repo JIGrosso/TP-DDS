@@ -211,7 +211,7 @@ public class PanelDerivacionTicket extends JPanel{
 		btnConfirmar.addActionListener(e -> {
 			ClasificacionDTO clasificacionDto = (ClasificacionDTO) cmbClasificacion.getSelectedItem();
 			GrupoDTO grupoDto = (GrupoDTO) cmbGrupo.getSelectedItem();
-			String observaciones = txtDescripcion.getText();
+			String observaciones = txtObservaciones.getText();
 			
 			//hacer validación estatica si no se usa interfaz dinámica
 			

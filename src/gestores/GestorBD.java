@@ -102,9 +102,11 @@ public class GestorBD {
 				
 				connection.close();
 				
-				GrupoDeResolucion grupo = mapearGrupoDeResolucion(idGrupo);
-				Soporte soporte = new Soporte(nroLeg, password, nombre, dni, telefono, telefonoInterno, ubicacion, email, cargo, grupo);
+				Soporte soporte = new Soporte(nroLeg, password, nombre, dni, telefono, telefonoInterno, ubicacion, email, cargo, null);
 				GestorDeSoporte.soportesMapeados.add(soporte);
+				
+				GrupoDeResolucion grupo = mapearGrupoDeResolucion(idGrupo);
+				soporte.setGrupo(grupo);
 				
 				System.out.println("Soporte: " + soporte.nroLegajo + " mapeado desde BDD.");
 				
@@ -477,6 +479,10 @@ public class GestorBD {
 				
 				connection.close();
 
+				GrupoDeResolucion grupoDeResolucion = new GrupoDeResolucion(idNuevoGrupo, nombreGrupo, nivelGrupo, descripcionGrupo, intervencionesAsignadas);
+				System.out.println("Grupo: " + grupoDeResolucion.nombre + " mapeado desde BDD.");
+				GestorDeGrupo.gruposMapeados.add(grupoDeResolucion);
+				
 				for(int i = 0; i < auxIds.size()-1; i++) {
 					Intervencion aux = mapearIntervencion(auxIds.get(i));
 					intervencionesAsignadas.add(aux);
@@ -484,9 +490,7 @@ public class GestorBD {
 				
 				// Creacion de la instancia
 				
-				GrupoDeResolucion grupoDeResolucion = new GrupoDeResolucion(idNuevoGrupo, nombreGrupo, nivelGrupo, descripcionGrupo, intervencionesAsignadas);
-				System.out.println("Grupo: " + grupoDeResolucion.nombre + " mapeado desde BDD.");
-				GestorDeGrupo.gruposMapeados.add(grupoDeResolucion);
+				grupoDeResolucion.intervenciones = intervencionesAsignadas;
 		
 				
 				return grupoDeResolucion;
@@ -570,11 +574,14 @@ public class GestorBD {
 			String idEstadoIntervencion = resultSet.getString("idEstadoIntervencion");
 			EstadoIntervencion estado = GestorBD.mapearEstadoIntervencion(idEstadoIntervencion);
 			Integer nroSoporte = resultSet.getInt("nroLegajoSoporte");
+			
+			connection.close();
+			
 			Soporte actor = mapearSoporte(nroSoporte);
 				
 			HistorialEstadoIntervencion aux = new HistorialEstadoIntervencion(idHistorial, fechaDesde, fechaHasta, actor, estado);
 
-			connection.close();
+			
 			return aux;
 
 		} catch (SQLException e) {
@@ -952,18 +959,23 @@ public class GestorBD {
 			while(rs.next()) {
 
 				Integer nroTicketResultado = rs.getInt("nroticket");
+				Date apertura = rs.getTimestamp("fechaapertura");
+				ClasificacionDTO clasificacion = mapearClasificacionDTO(rs.getInt("idclasificacion"));
+				EstadoTicket estado = mapearEstadoTicket(rs.getString("idestadoticket"));
 				
 				Statement statement2;
 				statement2 = connection.createStatement();
 				ResultSet rs2 = statement2.executeQuery("SELECT i.idgrupo FROM public.intervencion i WHERE (i.nroticket = " + nroTicketResultado + " AND i.idestadointervencion = 'ASIGNADA') OR "
 						+ "(i.nroticket = " + nroTicketResultado + " AND i.idestadointervencion = 'ACTIVA')");
 				
-				rs2.next();
-
-				Date apertura = rs.getTimestamp("fechaapertura");
-				GrupoDTO grupo = mapearGrupoDTO(rs2.getInt("idgrupo"));
-				ClasificacionDTO clasificacion = mapearClasificacionDTO(rs.getInt("idclasificacion"));
-				EstadoTicket estado = mapearEstadoTicket(rs.getString("idestadoticket"));
+				GrupoDTO grupo = null;
+				
+				if(rs2.next()) {
+					grupo = mapearGrupoDTO(rs2.getInt("idgrupo"));
+				}
+				else {
+					grupo = mapearGrupoDTO(1);
+				}
 				
 				aux = new TicketDTO(nroTicketResultado, rs.getInt("nrolegajocliente"), grupo, clasificacion, apertura, estado, rs.getString("observaciones"), rs.getString("descripcion"));
 				resultado.add(aux);

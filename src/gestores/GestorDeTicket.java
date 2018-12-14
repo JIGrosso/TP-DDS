@@ -119,7 +119,7 @@ public class GestorDeTicket {
 			ticket.addHistorialClasificacionTicket(nuevoHistorialClasificacion);
 		}
 		
-			// Intervenciones
+		// Intervenciones
 			
 		List<Intervencion> intervenciones = grupo.getIntervenciones();
 		Intervencion intervencionAux = null;
