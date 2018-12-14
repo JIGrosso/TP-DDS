@@ -8,9 +8,6 @@ import javax.swing.JOptionPane;
 
 import clasesDTO.ClasificacionDTO;
 import clasesDTO.GrupoDTO;
-import clasesDTO.HistorialClasificacionDTO;
-import clasesDTO.HistorialEstadoTicketDTO;
-import clasesDTO.IntervencionDTO;
 import clasesDTO.TicketDTO;
 import produccion.Clasificacion;
 import produccion.EstadoTicket;
@@ -20,7 +17,6 @@ import produccion.HistorialClasificacionTicket;
 import produccion.HistorialEstadoTicket;
 import produccion.Intervencion;
 import produccion.Ticket;
-import produccion.EstadoIntervencion; 
 import usuarios.Cliente;
 import usuarios.GrupoDeResolucion;
 import usuarios.Soporte;
@@ -104,7 +100,7 @@ public class GestorDeTicket {
 		
 		Ticket ticket = GestorBD.mapearTicket(ticketDTO.nroTicket);
 		GrupoDeResolucion grupo = GestorBD.mapearGrupoDeResolucion(grupoDTO.idGrupo);
-		
+	
 		Date fechaActual = new Date();
 		
 		if(clasificacionDTO.idClasificacion != ticket.clasificacion.idClasificacion) {
@@ -143,8 +139,7 @@ public class GestorDeTicket {
 			nuevaIntervencion = GestorDeIntervencion.crearIntervencion(Principal.usuarioIniciado, fechaActual, GestorDeIntervencion.mapearEstadoIntervencion("ASIGNADA"));
 			ticket.intervenciones.add(nuevaIntervencion);
 		}
-			
-		intervenciones = ticket.intervenciones;
+		
 		Intervencion intervencionActual = null;
 		Intervencion auxInt = null;
 		
@@ -155,12 +150,18 @@ public class GestorDeTicket {
 			}
 		}
 		
+		if(observaciones == null) {
+			ticket.observaciones = ticketDTO.observaciones;
+		}
+		else {
+			intervencionActual.setObservaciones(observaciones);
+		}
 		GestorDeIntervencion.intervencionEnEspera(intervencionActual);
 		
 		//Historial Estado Ticket
 			
 		HistorialEstadoTicket ultimoHistorialEstado = ticket.getUlitmoHistorialET();
-		ultimoHistorialEstado.cerrarHistorialEstadoTicket();
+		ultimoHistorialEstado.cerrarHistorialEstadoTicket(fechaActual);
 		ticket.estadoActual = nuevoEstado;
 
 		HistorialEstadoTicket nuevoHistorial = new HistorialEstadoTicket(GestorBD.nroNuevoHistorialET(), Principal.usuarioIniciado, nuevoEstado, fechaActual, null);
@@ -183,6 +184,7 @@ public class GestorDeTicket {
 
 	public static void actualizarTicket(Integer nroTicket, Intervencion intervencionA,
 			ClasificacionDTO clasificacionDto) {
+		
 		EstadosIntervencion idEstadoInt = intervencionA.getEstadoIntervencionActual().getIdEstadoInt();
 		Ticket ticket = GestorBD.mapearTicket(nroTicket);
 		if(idEstadoInt == EstadosIntervencion.ESPERA) {

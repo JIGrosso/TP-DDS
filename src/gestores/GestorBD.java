@@ -845,9 +845,10 @@ public class GestorBD {
 				statementE.executeUpdate("UPDATE public.ticket SET idClasificacion = '"+ ticket.clasificacion.getIdClasificacion() +"' WHERE nroTicket = "+ ticket.nroTicket);
 				
 			}
-//			Statement statement4;
-//			statement4 = connection.createStatement();
-//			statement4.executeUpdate("UPDATE public.ticket SET observaciones = '"+ ticket.observaciones +"' WHERE nroTicket = "+ ticket.nroTicket);
+			
+			Statement statement4;
+			statement4 = connection.createStatement();
+			statement4.executeUpdate("UPDATE public.ticket SET observaciones = '"+ ticket.observaciones +"' WHERE nroTicket = "+ ticket.nroTicket);
 			
 			if(intervencion != null) {
 				GestorBD.modificarIntervencion(intervencion);
@@ -887,6 +888,7 @@ public class GestorBD {
 				statement2.executeUpdate("UPDATE public.historial_estado_intervencion SET fechaHasta = '"+ fechaHastaHistorialEI +"' WHERE idHistorialEstadoIntervencion = "+ auxHistorial.idHistorialEstadoInt);
 			}
 			else {
+				
 				Statement statement;
 				statement = connection.createStatement();
 				statement.executeUpdate("UPDATE public.intervencion SET idEstadoIntervencion = '"+ intervencion.estadoIntervencionActual.getIdEstadoInt() +"' WHERE idIntervencion = "+ intervencion.idIntervencion);
@@ -931,7 +933,7 @@ public class GestorBD {
 			
 			Statement statement;
 			statement = connection.createStatement();
-			ResultSet rs = statement.executeQuery("SELECT t.nroticket, t.nrolegajocliente, t.idclasificacion, t.fechaapertura, t.idestadoticket, i.idgrupo "
+			ResultSet rs = statement.executeQuery("SELECT t.nroticket, t.nrolegajocliente, t.idclasificacion, t.fechaapertura, t.idestadoticket, i.idgrupo, t.descripcion, t.observaciones "
 					+ "FROM public.ticket t, public.intervencion i "
 					+ "WHERE COALESCE(t.nroTicket = "+ nroTicket +", t.nroTicket IS NOT NULL) AND "
 					+ "COALESCE(t.nroLegajoCliente = "+ nroLegajo +", t.nroLegajoCliente IS NOT NULL) AND "
@@ -949,7 +951,7 @@ public class GestorBD {
 				ClasificacionDTO clasificacion = mapearClasificacionDTO(rs.getInt("idclasificacion"));
 				EstadoTicket estado = mapearEstadoTicket(rs.getString("idestadoticket"));
 				
-				aux = new TicketDTO(rs.getInt("nroticket"), rs.getInt("nrolegajocliente"), grupo, clasificacion, apertura, estado);
+				aux = new TicketDTO(rs.getInt("nroticket"), rs.getInt("nrolegajocliente"), grupo, clasificacion, apertura, estado, rs.getString("observaciones"), rs.getString("descripcion"));
 				resultado.add(aux);
 			}
 			
@@ -1279,7 +1281,7 @@ public class GestorBD {
 			
 			connection.close();
 			
-			ticket = new TicketDTO(rs.getInt("nroticket"), rs.getInt("nrolegajocliente"), grupo, clasificacion, apertura, estado);	
+			ticket = new TicketDTO(rs.getInt("nroticket"), rs.getInt("nrolegajocliente"), grupo, clasificacion, apertura, estado, rs.getString("observaciones"), rs.getString("descripcion"));	
 			ticket.setHistoriales(mapearHistorialesEstadoTicketDTO(ticket.nroTicket));
 			ticket.setHistorialesClasificacion(mapearHistorialesClasificacionDTO(ticket.nroTicket));
 			ticket.setIntervenciones(mapearIntervencionesDTOTicket(ticket.nroTicket));

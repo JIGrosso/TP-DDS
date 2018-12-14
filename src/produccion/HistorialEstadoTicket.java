@@ -35,4 +35,8 @@ public class HistorialEstadoTicket {
 	public void cerrarHistorialEstadoTicket() {
 		this.fechaHasta = new Date();
 	}
+	
+	public void cerrarHistorialEstadoTicket(Date fechaHasta) {
+		this.fechaHasta = fechaHasta;
+	}
 }

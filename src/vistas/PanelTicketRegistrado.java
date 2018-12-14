@@ -1,17 +1,16 @@
 package vistas;
 
-import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
-import java.awt.Toolkit;
 import java.util.ArrayList;
 
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
 import javax.swing.SwingUtilities;
@@ -22,7 +21,6 @@ import clasesDTO.TicketDTO;
 import gestores.GestorDeGrupo;
 import gestores.GestorDeTicket;
 import produccion.Ticket;
-import usuarios.GrupoDeResolucion;
 
 public class PanelTicketRegistrado extends JPanel{
 
@@ -35,7 +33,6 @@ public class PanelTicketRegistrado extends JPanel{
 	private JComboBox cmbGrupos;
 	private JButton btnCerrado;
 	private JButton btnDerivar;
-	private JButton btnSalir;
 	
 	public PanelTicketRegistrado(Ticket ticketCreado) {
 		this.ticket = ticketCreado;
@@ -91,28 +88,16 @@ public class PanelTicketRegistrado extends JPanel{
 		
 		btnDerivar = new JButton("Derivar");
 		btnDerivar.addActionListener(e -> {
+			String obs = txtObservaciones.getText();
 			GrupoDTO grupoAux = new GrupoDTO(ticket.grupoAsignado.idGrupo, ticket.grupoAsignado.nombre);
 			ClasificacionDTO clasificacionAux = new ClasificacionDTO(ticket.clasificacion.idClasificacion, ticket.clasificacion.nombre, ticket.clasificacion.descripcionAlcance);
-			TicketDTO ticketAux = new TicketDTO(ticket.nroTicket, ticket.cliente.nroLegajo, grupoAux, clasificacionAux, ticket.fechaYHoraApertura, ticket.estadoActual);
-			derivarTicket(ticketAux);
+			TicketDTO ticketAux = new TicketDTO(ticket.nroTicket, ticket.cliente.nroLegajo, grupoAux, clasificacionAux, ticket.fechaYHoraApertura, ticket.estadoActual, obs, ticket.descripcion);
+			GestorDeTicket.derivarTicket(ticketAux, GestorDeTicket.mapearEstadoTicket("ABIERTO_D"), clasificacionAux, grupoAux, null);
+			JOptionPane.showMessageDialog(null, "El ticket se ha derivado correctamente", "Éxito", JOptionPane.INFORMATION_MESSAGE);
 		});
 		gridConst.gridy = 3;
 		this.add(btnDerivar, gridConst);
 
 	}
 	
-	public void derivarTicket(TicketDTO ticket) {
-		
-		JFrame newFrame = new JFrame();
-		newFrame.setVisible(true);
-		newFrame.setSize(1000, 500);
-		newFrame.setTitle("Derivar Ticket");
-		
-		PanelDerivacionTicket derivarTicket = new PanelDerivacionTicket(ticket);
-		newFrame.setContentPane(derivarTicket);
-		
-		Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
-        newFrame.setLocation(dim.width/2- newFrame.getSize().width/2, dim.height/2- newFrame.getSize().height/2);
-		
-	}
 }
