@@ -14,9 +14,9 @@ public class Intervencion {
 	public Date fechaFin;
 	public EstadoIntervencion estadoIntervencionActual;
 	public List<HistorialEstadoIntervencion> historialesEstado;
-	
+
 	// Creacion primer intervencion
-	
+
 	public Intervencion(Integer idIntervencion, Date fechaAsignacion, HistorialEstadoIntervencion primerHistorial) {
 		//ACTIVA
 		this.idIntervencion = idIntervencion;
@@ -26,13 +26,13 @@ public class Intervencion {
 		this.estadoIntervencionActual = GestorDeIntervencion.mapearEstadoIntervencion("ACTIVA");
 		this.historialesEstado = new ArrayList<HistorialEstadoIntervencion>();
 		this.historialesEstado.add(primerHistorial);
-		
+
 	}
-	
+
 	// Para el mapeo de intervenciones
-	
+
 	public Intervencion(Integer idIntervencion, String observaciones, Date fechaAsignacion, Date fechaFin, EstadoIntervencion estadoActual, List<HistorialEstadoIntervencion> historiales) {
-		
+
 		this.idIntervencion = idIntervencion;
 		this.observaciones = observaciones;
 		this.fechaAsignacion = fechaAsignacion;
@@ -44,7 +44,7 @@ public class Intervencion {
 		else {
 			this.historialesEstado = historiales;
 		}
-		
+
 	}
 
 	public Integer getIdIntervencion() {
@@ -85,14 +85,14 @@ public class Intervencion {
 
 	public void setEstadoIntervencionActual(EstadoIntervencion estadoIntervencionActual) {
 		try {
-			
+
 			this.getUltimoHistorialIntervencion().setFechaHasta();
 			this.estadoIntervencionActual = estadoIntervencionActual;
 		}
 		catch(Exception e) {
 			throw e;
 		}
-		
+
 	}
 
 	public List<HistorialEstadoIntervencion> getHistorialesEstado() {
@@ -102,11 +102,11 @@ public class Intervencion {
 	public void setHistorialesEstado(List<HistorialEstadoIntervencion> historialesEstado) {
 		this.historialesEstado = historialesEstado;
 	}
-	
+
 	public HistorialEstadoIntervencion getUltimoHistorialIntervencion() {
 		return this.historialesEstado.get(this.historialesEstado.size()-1);
 	}
-	
+
 	public HistorialEstadoIntervencion getPenultimoHistorialIntervencion() {
 		return this.historialesEstado.get(this.historialesEstado.size()-2);
 	}
@@ -114,7 +114,7 @@ public class Intervencion {
 	public void addHistorialEstadoIntervencion (HistorialEstadoIntervencion nuevoHistorial) {
 		this.historialesEstado.add(nuevoHistorial);
 	}
-	
+
 	public boolean equals(Intervencion intervencion) {
 		return (this.idIntervencion == intervencion.idIntervencion);
 	}
