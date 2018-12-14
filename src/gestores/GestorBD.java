@@ -938,25 +938,34 @@ public class GestorBD {
 			
 			Statement statement;
 			statement = connection.createStatement();
-			ResultSet rs = statement.executeQuery("SELECT t.nroticket, t.nrolegajocliente, t.idclasificacion, t.fechaapertura, t.idestadoticket, i.idgrupo, t.descripcion, t.observaciones "
+			ResultSet rs = statement.executeQuery("SELECT DISTINCT t.nroticket, t.nrolegajocliente, t.idclasificacion, t.fechaapertura, t.idestadoticket, t.descripcion, t.observaciones "
 					+ "FROM public.ticket t, public.intervencion i "
 					+ "WHERE COALESCE(t.nroTicket = "+ nroTicket +", t.nroTicket IS NOT NULL) AND "
 					+ "COALESCE(t.nroLegajoCliente = "+ nroLegajo +", t.nroLegajoCliente IS NOT NULL) AND "
 					+ "COALESCE(t.idClasificacion = "+ idClasificacion +", t.idClasificacion IS NOT NULL) AND "
 					+ "COALESCE (t.idEstadoTicket = "+ idEstadoS +", t.idEstadoTicket IS NOT NULL) AND "
-					+ "COALESCE (t.fechaApertura = "+ fechaA +", t.fechaApertura IS NOT NULL) AND "
-					+ "t.nroTicket = i.nroTicket");
+					+ "COALESCE (t.fechaApertura = "+ fechaA +", t.fechaApertura IS NOT NULL)");
 			
 			List<TicketDTO> resultado = new ArrayList<TicketDTO>();
 			TicketDTO aux = null;
-			
+						
 			while(rs.next()) {
+
+				Integer nroTicketResultado = rs.getInt("nroticket");
+				
+				Statement statement2;
+				statement2 = connection.createStatement();
+				ResultSet rs2 = statement2.executeQuery("SELECT i.idgrupo FROM public.intervencion i WHERE (i.nroticket = " + nroTicketResultado + " AND i.idestadointervencion = 'ASIGNADA') OR "
+						+ "(i.nroticket = " + nroTicketResultado + " AND i.idestadointervencion = 'ACTIVA')");
+				
+				rs2.next();
+
 				Date apertura = rs.getTimestamp("fechaapertura");
-				GrupoDTO grupo = mapearGrupoDTO(rs.getInt("idgrupo"));
+				GrupoDTO grupo = mapearGrupoDTO(rs2.getInt("idgrupo"));
 				ClasificacionDTO clasificacion = mapearClasificacionDTO(rs.getInt("idclasificacion"));
 				EstadoTicket estado = mapearEstadoTicket(rs.getString("idestadoticket"));
 				
-				aux = new TicketDTO(rs.getInt("nroticket"), rs.getInt("nrolegajocliente"), grupo, clasificacion, apertura, estado, rs.getString("observaciones"), rs.getString("descripcion"));
+				aux = new TicketDTO(nroTicketResultado, rs.getInt("nrolegajocliente"), grupo, clasificacion, apertura, estado, rs.getString("observaciones"), rs.getString("descripcion"));
 				resultado.add(aux);
 			}
 			
