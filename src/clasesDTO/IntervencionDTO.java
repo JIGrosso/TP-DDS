@@ -22,5 +22,9 @@ public class IntervencionDTO {
 	public EstadoIntervencion getEstado() {
 		return estadoIntervencionActual;
 	}
+	
+	public Date getFechaAsignacion() {
+		return fechaAsignacion;
+	}
 
 }
