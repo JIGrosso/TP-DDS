@@ -115,5 +115,7 @@ public class Intervencion {
 		this.historialesEstado.add(nuevoHistorial);
 	}
 	
-	
+	public boolean equals(Intervencion intervencion) {
+		return (this.idIntervencion == intervencion.idIntervencion);
+	}
 }

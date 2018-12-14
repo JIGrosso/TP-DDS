@@ -70,7 +70,7 @@ public class GestorDeIntervencion {
 		
 	}
 
-	public static void activarIntervencion(Intervencion intervencion) {
+	public static void asignarIntervencion(Intervencion intervencion) {
 		
 		EstadoIntervencion nuevoEstado = GestorBD.mapearEstadoIntervencion("ASIGNADA");
 		intervencion.setEstadoIntervencionActual(nuevoEstado);
@@ -82,4 +82,16 @@ public class GestorDeIntervencion {
 	public static EstadoIntervencion mapearEstadoIntervencion(String idEstado) {
 		return GestorBD.mapearEstadoIntervencion(idEstado);
 	}
+
+	public static void intervencionEnEspera(Intervencion intervencion) {
+		
+		EstadoIntervencion estadoEspera = mapearEstadoIntervencion("ESPERA");
+		intervencion.estadoIntervencionActual = estadoEspera;
+		intervencion.getUltimoHistorialIntervencion().setFechaHasta();
+		
+		HistorialEstadoIntervencion nuevoHistorial = new HistorialEstadoIntervencion(GestorBD.nroNuevoHistorialEI(), new Date(), null, Principal.usuarioIniciado, estadoEspera);
+		intervencion.addHistorialEstadoIntervencion(nuevoHistorial);
+
+	}
+	
 }
