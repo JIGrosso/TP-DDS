@@ -43,7 +43,7 @@ public class GestorDeIntervencion {
 		Integer idHistorial = GestorBD.nroNuevoHistorialEI();
 
 		HistorialEstadoIntervencion primerHistorial = new HistorialEstadoIntervencion(idHistorial, fechaAsignacion, null, soporte, estado);
-		Intervencion intervencion = new Intervencion(IdIntervencion, "observaciones", fechaAsignacion, null, estado, null);
+		Intervencion intervencion = new Intervencion(IdIntervencion, "", fechaAsignacion, null, estado, null);
 		intervencion.addHistorialEstadoIntervencion(primerHistorial);
 		
 		soporte.getGrupo().intervenciones.add(intervencion);
