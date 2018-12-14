@@ -19,13 +19,15 @@ public class TicketDTO {
 	public List<HistorialClasificacionDTO> historialesClasificacion;
 	public List<IntervencionDTO> intervenciones;
 	
-	public TicketDTO(Integer nroTicket, Integer nroLegajo, GrupoDTO grupoAsignado, ClasificacionDTO clasificacion, Date fechaYHora, EstadoTicket estadoActual) {
+	public TicketDTO(Integer nroTicket, Integer nroLegajo, GrupoDTO grupoAsignado, ClasificacionDTO clasificacion, Date fechaYHora, EstadoTicket estadoActual, String observaciones, String descripcion) {
 		this.nroTicket = nroTicket;
 		this.nroLegajoCliente = nroLegajo;
 		this.grupoAsignado = grupoAsignado;
 		this.clasificacion = clasificacion;
 		this.fechaYHoraApertura = fechaYHora;
 		this.estadoActual = estadoActual;
+		this.observaciones = observaciones;
+		this.descripcion = descripcion;
 	}
 	
 	public Integer getNroTicket() {

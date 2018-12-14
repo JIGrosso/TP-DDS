@@ -18,12 +18,12 @@ import usuarios.Soporte;
 import vistas.Principal;
 
 public class GestorDeIntervencion {
-	
+
 	public static EstadoIntervencion asignada;
 	public static EstadoIntervencion activa;
 	public static EstadoIntervencion espera;
 	public static EstadoIntervencion cerrada;
-	
+
 	public static Intervencion crearIntervencion(Soporte soporte, Date fechaAsignacion) {
 
 		Integer IdIntervencion = GestorBD.nroNuevoIntervencion();
@@ -31,12 +31,12 @@ public class GestorDeIntervencion {
 
 		HistorialEstadoIntervencion primerHistorial = new HistorialEstadoIntervencion(idHistorial, fechaAsignacion, soporte);
 		Intervencion intervencion = new Intervencion(IdIntervencion, fechaAsignacion, primerHistorial);
-		
+
 		soporte.getGrupo().intervenciones.add(intervencion);
 
 		return intervencion;
 	}
-	
+
 	public static Intervencion crearIntervencion(Soporte soporte, Date fechaAsignacion, EstadoIntervencion estado) {
 
 		Integer IdIntervencion = GestorBD.nroNuevoIntervencion();
@@ -45,20 +45,20 @@ public class GestorDeIntervencion {
 		HistorialEstadoIntervencion primerHistorial = new HistorialEstadoIntervencion(idHistorial, fechaAsignacion, null, soporte, estado);
 		Intervencion intervencion = new Intervencion(IdIntervencion, "observaciones", fechaAsignacion, null, estado, null);
 		intervencion.addHistorialEstadoIntervencion(primerHistorial);
-		
+
 		soporte.getGrupo().intervenciones.add(intervencion);
 
 		return intervencion;
 	}
-	
+
 	public static void cerrarIntervencion(Intervencion intervencion) {
-		
+
 		intervencion.fechaFin = new Date();
 		intervencion.setEstadoIntervencionActual(mapearEstadoIntervencion("CERRADA"));
 	}
 
 	public static ArrayList<EstadoIntervencion> mapearEstadosIntervencion() {
-		
+
 		ArrayList<EstadoIntervencion> estadosIntervencion = new ArrayList<EstadoIntervencion>();
 		EstadoIntervencion asignadadto = GestorBD.mapearEstadoIntervencion("ASIGNADA");
 		estadosIntervencion.add(asignadadto);
@@ -73,20 +73,31 @@ public class GestorDeIntervencion {
 		estadosIntervencion.add(cerradadto);
 		cerrada = GestorBD.mapearEstadoIntervencion("CERRADA");
 		return estadosIntervencion;
-		
+
 	}
 
-	public static void activarIntervencion(Intervencion intervencion) {
-		
+	public static void asignarIntervencion(Intervencion intervencion) {
+
 		EstadoIntervencion nuevoEstado = GestorBD.mapearEstadoIntervencion("ASIGNADA");
 		intervencion.setEstadoIntervencionActual(nuevoEstado);
-		
-		HistorialEstadoIntervencion nuevoHistorial = new HistorialEstadoIntervencion(GestorBD.nroNuevoHistorialEI(), new Date(), null, Principal.usuarioIniciado, nuevoEstado);	
+
+		HistorialEstadoIntervencion nuevoHistorial = new HistorialEstadoIntervencion(GestorBD.nroNuevoHistorialEI(), new Date(), null, Principal.usuarioIniciado, nuevoEstado);
 		intervencion.addHistorialEstadoIntervencion(nuevoHistorial);
 	}
 
 	public static EstadoIntervencion mapearEstadoIntervencion(String idEstado) {
 		return GestorBD.mapearEstadoIntervencion(idEstado);
+	}
+
+	public static void intervencionEnEspera(Intervencion intervencion) {
+
+		EstadoIntervencion estadoEspera = mapearEstadoIntervencion("ESPERA");
+		intervencion.estadoIntervencionActual = estadoEspera;
+		intervencion.getUltimoHistorialIntervencion().setFechaHasta();
+
+		HistorialEstadoIntervencion nuevoHistorial = new HistorialEstadoIntervencion(GestorBD.nroNuevoHistorialEI(), new Date(), null, Principal.usuarioIniciado, estadoEspera);
+		intervencion.addHistorialEstadoIntervencion(nuevoHistorial);
+
 	}
 
 	public static GrupoDTO getGrupoIntervencion(IntervencionDTO intervencion) {

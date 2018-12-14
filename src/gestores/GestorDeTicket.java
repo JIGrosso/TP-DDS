@@ -8,9 +8,6 @@ import javax.swing.JOptionPane;
 
 import clasesDTO.ClasificacionDTO;
 import clasesDTO.GrupoDTO;
-import clasesDTO.HistorialClasificacionDTO;
-import clasesDTO.HistorialEstadoTicketDTO;
-import clasesDTO.IntervencionDTO;
 import clasesDTO.TicketDTO;
 import produccion.Clasificacion;
 import produccion.EstadoTicket;
@@ -20,7 +17,6 @@ import produccion.HistorialClasificacionTicket;
 import produccion.HistorialEstadoTicket;
 import produccion.Intervencion;
 import produccion.Ticket;
-import produccion.EstadoIntervencion; 
 import usuarios.Cliente;
 import usuarios.GrupoDeResolucion;
 import usuarios.Soporte;
@@ -50,7 +46,6 @@ public class GestorDeTicket {
 		nuevoTicket.intervenciones.add(nuevaIntervencion);
 
 		GestorBD.guardarTicket(nuevoTicket, nuevaIntervencion, soporte);
-		// GuardarGrupo pq se actualiza su lista de intervenciones
 		
 		return nuevoTicket;
 
@@ -62,7 +57,7 @@ public class GestorDeTicket {
 		ticket.observaciones = obs;
 		Intervencion intervencion = ticket.getUltimaIntervencion();
 		GestorDeIntervencion.cerrarIntervencion(intervencion);
-		GestorBD.modificarTicket(ticket, intervencion);
+		GestorBD.modificarTicket(ticket, intervencion, false);
 		JOptionPane.showMessageDialog(null, "El ticket "+ticket.nroTicket+" se ha cerrado con éxito!", "CierreExitoso", JOptionPane.INFORMATION_MESSAGE);
 	}
 
@@ -101,10 +96,12 @@ public class GestorDeTicket {
 
 	public static void derivarTicket(TicketDTO ticketDTO, EstadoTicket nuevoEstado, ClasificacionDTO clasificacionDTO, GrupoDTO grupoDTO, String observaciones) {
 		
+		boolean clasificacionNueva = false;
+		
 		Ticket ticket = GestorBD.mapearTicket(ticketDTO.nroTicket);
 		GrupoDeResolucion grupo = GestorBD.mapearGrupoDeResolucion(grupoDTO.idGrupo);
-		
-		System.out.println("Ticket mapeado: "+ticket.nroTicket);
+	
+		Date fechaActual = new Date();
 		
 		if(clasificacionDTO.idClasificacion != ticket.clasificacion.idClasificacion) {
 			
@@ -113,46 +110,71 @@ public class GestorDeTicket {
 			Clasificacion clasificacion = GestorBD.mapearClasificacion(clasificacionDTO.idClasificacion);
 			ticket.setClasificacion(clasificacion);
 			
+			clasificacionNueva = true;
+			
 			HistorialClasificacionTicket ultimoHistorialClasificacion = ticket.getUlitmoHistorialC();
-			Date fechaActual = new Date();
+			
 			ultimoHistorialClasificacion.cerrarHistorialClasificacionTicket();
 			HistorialClasificacionTicket nuevoHistorialClasificacion = new HistorialClasificacionTicket(clasificacion, fechaActual);
 			ticket.addHistorialClasificacionTicket(nuevoHistorialClasificacion);
-			
+		}
+		
 			// Intervenciones
 			
-			List<Intervencion> intervenciones = grupo.getIntervenciones();
-			Integer aux = (intervenciones.size() - 1);
-			while(aux >= 0) {
-				Intervencion intervencionAux = intervenciones.get(aux);
-				if(intervencionAux.getEstadoIntervencionActual().idEstadoInt == EstadosIntervencion.ESPERA && (ticket.intervenciones.contains(intervencionAux))) {
-					GestorDeIntervencion.activarIntervencion(intervencionAux);
-					aux = 0;
-				} else {
-					aux--;
-				}
+		List<Intervencion> intervenciones = grupo.getIntervenciones();
+		Intervencion intervencionAux = null;
+		boolean crearIntervencion = true;
+		
+		for(int i = 0; i < intervenciones.size(); i++) {
+			intervencionAux = intervenciones.get(i);
+			if(intervencionAux.getEstadoIntervencionActual().idEstadoInt == EstadosIntervencion.ESPERA && (ticket.intervenciones.contains(intervencionAux))) {
+				GestorDeIntervencion.asignarIntervencion(intervencionAux);
+				crearIntervencion = false;
 			}
-			if(aux != 0) {
-				Intervencion nuevaIntervencion = GestorDeIntervencion.crearIntervencion(Principal.usuarioIniciado, fechaActual, GestorDeIntervencion.mapearEstadoIntervencion("ASIGNADA"));
-				ticket.intervenciones.add(nuevaIntervencion);
-			}
-			
-			//Historial Estado Ticket
-			
-			HistorialEstadoTicket ultimoHistorialEstado = ticket.getUlitmoHistorialET();
-			ultimoHistorialEstado.cerrarHistorialEstadoTicket();;
-			ticket.estadoActual = nuevoEstado;
-
-			HistorialEstadoTicket nuevoHistorial = new HistorialEstadoTicket(GestorBD.nroNuevoHistorialET(), Principal.usuarioIniciado, nuevoEstado, fechaActual, null);
-			ticket.addHistorialEstadoTicket(nuevoHistorial);
-			
-			//	GUARDAR TICKET Y GRUPO
-			
-			System.out.println("Ticket derivado: "+ticket.nroTicket);
-			System.out.println("Nuevo Estado: "+ticket.estadoActual);
-			System.out.println("Clasificacion: "+ticket.clasificacion);
-			
 		}
+			
+		Intervencion nuevaIntervencion = null;
+			
+		if(crearIntervencion) {
+			nuevaIntervencion = GestorDeIntervencion.crearIntervencion(Principal.usuarioIniciado, fechaActual, GestorDeIntervencion.mapearEstadoIntervencion("ASIGNADA"));
+			ticket.intervenciones.add(nuevaIntervencion);
+		}
+		
+		Intervencion intervencionActual = null;
+		Intervencion auxInt = null;
+		
+		for(int i = 0; i < intervenciones.size(); i++) {
+			auxInt = intervenciones.get(i);
+			if(auxInt.getEstadoIntervencionActual().idEstadoInt == EstadosIntervencion.ACTIVA) {
+				intervencionActual = auxInt;
+			}
+		}
+		
+		if(observaciones == null) {
+			ticket.observaciones = ticketDTO.observaciones;
+		}
+		else {
+			intervencionActual.setObservaciones(observaciones);
+		}
+		GestorDeIntervencion.intervencionEnEspera(intervencionActual);
+		
+		//Historial Estado Ticket
+			
+		HistorialEstadoTicket ultimoHistorialEstado = ticket.getUlitmoHistorialET();
+		ultimoHistorialEstado.cerrarHistorialEstadoTicket(fechaActual);
+		ticket.estadoActual = nuevoEstado;
+
+		HistorialEstadoTicket nuevoHistorial = new HistorialEstadoTicket(GestorBD.nroNuevoHistorialET(), Principal.usuarioIniciado, nuevoEstado, fechaActual, null);
+		ticket.addHistorialEstadoTicket(nuevoHistorial);
+			
+		//	GUARDAR TICKET
+			
+		if(crearIntervencion) {
+			GestorBD.guardarIntervencion(nuevaIntervencion, Principal.usuarioIniciado, ticket.nroTicket, grupo.idGrupo);
+		}
+			
+		GestorBD.modificarTicket(ticket, intervencionAux, clasificacionNueva);
+		GestorBD.modificarIntervencion(intervencionActual);
 		
 	}
 
@@ -162,6 +184,7 @@ public class GestorDeTicket {
 
 	public static void actualizarTicket(Integer nroTicket, Intervencion intervencionA,
 			ClasificacionDTO clasificacionDto) {
+		
 		EstadosIntervencion idEstadoInt = intervencionA.getEstadoIntervencionActual().getIdEstadoInt();
 		Ticket ticket = GestorBD.mapearTicket(nroTicket);
 		if(idEstadoInt == EstadosIntervencion.ESPERA) {
