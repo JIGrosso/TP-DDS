@@ -160,4 +160,57 @@ public class GestorDeTicket {
 		return GestorBD.mapearEstadoTicket(idEstado);
 	}
 
+	public static void actualizarTicket(Integer nroTicket, Intervencion intervencionA,
+			ClasificacionDTO clasificacionDto) {
+		EstadosIntervencion idEstadoInt = intervencionA.getEstadoIntervencionActual().getIdEstadoInt();
+		Ticket ticket = GestorBD.mapearTicket(nroTicket);
+		if(idEstadoInt == EstadosIntervencion.ESPERA) {
+			ticket.getUlitmoHistorialET().cerrarHistorialEstadoTicket();
+			HistorialEstadoTicket historialEstadoTicket = new HistorialEstadoTicket(GestorBD.nroNuevoHistorialET(),
+					Principal.usuarioIniciado, abiertoMA, new Date(), null);
+			ticket.addHistorialEstadoTicket(historialEstadoTicket);
+			ticket.setEstado(abiertoMA);
+		} else if(idEstadoInt == EstadosIntervencion.CERRADA) {
+			ArrayList<Intervencion> listaIntervenciones = (ArrayList<Intervencion>) ticket.getIntervenciones();
+			Integer intervAbiertas = 0;
+			for(Intervencion aux: listaIntervenciones) {
+				if(aux.getEstadoIntervencionActual().getIdEstadoInt() == EstadosIntervencion.ESPERA) {
+					intervAbiertas++;
+					//Ya que la mesa de ayuda siempre tiene su intervencion en espera
+					if(intervAbiertas > 1) {
+						break;
+					}
+				}
+			}
+			ticket.getUlitmoHistorialET().cerrarHistorialEstadoTicket();
+			EstadoTicket nuevoEstado;
+			if(intervAbiertas > 1) {
+				nuevoEstado = solucionadoOK;
+			}
+			else {
+				nuevoEstado = abiertoMA;
+			}
+			HistorialEstadoTicket historialEstadoTicket = new HistorialEstadoTicket(GestorBD.nroNuevoHistorialET(),
+					Principal.usuarioIniciado, nuevoEstado, new Date(), null);
+			ticket.addHistorialEstadoTicket(historialEstadoTicket);
+			ticket.setEstado(nuevoEstado);
+			//revisar si actualizarIntervencion es necesario;
+			ticket.actualizarIntervencion(intervencionA);
+			
+			if(clasificacionDto.getIdClasificacion() != ticket.getClasificacion().getIdClasificacion()) {
+				ticket.getUlitmoHistorialC().cerrarHistorialClasificacionTicket();
+				Clasificacion nuevaClasificacion = GestorBD.mapearClasificacion(clasificacionDto.getIdClasificacion());
+				HistorialClasificacionTicket historialClasif = new HistorialClasificacionTicket(GestorBD.nroNuevoHistorialC(),
+						new Date(), null, nuevaClasificacion);
+				ticket.addHistorialClasificacionTicket(historialClasif);
+				ticket.setClasificacion(nuevaClasificacion);
+			}
+			
+			//fijar si es el guardado correcto
+			
+			GestorBD.guardarTicket(ticket, intervencionA, Principal.usuarioIniciado);
+		}
+		
+	}
+
 }

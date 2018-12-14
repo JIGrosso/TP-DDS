@@ -74,6 +74,10 @@ public class Ticket {
 		}
 	}
 	
+	public Clasificacion getClasificacion() {
+		return this.clasificacion;
+	}
+	
 	public Intervencion getUltimaIntervencion() {
 		return this.intervenciones.get(this.intervenciones.size()-1);
 	}
@@ -105,6 +109,21 @@ public class Ticket {
 	public List<Intervencion> getIntervenciones(){
 		return this.intervenciones;
 	}
+
+	public void setEstado(EstadoTicket estadoTicket) {
+		this.estadoActual = estadoTicket;
+	}
+
+	public void actualizarIntervencion(Intervencion intervencionA) {
+		for(Intervencion aux: intervenciones) {
+			if(aux.equals(intervencionA)) {
+				intervenciones.remove(aux);
+				intervenciones.add(intervencionA);
+				break;
+			}
+		}
+	}
+
 	
 }
 	

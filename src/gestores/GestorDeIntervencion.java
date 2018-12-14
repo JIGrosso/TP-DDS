@@ -3,9 +3,13 @@ package gestores;
 import java.util.ArrayList;
 import java.util.Date;
 
+import clasesDTO.ClasificacionDTO;
+import clasesDTO.GrupoDTO;
 import clasesDTO.HistorialEstadoIntervencionDTO;
 import clasesDTO.IntervencionDTO;
+import clasesDTO.TicketDTO;
 import produccion.EstadoIntervencion;
+import produccion.EstadoTicket;
 import produccion.HistorialEstadoIntervencion;
 import produccion.Intervencion;
 import usuarios.Soporte;
@@ -81,5 +85,37 @@ public class GestorDeIntervencion {
 
 	public static EstadoIntervencion mapearEstadoIntervencion(String idEstado) {
 		return GestorBD.mapearEstadoIntervencion(idEstado);
+	}
+
+	public static GrupoDTO getGrupoIntervencion(IntervencionDTO intervencion) {
+		return GestorBD.mapearGrupoIntervencionDTO(intervencion.getId());
+	}
+
+	public static TicketDTO recuperarTicketDTO(Integer id) {
+		return GestorBD.mapearTicketIntervDTO(id);
+	}
+
+	public static ArrayList<EstadoIntervencion> getEstadosDistintosIntervencion(EstadoIntervencion estado) {
+		ArrayList<EstadoIntervencion> aux = new ArrayList<EstadoIntervencion>();
+		if(estado == asignada) {
+			aux.add(activa);
+			aux.add(cerrada);
+			aux.add(espera);
+		}
+		if(estado == activa) {
+			aux.add(cerrada);
+			aux.add(espera);
+		}
+		return null;
+	}
+
+	public static void actualizarEstadoIntervencion(TicketDTO ticket, IntervencionDTO intervencionDto,
+			ClasificacionDTO clasificacionDto, EstadoIntervencion nuevoEstadoIntervencion, String observaciones) {
+		Intervencion intervencion = GestorBD.mapearIntervencion(intervencionDto.idIntervencion);
+		intervencion.getUltimoHistorialIntervencion().setFechaHasta();
+		intervencion.setEstadoIntervencionActual(nuevoEstadoIntervencion);
+		HistorialEstadoIntervencion historialEstInt = new HistorialEstadoIntervencion(GestorBD.nroNuevoHistorialEI(), new Date(), null, Principal.usuarioIniciado, nuevoEstadoIntervencion);
+		intervencion.addHistorialEstadoIntervencion(historialEstInt);
+		GestorDeTicket.actualizarTicket(ticket.nroTicket, intervencion, clasificacionDto);
 	}
 }

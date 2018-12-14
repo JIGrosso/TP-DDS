@@ -1200,6 +1200,40 @@ public class GestorBD {
 		
 		return null;
 	}
+	
+	public static TicketDTO mapearTicketIntervDTO(Integer id) {
+		try (Connection connection = DriverManager.getConnection("jdbc:postgresql://localhost:5432/TP-DDS", "postgres", "postgres")) {
+			Statement statement;
+			statement = connection.createStatement();
+			ResultSet rs = statement.executeQuery("SELECT SELECT t.nroticket, t.nrolegajocliente, t.idclasificacion, "
+					+ "t.fechaapertura, t.idestadoticket, i.idgrupo"
+					+ " FROM public.ticket t, public.intervencion i WHERE i.idIntervencion ="+ id +" AND t.nroTicket = p.nroTicket");
+			
+			rs.next();
+			
+			TicketDTO ticket;
+			
+			Date apertura = rs.getTimestamp("fechaapertura");
+			GrupoDTO grupo = mapearGrupoDTO(rs.getInt("idgrupo"));
+			ClasificacionDTO clasificacion = mapearClasificacionDTO(rs.getInt("idclasificacion"));
+			EstadoTicket estado = mapearEstadoTicket(rs.getString("idestadoticket"));
+			
+			connection.close();
+			
+			ticket = new TicketDTO(rs.getInt("nroticket"), rs.getInt("nrolegajocliente"), grupo, clasificacion, apertura, estado);	
+			ticket.setHistoriales(mapearHistorialesEstadoTicketDTO(ticket.nroTicket));
+			ticket.setHistorialesClasificacion(mapearHistorialesClasificacionDTO(ticket.nroTicket));
+			ticket.setIntervenciones(mapearIntervencionesDTOTicket(ticket.nroTicket));
+			
+			return ticket;
+		
+		}
+		catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		return null;
+	}
 }
 
 

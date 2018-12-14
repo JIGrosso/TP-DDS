@@ -27,4 +27,8 @@ public class GrupoDTO {
 	public void addIntervencion(IntervencionDTO nueva) {
 		this.intervenciones.add(nueva);
 	}
+
+	public String getNombre() {
+		return this.nombre;
+	}
 }
