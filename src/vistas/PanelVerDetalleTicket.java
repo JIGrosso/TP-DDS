@@ -42,9 +42,16 @@ public class PanelVerDetalleTicket extends JPanel {
 	private JTextField txtTelefonoInterno;
 	private JLabel lblUbicacion;
 	private JTextField txtUbicacion;
+<<<<<<< HEAD
+<<<<<<< HEAD
 	private JLabel lblDetalleHistorico;
 	private JTextField txtDetalleHistorico;
 
+=======
+=======
+>>>>>>> parent of 2c7d4fd... Revert "Merge branch 'Nacho' of https://github.com/JIGrosso/TP-DDS into Nacho"
+	
+>>>>>>> parent of 2c7d4fd... Revert "Merge branch 'Nacho' of https://github.com/JIGrosso/TP-DDS into Nacho"
 	private TablaVerDetalleTicket tablaDetalleTicket;
 
 	private JTable tabla;
@@ -117,34 +124,58 @@ public class PanelVerDetalleTicket extends JPanel {
 		gridConst.gridx = 0;
 		gridConst.insets = new Insets(0, 5, 15, 5);
 		this.add(lblApellidoNombre, gridConst);
+<<<<<<< HEAD
+<<<<<<< HEAD
 
 		txtApellidoNombre = new JTextField(7);
+=======
+		
+		txtApellidoNombre = new JTextField(10);
+>>>>>>> parent of 2c7d4fd... Revert "Merge branch 'Nacho' of https://github.com/JIGrosso/TP-DDS into Nacho"
+=======
+		
+		txtApellidoNombre = new JTextField(10);
+>>>>>>> parent of 2c7d4fd... Revert "Merge branch 'Nacho' of https://github.com/JIGrosso/TP-DDS into Nacho"
 		txtApellidoNombre.setEditable(false);
 		txtApellidoNombre.setText(String.valueOf(cliente.nombre));
 		gridConst.gridx = 1;
 		this.add(txtApellidoNombre, gridConst);
+<<<<<<< HEAD
 
 		lblCargo = new JLabel("Cargo: ");
 		gridConst.gridx = 2;
 		gridConst.insets = new Insets(0, 5, 15, 5);
 		this.add(lblCargo, gridConst);
+<<<<<<< HEAD
 
+=======
+		
+>>>>>>> parent of 2c7d4fd... Revert "Merge branch 'Nacho' of https://github.com/JIGrosso/TP-DDS into Nacho"
 		txtCargo = new JTextField(13);
 		txtCargo.setEditable(false);
 		txtCargo.setText(String.valueOf(cliente.cargo));
 		gridConst.gridx = 3;
 		this.add(txtCargo, gridConst);
+<<<<<<< HEAD
 
+=======
+		
+>>>>>>> parent of 2c7d4fd... Revert "Merge branch 'Nacho' of https://github.com/JIGrosso/TP-DDS into Nacho"
 		lblTelefonoInterno = new JLabel("Telefono Interno: ");
 		gridConst.gridy = 5;
 		gridConst.gridx = 0;
 		gridConst.insets = new Insets(0, 5, 15, 5);
 		this.add(lblTelefonoInterno, gridConst);
+<<<<<<< HEAD
 
+=======
+		
+>>>>>>> parent of 2c7d4fd... Revert "Merge branch 'Nacho' of https://github.com/JIGrosso/TP-DDS into Nacho"
 		txtTelefonoInterno = new JTextField(10);
 		txtTelefonoInterno.setEditable(false);
 		txtTelefonoInterno.setText(String.valueOf(cliente.telefonoInterno));
 		gridConst.gridx = 1;
+<<<<<<< HEAD
 		this.add(txtTelefonoInterno, gridConst);
 
 		lblUbicacion = new JLabel("Ubicaciï¿½n: ");
@@ -153,10 +184,21 @@ public class PanelVerDetalleTicket extends JPanel {
 		this.add(lblUbicacion, gridConst);
 
 		txtUbicacion = new JTextField(13);
+=======
+		this.add(txtTelefonoInterno, gridConst);	
+		
+		lblUbicacion = new JLabel("Ubicación: ");
+		gridConst.gridx = 2;
+		gridConst.insets = new Insets(0, 5, 15, 5);
+		this.add(lblUbicacion, gridConst);
+		
+		txtUbicacion = new JTextField(10);
+>>>>>>> parent of 2c7d4fd... Revert "Merge branch 'Nacho' of https://github.com/JIGrosso/TP-DDS into Nacho"
 		txtUbicacion.setEditable(false);
 		txtUbicacion.setText(String.valueOf(cliente.ubicacion));
 		gridConst.gridx = 3;
 		this.add(txtUbicacion, gridConst);
+<<<<<<< HEAD
 
 		lblDetalleHistorico = new JLabel("Detalle Histï¿½rico del Reclamo: ");
 		lblDetalleHistorico.setFont(new Font(Font.DIALOG, Font.BOLD, 16));
@@ -164,11 +206,62 @@ public class PanelVerDetalleTicket extends JPanel {
 		gridConst.gridy = 6;
 		this.add(lblDetalleHistorico, gridConst);
 
+=======
+=======
+
+		lblCargo = new JLabel("Cargo: ");
+		gridConst.gridx = 2;
+		gridConst.insets = new Insets(0, 5, 15, 5);
+		this.add(lblCargo, gridConst);
+		
+		txtCargo = new JTextField(13);
+		txtCargo.setEditable(false);
+		txtCargo.setText(String.valueOf(cliente.cargo));
+		gridConst.gridx = 3;
+		this.add(txtCargo, gridConst);
+		
+		lblTelefonoInterno = new JLabel("Telefono Interno: ");
+		gridConst.gridy = 5;
+		gridConst.gridx = 0;
+		gridConst.insets = new Insets(0, 5, 15, 5);
+		this.add(lblTelefonoInterno, gridConst);
+		
+		txtTelefonoInterno = new JTextField(10);
+		txtTelefonoInterno.setEditable(false);
+		txtTelefonoInterno.setText(String.valueOf(cliente.telefonoInterno));
+		gridConst.gridx = 1;
+		this.add(txtTelefonoInterno, gridConst);	
+		
+		lblUbicacion = new JLabel("Ubicación: ");
+		gridConst.gridx = 2;
+		gridConst.insets = new Insets(0, 5, 15, 5);
+		this.add(lblUbicacion, gridConst);
+		
+		txtUbicacion = new JTextField(10);
+		txtUbicacion.setEditable(false);
+		txtUbicacion.setText(String.valueOf(cliente.ubicacion));
+		gridConst.gridx = 3;
+		this.add(txtUbicacion, gridConst);
+		
 		gridConst.fill = GridBagConstraints.BOTH;
 		tabla = new JTable(tablaDetalleTicket);
 		tabla.setFillsViewportHeight(true);
 		tabla.setRowSelectionAllowed(true);
 		JScrollPane scrollPane = new JScrollPane(tabla);
+		gridConst.gridy = 6;
+		gridConst.gridwidth = 7;
+		this.add(scrollPane, gridConst);
+		gridConst.fill = GridBagConstraints.NONE;
+		
+>>>>>>> parent of 2c7d4fd... Revert "Merge branch 'Nacho' of https://github.com/JIGrosso/TP-DDS into Nacho"
+		
+>>>>>>> parent of 2c7d4fd... Revert "Merge branch 'Nacho' of https://github.com/JIGrosso/TP-DDS into Nacho"
+		gridConst.fill = GridBagConstraints.BOTH;
+		tabla = new JTable(tablaDetalleTicket);
+		tabla.setFillsViewportHeight(true);
+		tabla.setRowSelectionAllowed(true);
+		JScrollPane scrollPane = new JScrollPane(tabla);
+<<<<<<< HEAD
 		gridConst.gridy = 7;
 		gridConst.gridx = 0;
 		gridConst.gridwidth = 10;
@@ -212,6 +305,14 @@ public class PanelVerDetalleTicket extends JPanel {
 		c7.setPreferredSize(new Dimension(80, 20));
 		gridConst.gridx = 9;
 		this.add(c7, gridConst);
+=======
+		gridConst.gridy = 6;
+		gridConst.gridwidth = 7;
+		this.add(scrollPane, gridConst);
+		gridConst.fill = GridBagConstraints.NONE;
+		
+		
+>>>>>>> parent of 2c7d4fd... Revert "Merge branch 'Nacho' of https://github.com/JIGrosso/TP-DDS into Nacho"
 	}
 
 	public void setResultado(List<HistorialEstadoTicketDTO> listaResultado, boolean actualizar) {
