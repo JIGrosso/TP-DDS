@@ -138,6 +138,7 @@ public class GestorDeTicket {
 		if(crearIntervencion) {
 			nuevaIntervencion = GestorDeIntervencion.crearIntervencion(Principal.usuarioIniciado, fechaActual, GestorDeIntervencion.mapearEstadoIntervencion("ASIGNADA"));
 			ticket.intervenciones.add(nuevaIntervencion);
+			intervencionAux = null;
 		}
 		
 		Intervencion intervencionActual = null;

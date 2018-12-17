@@ -89,7 +89,7 @@ public class PanelTicketRegistrado extends JPanel{
 		btnDerivar = new JButton("Derivar");
 		btnDerivar.addActionListener(e -> {
 			String obs = txtObservaciones.getText();
-			GrupoDTO grupoAux = new GrupoDTO(ticket.grupoAsignado.idGrupo, ticket.grupoAsignado.nombre);
+			GrupoDTO grupoAux = (GrupoDTO) cmbGrupos.getSelectedItem();
 			ClasificacionDTO clasificacionAux = new ClasificacionDTO(ticket.clasificacion.idClasificacion, ticket.clasificacion.nombre, ticket.clasificacion.descripcionAlcance);
 			TicketDTO ticketAux = new TicketDTO(ticket.nroTicket, ticket.cliente.nroLegajo, grupoAux, clasificacionAux, ticket.fechaYHoraApertura, ticket.estadoActual, obs, ticket.descripcion);
 			GestorDeTicket.derivarTicket(ticketAux, GestorDeTicket.mapearEstadoTicket("ABIERTO_D"), clasificacionAux, grupoAux, null);

@@ -6,15 +6,20 @@ import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.Box;
+import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 
+import auxiliares.TablaBusquedaTicket;
 import auxiliares.TablaVerDetalleTicket;
+import clasesDTO.HistorialEstadoTicketDTO;
 import clasesDTO.TicketDTO;
 import gestores.GestorDeCliente;
 import usuarios.Cliente;
@@ -37,6 +42,8 @@ public class PanelVerDetalleTicket extends JPanel {
 	private JTextField txtTelefonoInterno;
 	private JLabel lblUbicacion;
 	private JTextField txtUbicacion;
+	private JLabel lblDetalleHistorico;
+	private JTextField txtDetalleHistorico;
 	
 	private TablaVerDetalleTicket tablaDetalleTicket;
 	
@@ -45,6 +52,8 @@ public class PanelVerDetalleTicket extends JPanel {
 	public PanelVerDetalleTicket (TicketDTO ticketDTO) {
 		
 		this.setLayout(new GridBagLayout());
+		this.tablaDetalleTicket = new TablaVerDetalleTicket();
+		this.setResultado(new ArrayList<>(), false);
 		this.construir(ticketDTO);
 	}
 	
@@ -68,7 +77,7 @@ public class PanelVerDetalleTicket extends JPanel {
 		gridConst.insets = new Insets(0, 5, 15, 5);
 		this.add(lblNro, gridConst);
 		
-		txtNro = new JTextField(7);
+		txtNro = new JTextField(10);
 		txtNro.setEditable(false);
 		txtNro.setText(String.valueOf(ticketDTO.nroTicket));
 		gridConst.gridx = 1;
@@ -86,7 +95,7 @@ public class PanelVerDetalleTicket extends JPanel {
 		gridConst.insets = new Insets(0, 5, 15, 5);
 		this.add(lblNroLegajo, gridConst);
 		
-		txtNroLegajo = new JTextField(7);
+		txtNroLegajo = new JTextField(10);
 		txtNroLegajo.setEditable(false);
 		txtNroLegajo.setText(String.valueOf(cliente.nroLegajo));
 		gridConst.gridx = 1;
@@ -97,7 +106,7 @@ public class PanelVerDetalleTicket extends JPanel {
 		gridConst.insets = new Insets(0, 5, 15, 5);
 		this.add(lblTelefono, gridConst);
 		
-		txtTelefono = new JTextField(7);
+		txtTelefono = new JTextField(13);
 		txtTelefono.setEditable(false);
 		txtTelefono.setText(String.valueOf(cliente.telefono));
 		gridConst.gridx = 3;
@@ -143,25 +152,74 @@ public class PanelVerDetalleTicket extends JPanel {
 		gridConst.insets = new Insets(0, 5, 15, 5);
 		this.add(lblUbicacion, gridConst);
 		
-		txtUbicacion = new JTextField(10);
+		txtUbicacion = new JTextField(13);
 		txtUbicacion.setEditable(false);
 		txtUbicacion.setText(String.valueOf(cliente.ubicacion));
 		gridConst.gridx = 3;
 		this.add(txtUbicacion, gridConst);
+		
+		lblDetalleHistorico = new JLabel("Detalle Histórico del Reclamo: ");
+		lblDetalleHistorico.setFont(new Font(Font.DIALOG, Font.BOLD, 16));
+		gridConst.gridx = 0;
+		gridConst.gridy = 6;
+		this.add(lblDetalleHistorico, gridConst);
 		
 		gridConst.fill = GridBagConstraints.BOTH;
 		tabla = new JTable(tablaDetalleTicket);
 		tabla.setFillsViewportHeight(true);
 		tabla.setRowSelectionAllowed(true);
 		JScrollPane scrollPane = new JScrollPane(tabla);
-		gridConst.gridy = 6;
-		gridConst.gridwidth = 7;
+		gridConst.gridy = 7;
+		gridConst.gridx = 0;	
+		gridConst.gridwidth = 10;
 		this.add(scrollPane, gridConst);
 		gridConst.fill = GridBagConstraints.NONE;
 		
+		Box empty = new Box(1);
+		Component c1 = empty.createGlue();
+		c1.setPreferredSize(new Dimension(80, 20));
+		gridConst.gridwidth = 1;
+		gridConst.gridy = 8;
+		gridConst.gridx = 4;
+		this.add(c1, gridConst);
 		
+		Component c2 = empty.createGlue();
+		c2.setPreferredSize(new Dimension(80, 20));
+		gridConst.gridx = 5;
+		this.add(c2, gridConst);
+		
+		Component c3 = empty.createGlue();
+		c3.setPreferredSize(new Dimension(80, 20));
+		gridConst.gridx = 6;
+		this.add(c3, gridConst);
+		
+		Component c4 = empty.createGlue();
+		c4.setPreferredSize(new Dimension(80, 20));
+		gridConst.gridx = 7;
+		this.add(c4, gridConst);
+		
+		Component c5 = empty.createGlue();
+		c5.setPreferredSize(new Dimension(80, 20));
+		gridConst.gridx = 7;
+		this.add(c5, gridConst);
+		
+		Component c6 = empty.createGlue();
+		c6.setPreferredSize(new Dimension(80, 20));
+		gridConst.gridx = 8;
+		this.add(c6, gridConst);
+		
+		Component c7 = empty.createGlue();
+		c7.setPreferredSize(new Dimension(80, 20));
+		gridConst.gridx = 9;
+		this.add(c7, gridConst);
 	}
 	
+	public void setResultado(List<HistorialEstadoTicketDTO> listaResultado, boolean actualizar) {
+		this.tablaDetalleTicket.setHistoriales(listaResultado);
+		if(actualizar) {
+			this.tablaDetalleTicket.fireTableDataChanged();
+		}
+	}
 
 	
 }

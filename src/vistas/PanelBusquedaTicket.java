@@ -289,7 +289,7 @@ public class PanelBusquedaTicket extends JPanel{
 		
 		JFrame newFrame = new JFrame();
 		newFrame.setVisible(true);
-		newFrame.setSize(1000, 500);
+		newFrame.setSize(1400, 900);
 		newFrame.setTitle("Ver Detalle Ticket");
 		
 		PanelVerDetalleTicket verDetalle = new PanelVerDetalleTicket(ticketSeleccionado);
@@ -303,7 +303,7 @@ public class PanelBusquedaTicket extends JPanel{
 		
 		JFrame newFrame = new JFrame();
 		newFrame.setVisible(true);
-		newFrame.setSize(1000, 500);
+		newFrame.setSize(600, 500);
 		newFrame.setTitle("Derivar Ticket");
 		
 		PanelDerivacionTicket derivarTicket = new PanelDerivacionTicket(ticketSeleccionado);
