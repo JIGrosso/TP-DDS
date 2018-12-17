@@ -43,7 +43,7 @@ public class GestorDeIntervencion {
 		Integer idHistorial = GestorBD.nroNuevoHistorialEI();
 
 		HistorialEstadoIntervencion primerHistorial = new HistorialEstadoIntervencion(idHistorial, fechaAsignacion, null, soporte, estado);
-		Intervencion intervencion = new Intervencion(IdIntervencion, "", fechaAsignacion, null, estado, null);
+		Intervencion intervencion = new Intervencion(IdIntervencion, "observaciones", fechaAsignacion, null, estado, null);
 		intervencion.addHistorialEstadoIntervencion(primerHistorial);
 
 		soporte.getGrupo().intervenciones.add(intervencion);
@@ -133,8 +133,7 @@ public class GestorDeIntervencion {
 	}
 
 	public static List<IntervencionDTO> buscarIntervenciones(Integer nroTicket, Integer nroLegajo,
-			EstadosIntervencion idEstado, Date fechaDesde, Date fechaHasta) {
-		
-		return null;
+			EstadoIntervencion estado, Date fechaDesde, Date fechaHasta) {
+		return GestorBD.buscarIntervenciones(nroTicket, nroLegajo, estado, fechaDesde, fechaHasta);
 	}
 }
