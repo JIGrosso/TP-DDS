@@ -132,6 +132,7 @@ public class PanelBusquedaIntervencion extends JPanel {
 				Integer nroLegajo = null;
 				Date fechaDesde = null;
 				Date fechaHasta = null;
+				EstadoIntervencion estado = null;
 				
 				if(!txtNroTicket.getText().isEmpty()) {
 					nroTicket = Integer.valueOf(txtNroTicket.getText());
@@ -146,8 +147,11 @@ public class PanelBusquedaIntervencion extends JPanel {
 				if(!(txtFechaHasta.getDate() == null)) {
 					fechaHasta = txtFechaHasta.getDate();
 				}
-				EstadosIntervencion idEstado = ((EstadoIntervencion) cmbEstado.getSelectedItem()).idEstadoInt;
-				setResultado(GestorDeIntervencion.buscarIntervenciones(nroTicket, nroLegajo, idEstado, fechaDesde, fechaHasta), true);
+				if(((EstadoIntervencion)cmbEstado.getSelectedItem()).getNombre() != "Todos") {
+					estado = ((EstadoIntervencion) cmbEstado.getSelectedItem());
+				}
+				
+				setResultado(GestorDeIntervencion.buscarIntervenciones(nroTicket, nroLegajo, estado, fechaDesde, fechaHasta), true);
 			});
 		}
 		public void setResultado(List<IntervencionDTO> listaResultado, boolean actualizar) {

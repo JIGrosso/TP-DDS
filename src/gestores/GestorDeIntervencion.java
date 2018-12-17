@@ -133,8 +133,7 @@ public class GestorDeIntervencion {
 	}
 
 	public static List<IntervencionDTO> buscarIntervenciones(Integer nroTicket, Integer nroLegajo,
-			EstadosIntervencion idEstado, Date fechaDesde, Date fechaHasta) {
-		
-		return null;
+			EstadoIntervencion estado, Date fechaDesde, Date fechaHasta) {
+		return GestorBD.buscarIntervenciones(nroTicket, nroLegajo, estado, fechaDesde, fechaHasta);
 	}
 }

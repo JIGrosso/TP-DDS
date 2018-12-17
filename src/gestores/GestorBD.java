@@ -1295,6 +1295,38 @@ public class GestorBD {
 		
 		return null;
 	}
+
+	public static List<IntervencionDTO> buscarIntervenciones(Integer nroTicket, Integer nroLegajo,
+			EstadoIntervencion estado, Date fechaDesde, Date fechaHasta) {
+		String idEstadoS = null;
+		String fechaD = null;
+		String fechaH = null;
+		
+		if(!(estado == null)) {
+			idEstadoS = "'"+String.valueOf(estado.getIdEstadoInt())+"'";
+		}
+		if(!(fechaDesde == null)) {
+			fechaD = "'"+String.valueOf(fechaDesde)+"'";
+		}
+		if(!(fechaHasta == null)) {
+			fechaH = "'"+String.valueOf(fechaHasta)+"'";
+		}
+		
+		try (Connection connection = DriverManager.getConnection("jdbc:postgresql://localhost:5432/TP-DDS", "postgres", "postgres")) {
+
+			System.out.println("Connected to PostgreSQL database! --> Buscar Tickets");
+			
+			Statement statement;
+			statement = connection.createStatement();
+			ResultSet rs = statement.executeQuery("");
+
+		}
+		catch (SQLException e) {
+			e.printStackTrace();
+			return null;
+		}
+		return null;
+	}
 }
 
 
