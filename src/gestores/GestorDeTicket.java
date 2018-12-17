@@ -138,6 +138,7 @@ public class GestorDeTicket {
 		if(crearIntervencion) {
 			nuevaIntervencion = GestorDeIntervencion.crearIntervencion(Principal.usuarioIniciado, fechaActual, GestorDeIntervencion.mapearEstadoIntervencion("ASIGNADA"));
 			ticket.intervenciones.add(nuevaIntervencion);
+			intervencionAux = null;
 		}
 		
 		Intervencion intervencionActual = null;
@@ -174,7 +175,6 @@ public class GestorDeTicket {
 		if(crearIntervencion) {
 			GestorBD.guardarIntervencion(nuevaIntervencion, Principal.usuarioIniciado, ticket.nroTicket, grupo.idGrupo);
 		}
-			
 		GestorBD.modificarTicket(ticket, intervencionAux, clasificacionNueva);
 		GestorBD.modificarIntervencion(intervencionActual);
 		
