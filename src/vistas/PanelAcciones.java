@@ -45,6 +45,7 @@ public class PanelAcciones extends JPanel{
 		
 		lblNro = new JLabel("Nro. de Legajo: ");
 		gridConst.gridy = 1;
+		gridConst.gridwidth = 1;
 		gridConst.insets = new Insets(0, 5, 15, 5);
 		this.add(lblNro, gridConst);
 		

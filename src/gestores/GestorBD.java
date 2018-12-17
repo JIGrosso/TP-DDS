@@ -46,9 +46,11 @@ public class GestorBD {
 
 			Statement statement;
 			statement = connection.createStatement();
-			ResultSet resultSet = statement.executeQuery("SELECT * FROM soporte WHERE nroLegajo = " + nroLegajo +" AND contrasenia = '" + password + "'");
+			ResultSet resultSet = statement.executeQuery("SELECT * FROM public.soporte WHERE nroLegajo = " + nroLegajo +" AND contrasenia = '" + password + "'");
 			
-			if(!resultSet.next()) {
+			boolean condicion = resultSet.next();
+			
+			if(!(condicion)) {
 				connection.close();
 				return false;
 			}
@@ -887,6 +889,7 @@ public class GestorBD {
 				statement2 = connection.createStatement();
 				statement2.executeUpdate("UPDATE public.historial_estado_intervencion SET fechaHasta = '"+ fechaHastaHistorialEI +"' WHERE idHistorialEstadoIntervencion = "+ auxHistorial.idHistorialEstadoInt);
 			}
+			
 			else {
 				
 				Statement statement;

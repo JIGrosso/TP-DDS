@@ -5,6 +5,7 @@ import java.util.List;
 import javax.swing.table.AbstractTableModel;
 
 import clasesDTO.HistorialEstadoTicketDTO;
+import clasesDTO.TicketDTO;
 
 public class TablaVerDetalleTicket extends AbstractTableModel {
 
@@ -13,10 +14,6 @@ public class TablaVerDetalleTicket extends AbstractTableModel {
 	
 	public List<HistorialEstadoTicketDTO> getHistoriales() {
 		return historiales;
-	}
-	
-	public void setHistoriales(List<HistorialEstadoTicketDTO> tickets) {
-		this.historiales = tickets;
 	}
 	
 	public String getColumnName(int indice) {
@@ -63,6 +60,10 @@ public class TablaVerDetalleTicket extends AbstractTableModel {
 			break;
 		}	
 		return valor;
+	}
+
+	public void setHistoriales (List<HistorialEstadoTicketDTO> historiales) {
+		this.historiales = historiales;
 	}
 
 }
